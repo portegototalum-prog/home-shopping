@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home Shopping</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #222;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    padding: 32px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+header p {
+    opacity: .9;
+}
+
+/* MAIN */
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+    padding: 25px 18px 100px;
+}
+
+/* SEARCH */
+
+.search-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+}
+
+.search-box {
+    flex: 1;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 17px 18px 17px 50px;
+    border: none;
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    font-size: 16px;
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 17px;
+    top: 14px;
+    font-size: 22px;
+}
+
+.add-button {
+    border: none;
+    background: #4f46e5;
+    color: white;
+    border-radius: 16px;
+    padding: 0 23px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-button:hover {
+    background: #4338ca;
+}
+
+/* SECTION TITLES */
+
+.section-title {
+    margin: 28px 0 16px;
+    font-size: 23px;
+}
+
+/* CATEGORIES */
+
+.categories {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.category {
+    min-width: 105px;
+    border: none;
+    background: white;
+    padding: 15px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    text-align: center;
+}
+
+.category:hover,
+.category.active {
+    background: #4f46e5;
+    color: white;
+}
+
+.category-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 7px;
+}
+
+/* PRODUCTS */
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.product {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.06);
+    transition: .2s;
+}
+
+.product:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 25px rgba(0,0,0,.1);
+}
+
+.product-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.product h3 {
+    margin-bottom: 5px;
+}
+
+.product-category {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.product button {
+    width: 100%;
+    border: none;
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 11px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.product button:hover {
+    background: #4f46e5;
+    color: white;
+}
+
+/* SHOPPING LIST */
+
+.shopping-list {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 35px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.07);
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.clear-button {
+    border: none;
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 9px 13px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cart-icon {
+    font-size: 30px;
+}
+
+.cart-name {
+    font-weight: bold;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.quantity-controls button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #4338ca;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.remove {
+    color: #dc2626 !important;
+    background: #fee2e2 !important;
+}
+
+.empty {
+    text-align: center;
+    color: #777;
+    padding: 28px 5px;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 35px;
+    color: #777;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 430px;
+    border-radius: 20px;
+    padding: 25px;
+}
+
+.modal-box h2 {
+    margin-bottom: 20px;
+}
+
+.modal-box input,
+.modal-box select {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 13px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save {
+    background: #4f46e5;
+    color: white;
+}
+
+.cancel {
+    background: #eee;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    .search-area {
+        flex-direction: column;
+    }
+
+    .add-button {
+        padding: 14px;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cart-item {
+        align-items: flex-start;
+    }
+
+    .quantity-controls {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>🛒 Home Shopping</h1>
+
+    <p>Find it. Add it. Shop it.</p>
+
+</header>
+
+
+<div class="container">
+
+    <!-- SEARCH -->
+
+    <div class="search-area">
+
+        <div class="search-box">
+
+            <span class="search-icon">🔎</span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for something to buy..."
+                oninput="searchProducts()"
+            >
+
+        </div>
+
+        <button class="add-button" onclick="openModal()">
+            ＋ Add Item
+        </button>
+
+    </div>
+
+
+    <!-- CATEGORIES -->
+
+    <h2 class="section-title">Categories</h2>
+
+    <div class="categories">
+
+        <button class="category active"
+                onclick="filterCategory('All', this)">
+            <span class="category-icon">🛍️</span>
+            All
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Groceries', this)">
+            <span class="category-icon">🥛</span>
+            Groceries
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Fruits', this)">
+            <span class="category-icon">🍎</span>
+            Fruits
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Vegetables', this)">
+            <span class="category-icon">🥕</span>
+            Vegetables
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Cleaning', this)">
+            <span class="category-icon">🧹</span>
+            Cleaning
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Personal Care', this)">
+            <span class="category-icon">🧴</span>
+            Personal Care
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Snacks', this)">
+            <span class="category-icon">🍪</span>
+            Snacks
+        </button>
+
+        <button class="category"
+                onclick="filterCategory('Household', this)">
+            <span class="category-icon">🏠</span>
+            Household
+        </button>
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+
+    <h2 class="section-title">Things You May Need</h2>
+
+    <div class="products" id="products"></div>
+
+
+    <!-- SHOPPING LIST -->
+
+    <div class="shopping-list">
+
+        <div class="list-header">
+
+            <h2>🛒 My Shopping List</h2>
+
+            <button class="clear-button"
+                    onclick="clearCart()">
+                Clear All
+            </button>
+
+        </div>
+
+        <div id="cart"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ADD ITEM MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <h2>➕ Add Something</h2>
+
+        <input
+            type="text"
+            id="newItemName"
+            placeholder="Item name"
+        >
+
+        <input
+            type="text"
+            id="newItemIcon"
+            placeholder="Emoji (example: 🍞)"
+            maxlength="2"
+        >
+
+        <select id="newItemCategory">
+
+            <option value="Groceries">
+                🥛 Groceries
+            </option>
+
+            <option value="Fruits">
+                🍎 Fruits
+            </option>
+
+            <option value="Vegetables">
+                🥕 Vegetables
+            </option>
+
+            <option value="Cleaning">
+                🧹 Cleaning
+            </option>
+
+            <option value="Personal Care">
+                🧴 Personal Care
+            </option>
+
+            <option value="Snacks">
+                🍪 Snacks
+            </option>
+
+            <option value="Household">
+                🏠 Household
+            </option>
+
+        </select>
+
+        <div class="modal-actions">
+
+            <button class="cancel"
+                    onclick="closeModal()">
+                Cancel
+            </button>
+
+            <button class="save"
+                    onclick="addNewItem()">
+                Add Item
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   PRODUCTS
+========================================= */
+
+let products = [
+
+    /* GROCERIES */
+
+    {name:"Milk", icon:"🥛", category:"Groceries"},
+    {name:"Bread", icon:"🍞", category:"Groceries"},
+    {name:"Rice", icon:"🍚", category:"Groceries"},
+    {name:"Wheat Flour", icon:"🌾", category:"Groceries"},
+    {name:"Eggs", icon:"🥚", category:"Groceries"},
+    {name:"Cooking Oil", icon:"🫗", category:"Groceries"},
+    {name:"Sugar", icon:"🧂", category:"Groceries"},
+    {name:"Salt", icon:"🧂", category:"Groceries"},
+    {name:"Tea", icon:"🍵", category:"Groceries"},
+    {name:"Coffee", icon:"☕", category:"Groceries"},
+
+    /* FRUITS */
+
+    {name:"Apples", icon:"🍎", category:"Fruits"},
+    {name:"Bananas", icon:"🍌", category:"Fruits"},
+    {name:"Oranges", icon:"🍊", category:"Fruits"},
+    {name:"Mangoes", icon:"🥭", category:"Fruits"},
+    {name:"Grapes", icon:"🍇", category:"Fruits"},
+    {name:"Watermelon", icon:"🍉", category:"Fruits"},
+    {name:"Pineapple", icon:"🍍", category:"Fruits"},
+    {name:"Papaya", icon:"🥭", category:"Fruits"},
+    {name:"Guava", icon:"🍐", category:"Fruits"},
+    {name:"Pomegranate", icon:"❤️", category:"Fruits"},
+    {name:"Strawberries", icon:"🍓", category:"Fruits"},
+    {name:"Kiwi", icon:"🥝", category:"Fruits"},
+    {name:"Peaches", icon:"🍑", category:"Fruits"},
+    {name:"Cherries", icon:"🍒", category:"Fruits"},
+    {name:"Lemons", icon:"🍋", category:"Fruits"},
+    {name:"Coconut", icon:"🥥", category:"Fruits"},
+
+    /* VEGETABLES */
+
+    {name:"Potatoes", icon:"🥔", category:"Vegetables"},
+    {name:"Onions", icon:"🧅", category:"Vegetables"},
+    {name:"Tomatoes", icon:"🍅", category:"Vegetables"},
+    {name:"Carrots", icon:"🥕", category:"Vegetables"},
+    {name:"Cucumber", icon:"🥒", category:"Vegetables"},
+    {name:"Spinach", icon:"🥬", category:"Vegetables"},
+    {name:"Cabbage", icon:"🥬", category:"Vegetables"},
+    {name:"Cauliflower", icon:"🥦", category:"Vegetables"},
+    {name:"Broccoli", icon:"🥦", category:"Vegetables"},
+    {name:"Capsicum", icon:"🫑", category:"Vegetables"},
+    {name:"Green Peas", icon:"🫛", category:"Vegetables"},
+    {name:"Corn", icon:"🌽", category:"Vegetables"},
+    {name:"Garlic", icon:"🧄", category:"Vegetables"},
+    {name:"Ginger", icon:"🫚", category:"Vegetables"},
+    {name:"Green Beans", icon:"🫘", category:"Vegetables"},
+
+    /* CLEANING */
+
+    {name:"Dish Soap", icon:"🧽", category:"Cleaning"},
+    {name:"Laundry Detergent", icon:"🧺", category:"Cleaning"},
+    {name:"Floor Cleaner", icon:"🧹", category:"Cleaning"},
+    {name:"Glass Cleaner", icon:"🪟", category:"Cleaning"},
+    {name:"Tissues", icon:"🧻", category:"Cleaning"},
+    {name:"Sponges", icon:"🧽", category:"Cleaning"},
+
+    /* PERSONAL CARE */
+
+    {name:"Shampoo", icon:"🧴", category:"Personal Care"},
+    {name:"Toothpaste", icon:"🪥", category:"Personal Care"},
+    {name:"Soap", icon:"🧼", category:"Personal Care"},
+    {name:"Toothbrush", icon:"🪥", category:"Personal Care"},
+    {name:"Hand Wash", icon:"🧴", category:"Personal Care"},
+
+    /* SNACKS */
+
+    {name:"Biscuits", icon:"🍪", category:"Snacks"},
+    {name:"Chips", icon:"🥔", category:"Snacks"},
+    {name:"Chocolate", icon:"🍫", category:"Snacks"},
+    {name:"Popcorn", icon:"🍿", category:"Snacks"},
+    {name:"Nuts", icon:"🥜", category:"Snacks"},
+    {name:"Ice Cream", icon:"🍦", category:"Snacks"},
+
+    /* HOUSEHOLD */
+
+    {name:"Light Bulb", icon:"💡", category:"Household"},
+    {name:"Batteries", icon:"🔋", category:"Household"},
+    {name:"Garbage Bags", icon:"🗑️", category:"Household"},
+    {name:"Aluminium Foil", icon:"📦", category:"Household"},
+    {name:"Food Containers", icon:"🥡", category:"Household"},
+    {name:"Paper Towels", icon:"🧻", category:"Household"}
+
+];
+
+
+/* =========================================
+   SHOPPING CART
+========================================= */
+
+let cart =
+    JSON.parse(localStorage.getItem("homeShoppingCart")) || [];
+
+let currentCategory = "All";
+
+
+/* =========================================
+   DISPLAY PRODUCTS
+========================================= */
+
+function displayProducts(list = products) {
+
+    const container =
+        document.getElementById("products");
+
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+
+        container.innerHTML = `
+            <div class="no-results">
+
+                😕 Nothing found.
+
+                <br><br>
+
+                Try searching for something else
+                or click <b>＋ Add Item</b>.
+
+            </div>
+        `;
+
+        return;
+    }
+
+    list.forEach(product => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "product";
+
+        card.innerHTML = `
+
+            <div class="product-icon">
+                ${product.icon}
+            </div>
+
+            <h3>
+                ${product.name}
+            </h3>
+
+            <div class="product-category">
+                ${product.category}
+            </div>
+
+            <button
+                onclick="addToCart(${products.indexOf(product)})">
+
+                ＋ Add to List
+
+            </button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+
+/* =========================================
+   ADD TO CART
+========================================= */
+
+function addToCart(index) {
+
+    const product = products[index];
+
+    const existing =
+        cart.find(item => item.name === product.name);
+
+    if (existing) {
+
+        existing.quantity++;
+
+    } else {
+
+        cart.push({
+
+            name: product.name,
+
+            icon: product.icon,
+
+            quantity: 1
+
+        });
+    }
+
+    saveCart();
+
+    displayCart();
+}
+
+
+/* =========================================
+   DISPLAY CART
+========================================= */
+
+function displayCart() {
+
+    const container =
+        document.getElementById("cart");
+
+    container.innerHTML = "";
+
+    if (cart.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                🛒 Your shopping list is empty.
+
+                <br>
+
+                Add something you need!
+
+            </div>
+        `;
+
+        return;
+    }
+
+    cart.forEach((item, index) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "cart-item";
+
+        row.innerHTML = `
+
+            <div class="cart-left">
+
+                <div class="cart-icon">
+                    ${item.icon}
+                </div>
+
+                <div>
+
+                    <div class="cart-name">
+                        ${item.name}
+                    </div>
+
+                    <small>
+                        Quantity: ${item.quantity}
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="quantity-controls">
+
+                <button
+                    onclick="changeQuantity(${index}, -1)">
+                    −
+                </button>
+
+                <strong>
+                    ${item.quantity}
+                </strong>
+
+                <button
+                    onclick="changeQuantity(${index}, 1)">
+                    +
+                </button>
+
+                <button
+                    class="remove"
+                    onclick="removeItem(${index})">
+
+                    🗑️
+
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(row);
+    });
+}
+
+
+/* =========================================
+   QUANTITY
+========================================= */
+
+function changeQuantity(index, amount) {
+
+    cart[index].quantity += amount;
+
+    if (cart[index].quantity <= 0) {
+
+        cart.splice(index, 1);
+    }
+
+    saveCart();
+
+    displayCart();
+}
+
+
+/* =========================================
+   REMOVE
+========================================= */
+
+function removeItem(index) {
+
+    cart.splice(index, 1);
+
+    saveCart();
+
+    displayCart();
+}
+
+
+/* =========================================
+   CLEAR CART
+========================================= */
+
+function clearCart() {
+
+    if (cart.length === 0)
+        return;
+
+    if (confirm("Clear your entire shopping list?")) {
+
+        cart = [];
+
+        saveCart();
+
+        displayCart();
+    }
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+function searchProducts() {
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const filtered =
+        products.filter(product => {
+
+            const matchesSearch =
+                product.name
+                .toLowerCase()
+                .includes(search);
+
+            const matchesCategory =
+                currentCategory === "All" ||
+                product.category === currentCategory;
+
+            return matchesSearch &&
+                   matchesCategory;
+        });
+
+    displayProducts(filtered);
+}
+
+
+/* =========================================
+   CATEGORY FILTER
+========================================= */
+
+function filterCategory(category, button) {
+
+    currentCategory = category;
+
+    document
+        .querySelectorAll(".category")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    button.classList.add("active");
+
+    searchProducts();
+}
+
+
+/* =========================================
+   ADD NEW ITEM MODAL
+========================================= */
+
+function openModal() {
+
+    document
+        .getElementById("modal")
+        .style.display = "flex";
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("modal")
+        .style.display = "none";
+
+    document
+        .getElementById("newItemName")
+        .value = "";
+
+    document
+        .getElementById("newItemIcon")
+        .value = "";
+}
+
+
+function addNewItem() {
+
+    const name =
+        document
+        .getElementById("newItemName")
+        .value
+        .trim();
+
+    const icon =
+        document
+        .getElementById("newItemIcon")
+        .value
+        .trim() || "🛍️";
+
+    const category =
+        document
+        .getElementById("newItemCategory")
+        .value;
+
+    if (!name) {
+
+        alert("Please enter an item name.");
+
+        return;
+    }
+
+    products.push({
+
+        name: name,
+
+        icon: icon,
+
+        category: category
+
+    });
+
+    closeModal();
+
+    currentCategory = "All";
+
+    document
+        .querySelectorAll(".category")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    document
+        .querySelector(".category")
+        .classList.add("active");
+
+    displayProducts(products);
+
+    alert(name + " has been added!");
+}
+
+
+/* =========================================
+   SAVE CART
+========================================= */
+
+function saveCart() {
+
+    localStorage.setItem(
+        "homeShoppingCart",
+        JSON.stringify(cart)
+    );
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+displayProducts();
+
+displayCart();
+
+</script>
+
+</body>
+</html>
