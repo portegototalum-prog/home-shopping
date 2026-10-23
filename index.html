@@ -16,7 +16,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .shell{max-width:1260px;margin:auto;padding:0 28px 70px}
 .topbar{height:76px;display:flex;align-items:center;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:800}
-.brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:white;font-size:20px}
+.brand-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:20px}
 .top-actions{display:flex;gap:10px}
 .icon-btn,.ghost{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:10px 13px}
 .hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#5144c9,#795eea 58%,#a678f3);border-radius:26px;padding:36px 38px;color:#fff;display:flex;align-items:center;justify-content:space-between;min-height:220px;box-shadow:0 18px 42px #6857e826}
@@ -55,7 +55,7 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 .product-bottom{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:12px}
 .price{font-weight:800;font-size:14px}
 .add-small{border:0;background:var(--soft);color:var(--accent);border-radius:9px;padding:7px 9px;font-size:12px;font-weight:750}
-.add-small:hover{background:var(--accent);color:white}
+.add-small:hover{background:var(--accent);color:#fff}
 .buy-links{display:flex;gap:7px;margin-top:9px}
 .buy-links a{flex:1;text-align:center;text-decoration:none;color:var(--accent);background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:6px 4px;font-size:11px;font-weight:700}
 .buy-links a:hover{background:var(--soft)}
@@ -76,6 +76,8 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 .summary-line{display:flex;justify-content:space-between;margin:6px 0;color:var(--muted);font-size:13px}
 .summary-line.total{color:var(--text);font-size:17px;font-weight:800;margin-top:12px}
 .checkout{width:100%;margin-top:13px;border:0;background:linear-gradient(110deg,var(--accent),var(--accent2));color:#fff;padding:13px;border-radius:12px;font-weight:800}
+.share-cart{width:100%;margin-top:8px;border:1px solid var(--line);background:#e9f8ef;color:#138a45;padding:11px;border-radius:12px;font-weight:750}
+.share-cart:hover{filter:brightness(.97)}
 .scrim{position:fixed;inset:0;background:#11182788;display:none;align-items:center;justify-content:center;padding:18px;z-index:10;backdrop-filter:blur(4px)}
 .scrim.open{display:flex}
 .dialog{width:min(100%,450px);background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:21px;padding:23px;box-shadow:0 24px 80px #0003;animation:pop .18s ease-out}
@@ -88,16 +90,74 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 .field input,.field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface2);color:var(--text)}
 .dialog-actions{display:flex;gap:9px;margin-top:18px}
 .dialog-actions button{flex:1;padding:11px;border:0;border-radius:11px;font-weight:750}
-.primary{background:var(--accent);color:white}
+.primary{background:var(--accent);color:#fff}
 .secondary{background:var(--surface2);color:var(--text)}
 .detail-art{text-align:center;font-size:76px;background:var(--surface2);border-radius:16px;padding:20px;margin-bottom:15px}
 .detail-description{color:var(--muted);font-size:14px}
-.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#23243b;color:white;padding:11px 16px;border-radius:12px;z-index:20;transition:.25s}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#23243b;color:#fff;padding:11px 16px;border-radius:12px;z-index:20;transition:.25s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .footer-note{text-align:center;color:var(--muted);font-size:12px;margin:23px 0 0}
-@media(max-width:980px){.workspace{grid-template-columns:minmax(0,1fr) 310px}.products{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:740px){.shell{padding:0 15px 45px}.topbar{height:65px}.hero{padding:27px 23px;min-height:190px}.hero:after{right:-15px;font-size:95px}.workspace{grid-template-columns:1fr}.cart-panel{position:static}.cart-items{max-height:320px}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:21px}.panel{padding:17px}}
-@media(max-width:480px){.hero{display:block}.hero .add-btn{margin-top:18px}.hero:after{right:-9px;top:14px;font-size:80px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:10px}.product-art{height:78px;font-size:36px}.search-row{flex-wrap:wrap}.search-wrap{flex-basis:100%}.search-row select{flex:1}.top-actions .ghost{padding:9px}.qty{gap:4px}}
+@media(max-width:980px){
+  .workspace{grid-template-columns:minmax(0,1fr) 310px}
+  .products{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:740px){
+  .shell{padding:0 15px 45px}
+  .topbar{height:65px}
+  .hero{padding:27px 23px;min-height:190px}
+  .hero:after{right:-15px;font-size:95px}
+  .workspace{grid-template-columns:1fr}
+  .cart-panel{position:static}
+  .cart-items{max-height:320px}
+  .stats{gap:9px}
+  .stat{padding:13px}
+  .stat strong{font-size:21px}
+  .panel{padding:17px}
+}
+@media(max-width:480px){
+  .shell{padding:0 12px 34px}
+  .topbar{height:auto;min-height:64px;padding:10px 0;flex-wrap:wrap;gap:8px}
+  .brand{font-size:17px}
+  .top-actions{width:100%;justify-content:space-between;gap:6px}
+  .top-actions button{min-height:40px;padding:8px 10px}
+  .hero{display:block;padding:24px 18px;min-height:0}
+  .hero .add-btn{margin-top:18px}
+  .hero h1{font-size:29px}
+  .hero:after{right:-9px;top:14px;font-size:80px}
+  .stats{grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+  .stat:last-child{grid-column:1/-1}
+  .stat{padding:12px}
+  .stat strong{font-size:21px}
+  .workspace{grid-template-columns:1fr}
+  .panel{padding:14px;border-radius:16px}
+  .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .product{padding:9px;border-radius:13px}
+  .product-art{height:70px;font-size:36px;margin-bottom:9px}
+  .product h3{font-size:13px}
+  .product-bottom{gap:4px}
+  .price{font-size:13px}
+  .add-small{padding:7px 8px}
+  .buy-links{gap:5px}
+  .buy-links a{font-size:10px;padding:7px 2px}
+  .cart-panel{position:static}
+  .cart-items{max-height:320px}
+  .cart-row{grid-template-columns:36px minmax(0,1fr);gap:8px}
+  .cart-emoji{width:36px;height:36px}
+  .qty{grid-column:2;justify-content:flex-start;margin-top:2px;gap:4px}
+  .search-row{flex-wrap:wrap}
+  .search-wrap{flex-basis:100%}
+  .search-row select{flex:1;max-width:48%}
+  .dialog{padding:18px;border-radius:17px}
+  .footer-note{padding:0 8px}
+}
+@media(max-width:360px){
+  .brand{font-size:15px}
+  .top-actions button{font-size:12px;padding:7px}
+  .hero h1{font-size:26px}
+  .product-bottom{align-items:flex-start;flex-direction:column}
+  .add-small{width:100%}
+  .buy-links a{font-size:9px}
+}
 </style>
 </head>
 <body>
@@ -106,7 +166,7 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     <div class="brand"><span class="brand-mark">🛒</span> Home Shopping</div>
     <div class="top-actions">
       <button class="ghost" id="favoritesOnly" aria-pressed="false">♡ Favorites</button>
-      <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme">🌙</button>
+      <button class="icon-btn" id="themeToggle" title="Toggle color theme" aria-label="Toggle color theme">🌙</button>
     </div>
   </nav>
 
@@ -157,22 +217,34 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 
 <div class="scrim" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
   <div class="dialog">
-    <div class="dialog-head"><h2 id="productModalTitle">Add a product</h2><button class="close" data-close="productModal" aria-label="Close">×</button></div>
+    <div class="dialog-head">
+      <h2 id="productModalTitle">Add a product</h2>
+      <button class="close" data-close="productModal" aria-label="Close">×</button>
+    </div>
     <form id="productForm">
       <label class="field"><span>Product name</span><input id="newName" maxlength="50" required placeholder="e.g. Oat milk"></label>
       <label class="field"><span>Category</span><select id="newCategory"></select></label>
       <label class="field"><span>Price (₹)</span><input id="newPrice" type="number" min="0" step="1" required placeholder="e.g. 120"></label>
       <label class="field"><span>Emoji</span><input id="newIcon" maxlength="8" placeholder="🛍️"></label>
-      <div class="dialog-actions"><button type="button" class="secondary" data-close="productModal">Cancel</button><button class="primary">Save product</button></div>
+      <div class="dialog-actions">
+        <button type="button" class="secondary" data-close="productModal">Cancel</button>
+        <button class="primary">Save product</button>
+      </div>
     </form>
   </div>
 </div>
 
 <div class="scrim" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
   <div class="dialog">
-    <div class="dialog-head"><h2 id="detailTitle">Product details</h2><button class="close" data-close="detailModal" aria-label="Close">×</button></div>
+    <div class="dialog-head">
+      <h2 id="detailTitle">Product details</h2>
+      <button class="close" data-close="detailModal" aria-label="Close">×</button>
+    </div>
     <div id="detailContent"></div>
-    <div class="dialog-actions"><button class="secondary" data-close="detailModal">Close</button><button class="primary" id="detailAdd">＋ Add to list</button></div>
+    <div class="dialog-actions">
+      <button class="secondary" data-close="detailModal">Close</button>
+      <button class="primary" id="detailAdd">＋ Add to list</button>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -185,10 +257,12 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     favorites: "homeShoppingFavorites",
     theme: "homeShoppingTheme"
   };
+
   const categories = [
     ["All","✨"],["Groceries","🥛"],["Fruits","🍎"],["Vegetables","🥕"],
     ["Cleaning","🧹"],["Personal Care","🧴"],["Snacks","🍪"],["Household","🏠"]
   ];
+
   const rawProducts = [
     ["Milk","🥛","Groceries",68],["Bread","🍞","Groceries",45],["Rice","🍚","Groceries",120],
     ["Wheat Flour","🌾","Groceries",58],["Eggs","🥚","Groceries",72],["Cooking Oil","🫗","Groceries",165],
@@ -214,16 +288,23 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     ["Garbage Bags","🗑️","Household",75],["Aluminium Foil","📦","Household",85],
     ["Food Containers","🥡","Household",130],["Paper Towels","🧻","Household",70]
   ];
-  const starterProducts = rawProducts.map((p, i) => ({
-    id: "seed-" + i,
-    name: p[0], icon: p[1], category: p[2], price: p[3],
-    description: `A handy ${p[0].toLowerCase()} pick for your home. Add it to your list and adjust the quantity whenever you like.`,
+
+  const starterProducts = rawProducts.map((product, index) => ({
+    id: "seed-" + index,
+    name: product[0],
+    icon: product[1],
+    category: product[2],
+    price: product[3],
+    description: `A handy ${product[0].toLowerCase()} pick for your home. Add it to your list and adjust the quantity whenever you like.`,
     custom: false
   }));
 
   function readStorage(key, fallback) {
-    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
-    catch { return fallback; }
+    try {
+      return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    } catch {
+      return fallback;
+    }
   }
 
   let products = readStorage(STORAGE.products, null);
@@ -237,7 +318,7 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
   cart = cart.map(item => ({
     ...item,
     quantity: Math.max(1, Number(item.quantity) || 1),
-    price: Number(item.price) || Number(products.find(p => p.name === item.name)?.price) || 0
+    price: Number(item.price) || Number(products.find(product => product.name === item.name)?.price) || 0
   }));
 
   let favorites = readStorage(STORAGE.favorites, []);
@@ -250,11 +331,18 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 
   const $ = id => document.getElementById(id);
   const money = value => new Intl.NumberFormat("en-IN", {
-    style: "currency", currency: "INR", maximumFractionDigits: 0
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0
   }).format(value || 0);
-  const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[char]));
+
+  const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
 
   function save() {
     localStorage.setItem(STORAGE.products, JSON.stringify(products));
@@ -337,7 +425,8 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
   function renderCart() {
     if (!cart.length) {
       $("cart").innerHTML = `
-        <div class="cart-empty"><span class="big">🛒</span>
+        <div class="cart-empty">
+          <span class="big">🛒</span>
           Your list is ready for ideas.<br>Add a product to get started.
         </div>`;
       $("summary").innerHTML = "";
@@ -348,7 +437,8 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     $("cart").innerHTML = cart.map((item, index) => `
       <div class="cart-row">
         <div class="cart-emoji">${escapeHTML(item.icon || "🛍️")}</div>
-        <div><div class="cart-name">${escapeHTML(item.name)}</div>
+        <div>
+          <div class="cart-name">${escapeHTML(item.name)}</div>
           <div class="cart-price">${money(item.price)} each</div>
         </div>
         <div class="qty">
@@ -361,10 +451,12 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     `).join("");
 
     const total = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
+
     $("summary").innerHTML = `
       <div class="summary-line"><span>Subtotal</span><strong>${money(total)}</strong></div>
       <div class="summary-line"><span>Estimated savings</span><strong>—</strong></div>
       <div class="summary-line total"><span>Estimated total</span><span>${money(total)}</span></div>
+      <button class="share-cart" id="shareCart">💬 Share cart on WhatsApp</button>
       <button class="checkout" id="finishShop">✓ Done shopping</button>`;
     updateTotals();
   }
@@ -372,13 +464,22 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
   function addToCart(id) {
     const product = products.find(item => item.id === id);
     if (!product) return;
-    const existing = cart.find(item => item.id === id || (!item.id && item.name === product.name));
 
-    if (existing) existing.quantity++;
-    else cart.push({
-      id: product.id, name: product.name, icon: product.icon,
-      price: product.price, quantity: 1
-    });
+    const existing = cart.find(item =>
+      item.id === id || (!item.id && item.name === product.name)
+    );
+
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        icon: product.icon,
+        price: product.price,
+        quantity: 1
+      });
+    }
 
     save();
     renderCart();
@@ -445,8 +546,8 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 
     const card = event.target.closest(".product");
     if (card) {
-      const name = card.querySelector("h3").textContent;
-      activeDetail = products.find(product => product.name === name);
+      const productName = card.querySelector("h3").textContent;
+      activeDetail = products.find(product => product.name === productName);
       if (!activeDetail) return;
 
       $("detailTitle").textContent = activeDetail.name;
@@ -457,18 +558,17 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
           <strong>${money(activeDetail.price)}</strong>
         </div>
         <p class="detail-description">${escapeHTML(
-          activeDetail.description || `${activeDetail.name} is one of your home shopping essentials.`
+          activeDetail.description ||
+          `${activeDetail.name} is one of your home shopping essentials.`
         )}</p>`;
       openModal("detailModal");
     }
   });
 
   $("favoritesOnly").onclick = () => {
-    const button = $("favoritesOnly");
-    const showingFavorites = button.getAttribute("aria-pressed") !== "true";
-    button.setAttribute("aria-pressed", showingFavorites);
-    button.classList.toggle("active", showingFavorites);
-    favoritesOnly = showingFavorites;
+    favoritesOnly = !favoritesOnly;
+    $("favoritesOnly").classList.toggle("active", favoritesOnly);
+    $("favoritesOnly").setAttribute("aria-pressed", favoritesOnly);
     category = "All";
     renderCategories();
     renderProducts();
@@ -501,6 +601,19 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
       renderCart();
       notify("List cleared. Happy shopping! ✨");
     }
+
+    if (event.target.id === "shareCart") {
+      const total = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
+      const lines = cart.map(item =>
+        `• ${item.name} × ${item.quantity} — ${money(item.quantity * item.price)}`
+      ).join("\n");
+      const message = `My shopping list:\n${lines}\n\nEstimated total: ${money(total)}`;
+      window.open(
+        "https://wa.me/?text=" + encodeURIComponent(message),
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
   });
 
   $("detailAdd").onclick = () => {
@@ -510,6 +623,7 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
 
   $("productForm").addEventListener("submit", event => {
     event.preventDefault();
+
     const name = $("newName").value.trim();
     const categoryName = $("newCategory").value;
     const price = Number($("newPrice").value);
@@ -532,8 +646,8 @@ select{border:1px solid var(--line);border-radius:12px;background:var(--surface2
     closeModal("productModal");
     category = "All";
     favoritesOnly = false;
-    $("favoritesOnly").setAttribute("aria-pressed", "false");
     $("favoritesOnly").classList.remove("active");
+    $("favoritesOnly").setAttribute("aria-pressed", "false");
     renderCategories();
     renderProducts();
     notify(`${name} saved to your products ✨`);
