@@ -3,320 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Shopping Pro</title>
-    <!-- Google Fonts for Themes -->
+    <title>Home Shopping</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        /* Base / Root Variable Setups */
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #f4f6fc;
+            --header-bg: #7c3bed;
+            --header-text: #ffffff;
             --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-secondary: #64748b;
-            --accent-color: #2563eb;
-            --border-color: #e2e8f0;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --btn-add-bg: #2563eb;
+            --btn-add-text: #ffffff;
+            --chip-active-bg: #4f46e5;
+            --chip-active-text: #ffffff;
+            --chip-bg: #ffffff;
+            --border-radius: 20px;
+            --card-radius: 24px;
             --font-family: 'Inter', sans-serif;
-            --border-radius: 12px;
-            --app-header-bg: #2563eb;
-            --app-header-text: #ffffff;
-            --accent-hover: #1d4ed8;
+            --border-style: none;
+            --box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
         }
 
-        /* --- LIGHT THEME (Default) --- */
-        [data-theme="light"] {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --text-secondary: #64748b;
-            --accent-color: #2563eb;
-            --border-color: #e2e8f0;
-            --app-header-bg: #2563eb;
-            --app-header-text: #ffffff;
-        }
-
-        /* --- DARK THEME --- */
         [data-theme="dark"] {
             --bg-color: #0f172a;
+            --header-bg: #1e1b4b;
+            --header-text: #f8fafc;
             --card-bg: #1e293b;
             --text-color: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #38bdf8;
-            --border-color: #334155;
-            --app-header-bg: #1e293b;
-            --app-header-text: #38bdf8;
-            --accent-hover: #0ea5e9;
+            --text-muted: #94a3b8;
+            --btn-add-bg: #38bdf8;
+            --btn-add-text: #0f172a;
+            --chip-active-bg: #38bdf8;
+            --chip-active-text: #0f172a;
+            --chip-bg: #334155;
+            --box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
         }
 
-        /* --- HARRY POTTER THEME --- */
         [data-theme="harry-potter"] {
             --bg-color: #1a0f1a;
+            --header-bg: #740001;
+            --header-text: #f3e5ab;
             --card-bg: #2d192d;
             --text-color: #f3e5ab;
-            --text-secondary: #d4af37;
-            --accent-color: #740001;
-            --border-color: #d4af37;
+            --text-muted: #d4af37;
+            --btn-add-bg: #d4af37;
+            --btn-add-text: #740001;
+            --chip-active-bg: #d4af37;
+            --chip-active-text: #740001;
+            --chip-bg: #3d223d;
             --font-family: 'Cinzel', serif;
             --border-radius: 4px;
-            --app-header-bg: #740001;
-            --app-header-text: #ae0001;
-            --accent-hover: #ae0001;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
-        }
-        [data-theme="harry-potter"] .btn-primary {
-            color: #f3e5ab;
-            border: 1px solid var(--border-color);
+            --card-radius: 6px;
+            --border-style: 1px solid #d4af37;
+            --box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
         }
 
-        /* --- MINECRAFT THEME --- */
         [data-theme="minecraft"] {
-            --bg-color: #4c3117; /* Dirt background color */
+            --bg-color: #4c3117;
+            --header-bg: #5b8731;
+            --header-text: #ffffff;
             --card-bg: #312113;
             --text-color: #ffffff;
-            --text-secondary: #aaaaaa;
-            --accent-color: #5b8731; /* Grass green */
-            --border-color: #22150c;
+            --text-muted: #aaaaaa;
+            --btn-add-bg: #86b849;
+            --btn-add-text: #ffffff;
+            --chip-active-bg: #86b849;
+            --chip-active-text: #ffffff;
+            --chip-bg: #4a331e;
             --font-family: 'Press Start 2P', monospace;
             --border-radius: 0px;
-            --app-header-bg: #5b8731;
-            --app-header-text: #ffffff;
-            --accent-hover: #4a6f28;
-        }
-        [data-theme="minecraft"] input, 
-        [data-theme="minecraft"] button, 
-        [data-theme="minecraft"] select {
-            image-rendering: pixelated;
-            font-size: 0.8rem;
+            --card-radius: 0px;
+            --border-style: 3px solid #22150c;
+            --box-shadow: none;
         }
 
-        /* --- CRICKET THEME --- */
         [data-theme="cricket"] {
-            --bg-color: #14532d; /* Stadium Green */
+            --bg-color: #14532d;
+            --header-bg: #ffffff;
+            --header-text: #14532d;
             --card-bg: #166534;
             --text-color: #ffffff;
-            --text-secondary: #fef08a; /* Umpire Yellow */
-            --accent-color: #b45309; /* Pitch Turf Brown */
-            --border-color: #ffffff;
+            --text-muted: #fef08a;
+            --btn-add-bg: #b45309;
+            --btn-add-text: #ffffff;
+            --chip-active-bg: #b45309;
+            --chip-active-text: #ffffff;
+            --chip-bg: #15803d;
             --font-family: 'Teko', sans-serif;
-            --border-radius: 20px;
-            --app-header-bg: #ffffff;
-            --app-header-text: #14532d;
-            --accent-hover: #9a3412;
-        }
-        [data-theme="cricket"] .app-header h1 {
-            text-transform: uppercase;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
+            --border-radius: 30px;
+            --card-radius: 30px;
+            --border-style: 2px solid #ffffff;
+            --box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
-        /* Global Structural Styles */
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: var(--font-family);
-            transition: all 0.3s ease;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+        .header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            border-bottom: var(--border-style);
         }
 
-        /* Theme Selector Bar */
-        .theme-selector-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--card-bg);
-            padding: 12px 20px;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 15px;
-            border-radius: var(--border-radius);
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 2.2rem;
+            font-weight: 700;
         }
 
-        .theme-label {
-            font-weight: 600;
-            color: var(--text-secondary);
+        [data-theme="minecraft"] .header h1 { font-size: 1.4rem; }
+        [data-theme="cricket"] .header h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        .header p {
+            margin: 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
         .theme-select {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-family: var(--font-family);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.2);
+            color: inherit;
+            font-family: inherit;
             cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        [data-theme="cricket"] .theme-select {
+            border: 2px solid #14532d;
+            background: #ffffff;
+            color: #14532d;
         }
 
-        /* Header UI */
-        .app-header {
-            background-color: var(--app-header-bg);
-            color: var(--app-header-text);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            text-align: center;
-            position: relative;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        .theme-select option {
+            background-color: #ffffff;
+            color: #1f2937;
         }
 
-        .app-header h1 {
-            margin: 0;
-            font-size: 1.8rem;
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .search-bar-container {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
+            gap: 15px;
+            margin-top: -65px;
+            margin-bottom: 40px;
+            z-index: 10;
+            position: relative;
         }
 
-        /* Utility elements */
-        .search-box {
+        .search-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            max-width: 600px;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+        }
+
+        .search-input {
             width: 100%;
-            padding: 12px;
+            padding: 16px 20px 16px 45px;
             box-sizing: border-box;
-            border: 1px solid var(--border-color);
+            border: var(--border-style);
             border-radius: var(--border-radius);
-            background: var(--card-bg);
-            color: var(--text-color);
-            margin-bottom: 20px;
-            font-family: var(--font-family);
-        }
-
-        /* Category chips */
-        .categories-grid {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .category-chip {
-            padding: 8px 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            white-space: nowrap;
-            cursor: pointer;
+            font-size: 1rem;
+            background-color: var(--card-bg);
             color: var(--text-color);
             font-family: var(--font-family);
+            outline: none;
         }
 
-        .category-chip.active {
-            background: var(--accent-color);
-            color: white;
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
-        /* Dynamic Item Panels */
-        .panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+        .btn-add-item {
+            padding: 16px 28px;
+            background-color: var(--btn-add-bg);
+            color: var(--btn-add-text);
+            border: var(--border-style);
             border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .panel-title {
-            margin-top: 0;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .shopping-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .shopping-list-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Input actions */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--text-secondary);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-family: var(--font-family);
-        }
-
-        .btn {
-            padding: 10px 16px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
             font-weight: 600;
+            cursor: pointer;
             font-family: var(--font-family);
+            box-shadow: var(--box-shadow);
         }
 
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-        }
-
-        .btn-clear {
-            background: transparent;
-            color: #ef4444;
-            border: 1px solid #ef4444;
-            padding: 4px 8px;
+        [data-theme="minecraft"] .search-input,
+        [data-theme="minecraft"] .btn-add-item {
             font-size: 0.8rem;
         }
-    </style>
-</head>
-<body data-theme="light">
 
-    <div class="container">
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .categories-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+        }
+
+        .category-card {
+            background-color: var(--chip-bg);
+            border: var(--border-style);
+            border-radius: var(--card-radius);
+            min-width: 90px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-card.active {
+            background-color: var(--chip-active-bg);
+            color: var(--chip-active-text);
+        }
+
+        .category-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .category-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
         
-        <!-- Theme Controls Selector -->
-        <div class="theme-selector-container">
-            <span class="theme-label">✨ Visual Display Theme:</span>
-            <select class="theme-select" id="themeSelect" onchange="changeTheme(this.value)">
-                <option value="light">☀️ Light Clean Mode</option>
-                <option value="dark">🌙 Midnight Dark Mode</option>
-                <option value="harry-potter">🧙‍♂️ Harry Potter (Gryffindor)</option>
-                <option value="minecraft">⛏️ Minecraft Overworld</option>
-                <option value="cricket">🏏 Cricket Stadium Turf</option>
-            </select>
-        </div>
+        [data-theme="minecraft"] .category-name { font-size: 0.6rem; }
 
-        <!-- Header Panel -->
-        <div class="app-header">
-            <h1 id="appTitle">🛒 Home Shopping Pro</h1>
-            <p style="margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.8;">Find it. Add it. Shop it.</p>
-        </div>
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-        <!-- Search Feature -->
+        .product-card {
+            background-color: var(--card-bg);
+            border: var(--border-style);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+
+        .product-category {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .btn-add-list {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(79, 70, 229, 0.08);
+            color: #4f46e5;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-family);
+            transition: all 0.2s;
+        }
+
+        [data-theme="dark"] .btn-add-list {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        [data-theme="harry-potter"] .btn-add-list {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            border-radius: 4px;
+        }
+
+        [data-theme="minecraft"] .btn-add-list {
+            background-color: #4a331e;
+            color: #ffffff;
+            border: 2px solid #22150c;
+            border-radius: 0px;
+            font-size: 0.65rem;
+        }
+
+        [data-theme="cricket"] .btn-add-list {
+
+        
