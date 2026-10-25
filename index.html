@@ -6,337 +6,330 @@
     <title>Home Shopping</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
+        /* --- CORE CONFIGURATION (Light Mode Default) --- */
         :root {
-            --bg-color: #f4f6fc;
-            --header-bg: #7c3bed;
+            --bg-color: #f3f4f6;
+            --header-bg: #8b5cf6;
             --header-text: #ffffff;
+            --container-bg: transparent;
             --card-bg: #ffffff;
-            --text-color: #1f2937;
-            --text-muted: #6b7280;
-            --btn-add-bg: #2563eb;
+            --text-main: #1f2937;
+            --text-sub: #9ca3af;
+            --btn-add-bg: #3b82f6;
             --btn-add-text: #ffffff;
-            --chip-active-bg: #4f46e5;
+            --chip-active-bg: #3b82f6;
             --chip-active-text: #ffffff;
             --chip-bg: #ffffff;
-            --border-radius: 20px;
-            --card-radius: 24px;
+            --btn-action-bg: #eff6ff;
+            --btn-action-text: #2563eb;
             --font-family: 'Inter', sans-serif;
-            --border-style: none;
-            --box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            --radius-main: 16px;
+            --radius-card: 20px;
+            --border-element: none;
+            --shadow-style: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
+        /* --- DARK THEME ADJUSTMENTS --- */
         [data-theme="dark"] {
             --bg-color: #0f172a;
             --header-bg: #1e1b4b;
             --header-text: #f8fafc;
             --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
+            --text-main: #f8fafc;
+            --text-sub: #64748b;
             --btn-add-bg: #38bdf8;
             --btn-add-text: #0f172a;
             --chip-active-bg: #38bdf8;
             --chip-active-text: #0f172a;
             --chip-bg: #334155;
-            --box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+            --btn-action-bg: rgba(56, 189, 248, 0.1);
+            --btn-action-text: #38bdf8;
+            --shadow-style: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
+        /* --- HARRY POTTER THEME ADJUSTMENTS --- */
         [data-theme="harry-potter"] {
-            --bg-color: #1a0f1a;
+            --bg-color: #120812;
             --header-bg: #740001;
             --header-text: #f3e5ab;
-            --card-bg: #2d192d;
-            --text-color: #f3e5ab;
-            --text-muted: #d4af37;
+            --card-bg: #2a142a;
+            --text-main: #f3e5ab;
+            --text-sub: #d4af37;
             --btn-add-bg: #d4af37;
             --btn-add-text: #740001;
             --chip-active-bg: #d4af37;
             --chip-active-text: #740001;
-            --chip-bg: #3d223d;
+            --chip-bg: #3d1f3d;
+            --btn-action-bg: rgba(212, 175, 55, 0.15);
+            --btn-action-text: #d4af37;
             --font-family: 'Cinzel', serif;
-            --border-radius: 4px;
-            --card-radius: 6px;
-            --border-style: 1px solid #d4af37;
-            --box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+            --radius-main: 4px;
+            --radius-card: 6px;
+            --border-element: 1px solid #d4af37;
         }
 
+        /* --- MINECRAFT THEME ADJUSTMENTS --- */
         [data-theme="minecraft"] {
-            --bg-color: #4c3117;
-            --header-bg: #5b8731;
+            --bg-color: #5c3e21;
+            --header-bg: #4a7227;
             --header-text: #ffffff;
-            --card-bg: #312113;
-            --text-color: #ffffff;
-            --text-muted: #aaaaaa;
-            --btn-add-bg: #86b849;
+            --card-bg: #3c2a1a;
+            --text-main: #ffffff;
+            --text-sub: #868686;
+            --btn-add-bg: #6da239;
             --btn-add-text: #ffffff;
-            --chip-active-bg: #86b849;
+            --chip-active-bg: #6da239;
             --chip-active-text: #ffffff;
-            --chip-bg: #4a331e;
+            --chip-bg: #2a1d12;
+            --btn-action-bg: #4d331e;
+            --btn-action-text: #ffffff;
             --font-family: 'Press Start 2P', monospace;
-            --border-radius: 0px;
-            --card-radius: 0px;
-            --border-style: 3px solid #22150c;
-            --box-shadow: none;
+            --radius-main: 0px;
+            --radius-card: 0px;
+            --border-element: 3px solid #1d120a;
+            --shadow-style: none;
         }
 
+        /* --- CRICKET THEME ADJUSTMENTS --- */
         [data-theme="cricket"] {
-            --bg-color: #14532d;
+            --bg-color: #166534;
             --header-bg: #ffffff;
-            --header-text: #14532d;
-            --card-bg: #166534;
-            --text-color: #ffffff;
-            --text-muted: #fef08a;
-            --btn-add-bg: #b45309;
+            --header-text: #166534;
+            --card-bg: #15803d;
+            --text-main: #ffffff;
+            --text-sub: #fef08a;
+            --btn-add-bg: #c2410c;
             --btn-add-text: #ffffff;
-            --chip-active-bg: #b45309;
+            --chip-active-bg: #c2410c;
             --chip-active-text: #ffffff;
-            --chip-bg: #15803d;
+            --chip-bg: #16a34a;
+            --btn-action-bg: rgba(254, 240, 138, 0.2);
+            --btn-action-text: #fef08a;
             --font-family: 'Teko', sans-serif;
-            --border-radius: 30px;
-            --card-radius: 30px;
-            --border-style: 2px solid #ffffff;
-            --box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            --radius-main: 24px;
+            --radius-card: 28px;
+            --border-element: 2px solid #ffffff;
         }
 
+        /* --- STRUCTURE STYLING (Matches Screenshot 1 Exactly) --- */
         body {
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-main);
             font-family: var(--font-family);
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.2s, color 0.2s;
         }
 
-        .header {
+        .top-banner {
             background-color: var(--header-bg);
             color: var(--header-text);
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px 90px 20px;
             position: relative;
-            border-bottom: var(--border-style);
+            border-bottom: var(--border-element);
         }
 
-        .header h1 {
-            margin: 0 0 8px 0;
-            font-size: 2.2rem;
+        .top-banner h1 {
+            margin: 0 0 6px 0;
+            font-size: 2.4rem;
             font-weight: 700;
         }
 
-        [data-theme="minecraft"] .header h1 { font-size: 1.4rem; }
-        [data-theme="cricket"] .header h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 2px; }
+        [data-theme="minecraft"] .top-banner h1 { font-size: 1.3rem; }
+        [data-theme="cricket"] .top-banner h1 { font-size: 3.8rem; text-transform: uppercase; }
 
-        .header p {
+        .top-banner p {
             margin: 0;
             font-size: 1rem;
-            opacity: 0.9;
+            opacity: 0.85;
         }
 
-        .theme-dropdown {
+        .config-menu {
             position: absolute;
             top: 20px;
-            right: 20px;
+            right: 25px;
         }
 
-        .theme-select {
-            padding: 8px 14px;
+        .selector-box {
+            padding: 8px 12px;
             border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2);
             color: inherit;
             font-family: inherit;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        [data-theme="cricket"] .theme-select {
-            border: 2px solid #14532d;
-            background: #ffffff;
-            color: #14532d;
+            outline: none;
         }
 
-        .theme-select option {
+        [data-theme="cricket"] .selector-box {
+            background: #ffffff;
+            color: #166534;
+            border: 2px solid #166534;
+        }
+
+        .selector-box option {
             background-color: #ffffff;
             color: #1f2937;
         }
 
-        .main-content {
-            max-width: 1200px;
+        .app-body {
+            max-width: 1050px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 0 20px 50px 20px;
         }
 
-        .search-bar-container {
+        .action-row {
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 15px;
-            margin-top: -65px;
-            margin-bottom: 40px;
-            z-index: 10;
+            margin-top: -30px;
+            margin-bottom: 35px;
             position: relative;
+            z-index: 5;
         }
 
-        .search-input-wrapper {
+        .input-container {
             position: relative;
             flex-grow: 1;
-            max-width: 600px;
-            box-shadow: var(--box-shadow);
-            border-radius: var(--border-radius);
         }
 
-        .search-input {
+        .main-search {
             width: 100%;
-            padding: 16px 20px 16px 45px;
+            padding: 18px 20px 18px 50px;
             box-sizing: border-box;
-            border: var(--border-style);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
+            border: var(--border-element);
+            border-radius: var(--radius-main);
             background-color: var(--card-bg);
-            color: var(--text-color);
+            color: var(--text-main);
             font-family: var(--font-family);
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-style);
             outline: none;
         }
 
-        .search-icon {
+        .prefix-icon {
             position: absolute;
-            left: 18px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-muted);
+            color: var(--text-sub);
+            font-size: 1.1rem;
         }
 
-        .btn-add-item {
-            padding: 16px 28px;
+        .action-btn {
+            padding: 18px 30px;
             background-color: var(--btn-add-bg);
             color: var(--btn-add-text);
-            border: var(--border-style);
-            border-radius: var(--border-radius);
+            border: var(--border-element);
+            border-radius: var(--radius-main);
             font-weight: 600;
-            cursor: pointer;
             font-family: var(--font-family);
-            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            box-shadow: var(--shadow-style);
+            white-space: nowrap;
         }
 
-        [data-theme="minecraft"] .search-input,
-        [data-theme="minecraft"] .btn-add-item {
-            font-size: 0.8rem;
+        [data-theme="minecraft"] .main-search,
+        [data-theme="minecraft"] .action-btn {
+            font-size: 0.75rem;
         }
 
-        .section-title {
-            font-size: 1.4rem;
+        .layout-title {
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin: 25px 0 15px 0;
         }
 
-        .categories-container {
+        .horizontal-scroller {
             display: flex;
             gap: 12px;
             overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 40px;
+            padding-bottom: 8px;
+            margin-bottom: 30px;
         }
 
-        .category-card {
+        .category-element {
             background-color: var(--chip-bg);
-            border: var(--border-style);
-            border-radius: var(--card-radius);
-            min-width: 90px;
-            padding: 16px;
+            border: var(--border-element);
+            border-radius: var(--radius-main);
+            min-width: 80px;
+            padding: 14px;
             text-align: center;
             cursor: pointer;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.2s;
+            box-shadow: var(--shadow-style);
         }
 
-        .category-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .category-card.active {
+        .category-element.active {
             background-color: var(--chip-active-bg);
             color: var(--chip-active-text);
         }
 
-        .category-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+        .element-ico {
+            font-size: 1.6rem;
             display: block;
+            margin-bottom: 6px;
         }
 
-        .category-name {
-            font-size: 0.85rem;
+        .element-lbl {
+            font-size: 0.8rem;
             font-weight: 500;
         }
-        
-        [data-theme="minecraft"] .category-name { font-size: 0.6rem; }
 
-        .items-grid {
+        [data-theme="minecraft"] .element-lbl { font-size: 0.55rem; }
+
+        .items-showcase {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
         }
 
-        .product-card {
+        .item-box {
             background-color: var(--card-bg);
-            border: var(--border-style);
-            border-radius: var(--card-radius);
-            padding: 24px;
+            border: var(--border-element);
+            border-radius: var(--radius-card);
+            padding: 20px;
             text-align: center;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            box-shadow: var(--shadow-style);
         }
 
-        .product-icon {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
+        .item-ico {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
         }
 
-        .product-name {
-            font-size: 1.1rem;
+        .item-name {
+            font-size: 1rem;
             font-weight: 600;
-            margin: 0 0 4px 0;
+            margin: 0 0 2px 0;
         }
 
-        .product-category {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
+        .item-tag {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 16px;
         }
 
-        .btn-add-list {
+        .btn-trigger {
             width: 100%;
             padding: 10px;
-            background-color: rgba(79, 70, 229, 0.08);
-            color: #4f46e5;
-            border: none;
-            border-radius: 12px;
+            background-color: var(--btn-action-bg);
+            color: var(--btn-action-text);
+            border: var(--border-element);
+            border-radius: 10px;
             font-weight: 600;
-            cursor: pointer;
             font-family: var(--font-family);
-            transition: all 0.2s;
+            cursor: pointer;
         }
-
-        [data-theme="dark"] .btn-add-list {
-            background-color: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
+        
+        [data-theme="minecraft"] .btn-trigger {
+            border-radius: 0;
+            font-size: 0.6rem;
         }
-
-        [data-theme="harry-potter"] .btn-add-list {
-            background-color: rgba(212, 175, 55, 0.15);
-            color: #d4af37;
-            border: 1px solid #d4af37;
-            border-radius: 4px;
-        }
-
-        [data-theme="minecraft"] .btn-add-list {
-            background-color: #4a331e;
-            color: #ffffff;
-            border: 2px solid #22150c;
-            border-radius: 0px;
-            font-size: 0.65rem;
-        }
-
-        [data-theme="cricket"] .btn-add-list {
+        
+        [data-theme="cricket"] .btn-trigger {
+            border-radius: 16px;
+            font-size: 1.05rem;
 
         
