@@ -2,201 +2,300 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A simple home shopping list: browse items, add your own, and tick them off.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="A themed home shopping list: browse items, add your own, and tick them off. Harry Potter, Minecraft and Cricket themes with mini games.">
     <title>Home Shopping</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CORE CONFIGURATION (Light Mode Default) --- */
+        /* =====================================================================
+           THEME TOKENS
+           ===================================================================== */
         :root {
-            --bg-color: #f3f4f6;
-            --header-bg: #7c3aed;
+            --page-bg: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            --hero-bg: linear-gradient(135deg, #7c3aed 0%, #2563eb 55%, #06b6d4 100%);
             --header-text: #ffffff;
             --card-bg: #ffffff;
+            --card-edge: 1px solid rgba(15, 23, 42, 0.06);
             --text-main: #1f2937;
-            --text-sub: #6b7280;
-            --btn-add-bg: #2563eb;
+            --text-sub: #5b6472;
+            --btn-add-bg: linear-gradient(135deg, #2563eb, #7c3aed);
             --btn-add-text: #ffffff;
+            --chip-bg: #ffffff;
             --chip-active-bg: #2563eb;
             --chip-active-text: #ffffff;
-            --chip-bg: #ffffff;
             --btn-action-bg: #eff6ff;
             --btn-action-text: #1d4ed8;
+            --art-bg: radial-gradient(circle at 30% 25%, #ffffff 0%, #e0e7ff 75%);
             --danger: #dc2626;
             --focus: #f59e0b;
+            --hp-good: #22c55e;
+            --hp-bad: #ef4444;
             --font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --font-display: var(--font-family);
             --radius-main: 16px;
             --radius-card: 20px;
             --border-element: 1px solid transparent;
-            --shadow-style: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
+            --shadow-style: 0 4px 10px -2px rgba(15, 23, 42, 0.08);
+            --shadow-lift: 0 16px 30px -12px rgba(37, 99, 235, 0.4);
             --scale: 1;
         }
 
         [data-theme="dark"] {
-            --bg-color: #0f172a;
-            --header-bg: #1e1b4b;
+            --page-bg: radial-gradient(ellipse at 50% -20%, #1e2a5a 0%, transparent 60%), #0b1020;
+            --hero-bg: radial-gradient(circle at 20% 10%, #4338ca 0%, transparent 45%), radial-gradient(circle at 85% 30%, #0ea5e9 0%, transparent 40%), linear-gradient(180deg, #131a3a, #0f1330);
             --header-text: #f8fafc;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --btn-add-bg: #38bdf8;
-            --btn-add-text: #0f172a;
+            --card-bg: linear-gradient(160deg, #1e293b, #172033);
+            --card-edge: 1px solid rgba(148, 163, 184, 0.18);
+            --text-main: #f1f5f9;
+            --text-sub: #a3b2c8;
+            --btn-add-bg: linear-gradient(135deg, #38bdf8, #818cf8);
+            --btn-add-text: #0b1020;
+            --chip-bg: #1e293b;
             --chip-active-bg: #38bdf8;
-            --chip-active-text: #0f172a;
-            --chip-bg: #334155;
+            --chip-active-text: #0b1020;
             --btn-action-bg: rgba(56, 189, 248, 0.12);
             --btn-action-text: #7dd3fc;
+            --art-bg: radial-gradient(circle at 30% 25%, #334155 0%, #1b263b 75%);
             --danger: #f87171;
-            --shadow-style: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --shadow-style: 0 6px 16px rgba(0, 0, 0, 0.3);
+            --shadow-lift: 0 16px 34px -10px rgba(56, 189, 248, 0.35);
         }
 
         [data-theme="harry-potter"] {
-            --bg-color: #120812;
-            --header-bg: #740001;
+            --page-bg: radial-gradient(ellipse at 50% -10%, #3b1a4a 0%, transparent 60%), linear-gradient(180deg, #120812 0%, #1c0f1f 100%);
+            --hero-bg: linear-gradient(180deg, #06031a 0%, #170d38 52%, #4a0a14 100%);
             --header-text: #f3e5ab;
-            --card-bg: #2a142a;
-            --text-main: #f3e5ab;
-            --text-sub: #d4af37;
-            --btn-add-bg: #d4af37;
-            --btn-add-text: #740001;
-            --chip-active-bg: #d4af37;
-            --chip-active-text: #740001;
+            --card-bg: linear-gradient(160deg, #351b35, #241024);
+            --card-edge: 1px solid rgba(212, 175, 55, 0.55);
+            --text-main: #f6ecc0;
+            --text-sub: #e0bf55;
+            --btn-add-bg: linear-gradient(180deg, #f3d673, #b8902a);
+            --btn-add-text: #3b0000;
             --chip-bg: #3d1f3d;
-            --btn-action-bg: rgba(212, 175, 55, 0.15);
-            --btn-action-text: #e6c14f;
-            --danger: #ff8a8a;
+            --chip-active-bg: linear-gradient(180deg, #f3d673, #b8902a);
+            --chip-active-text: #3b0000;
+            --btn-action-bg: rgba(212, 175, 55, 0.16);
+            --btn-action-text: #f0cf62;
+            --art-bg: radial-gradient(circle at 30% 25%, #5d2f5d 0%, #2a142a 78%);
+            --danger: #ff9a9a;
             --font-family: 'Cinzel', Georgia, serif;
-            --radius-main: 4px;
-            --radius-card: 6px;
-            --border-element: 1px solid #d4af37;
+            --radius-main: 6px;
+            --radius-card: 8px;
+            --border-element: 1px solid rgba(212, 175, 55, 0.7);
+            --shadow-style: 0 6px 18px rgba(0, 0, 0, 0.45);
+            --shadow-lift: 0 0 0 1px #d4af37, 0 14px 34px -8px rgba(212, 175, 55, 0.45);
         }
 
         [data-theme="minecraft"] {
-            --bg-color: #5c3e21;
-            --header-bg: #4a7227;
+            --page-bg:
+                linear-gradient(45deg, rgba(0,0,0,.09) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.09) 75%) 0 0 / 32px 32px,
+                linear-gradient(45deg, rgba(0,0,0,.09) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.09) 75%) 16px 16px / 32px 32px,
+                #6b4a2b;
+            --hero-bg: linear-gradient(180deg, #5d9bff 0%, #9cc7ff 70%, #c9e2ff 100%);
             --header-text: #ffffff;
-            --card-bg: #3c2a1a;
+            --card-bg: #4a4a4a;
+            --card-edge: 4px solid #1d120a;
             --text-main: #ffffff;
-            --text-sub: #c4c4c4;
-            --btn-add-bg: #6da239;
+            --text-sub: #d6d6d6;
+            --btn-add-bg: #5c9a2e;
             --btn-add-text: #ffffff;
-            --chip-active-bg: #6da239;
+            --chip-bg: #3a3a3a;
+            --chip-active-bg: #5c9a2e;
             --chip-active-text: #ffffff;
-            --chip-bg: #2a1d12;
-            --btn-action-bg: #4d331e;
+            --btn-action-bg: #6a6a6a;
             --btn-action-text: #ffffff;
-            --danger: #ff9b8a;
+            --art-bg: linear-gradient(135deg, #8a8a8a, #5e5e5e);
+            --danger: #ffb4a6;
             --font-family: 'Press Start 2P', 'Courier New', monospace;
+            --font-display: var(--font-family);
             --radius-main: 0px;
             --radius-card: 0px;
             --border-element: 3px solid #1d120a;
-            --shadow-style: none;
+            --shadow-style: inset -4px -4px 0 rgba(0,0,0,.35), inset 4px 4px 0 rgba(255,255,255,.18);
+            --shadow-lift: inset -4px -4px 0 rgba(0,0,0,.35), inset 4px 4px 0 rgba(255,255,255,.28), 0 6px 0 #1d120a;
             --scale: 0.62;
         }
 
         [data-theme="cricket"] {
-            --bg-color: #166534;
-            --header-bg: #ffffff;
-            --header-text: #166534;
-            --card-bg: #15803d;
+            --page-bg: repeating-linear-gradient(90deg, #14532d 0 70px, #166534 70px 140px);
+            --hero-bg: linear-gradient(180deg, #06200f 0%, #0f4a25 70%, #166534 100%);
+            --header-text: #ffffff;
+            --card-bg: linear-gradient(160deg, #1f8a47, #15803d);
+            --card-edge: 2px solid rgba(255, 255, 255, 0.85);
             --text-main: #ffffff;
             --text-sub: #fef9c3;
-            --btn-add-bg: #c2410c;
+            --btn-add-bg: radial-gradient(circle at 30% 30%, #ef4444, #991b1b 75%);
             --btn-add-text: #ffffff;
-            --chip-active-bg: #c2410c;
-            --chip-active-text: #ffffff;
             --chip-bg: #14532d;
-            --btn-action-bg: rgba(254, 240, 138, 0.2);
+            --chip-active-bg: radial-gradient(circle at 30% 30%, #ef4444, #991b1b 75%);
+            --chip-active-text: #ffffff;
+            --btn-action-bg: rgba(254, 240, 138, 0.22);
             --btn-action-text: #fef08a;
+            --art-bg: radial-gradient(circle at 30% 25%, #4ade80 0%, #166534 80%);
             --danger: #fecaca;
             --font-family: 'Teko', 'Arial Narrow', sans-serif;
             --radius-main: 24px;
             --radius-card: 28px;
             --border-element: 2px solid #ffffff;
+            --shadow-style: 0 6px 14px rgba(0, 0, 0, 0.3);
+            --shadow-lift: 0 16px 30px -10px rgba(0, 0, 0, 0.55);
             --scale: 1.2;
         }
 
-        /* --- BASE --- */
+        /* =====================================================================
+           BASE
+           ===================================================================== */
         *, *::before, *::after { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+        html { -webkit-text-size-adjust: 100%; }
 
         body {
             margin: 0;
-            background-color: var(--bg-color);
+            min-height: 100vh;
+            background: var(--page-bg);
+            background-attachment: fixed;
             color: var(--text-main);
             font-family: var(--font-family);
             font-size: calc(1rem * var(--scale));
-            line-height: 1.4;
+            line-height: 1.45;
+            overflow-x: hidden;
             transition: background-color 0.2s, color 0.2s;
         }
 
         button, input, select { font: inherit; color: inherit; }
-        button { cursor: pointer; }
-
-        :focus-visible {
-            outline: 3px solid var(--focus);
-            outline-offset: 2px;
-        }
+        button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
         .sr-only {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
             overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
         }
 
-        /* --- HEADER --- */
+        h1, h2, h3 { font-family: var(--font-display); }
+
+        @keyframes rise { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+        @keyframes drift { from { transform: translateX(-120px); } to { transform: translateX(calc(100vw + 120px)); } }
+        @keyframes flicker { 0%, 100% { filter: brightness(1); } 40% { filter: brightness(1.35); } 70% { filter: brightness(0.9); } }
+        @keyframes roll { from { transform: translateX(-60px) rotate(0); } to { transform: translateX(calc(100vw + 60px)) rotate(1080deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+        /* =====================================================================
+           HEADER
+           ===================================================================== */
         .top-banner {
-            background-color: var(--header-bg);
+            position: relative;
+            overflow: hidden;
+            background: var(--hero-bg);
             color: var(--header-text);
             text-align: center;
-            padding: 56px 20px 90px;
-            position: relative;
+            padding: clamp(48px, 8vw, 76px) 20px clamp(84px, 12vw, 112px);
             border-bottom: var(--border-element);
         }
 
+        .banner-deco, .banner-fx { position: absolute; inset: 0; pointer-events: none; }
+        .banner-fx { overflow: hidden; }
+        .banner-inner { position: relative; z-index: 2; }
+
+        .brand-ico {
+            font-size: clamp(2.2rem, 6vw, 3.2rem);
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+            animation: float 4s ease-in-out infinite;
+        }
+
         .top-banner h1 {
-            margin: 0 0 6px;
-            font-size: calc(2.3rem * var(--scale));
+            margin: 4px 0 6px;
+            font-size: calc(clamp(1.9rem, 5vw, 2.8rem) * var(--scale));
             font-weight: 700;
             line-height: 1.15;
+            text-shadow: 0 3px 14px rgba(0, 0, 0, 0.35);
         }
 
-        [data-theme="cricket"] .top-banner h1 { text-transform: uppercase; letter-spacing: 0.04em; }
+        .top-banner p { margin: 0 auto; max-width: 34em; font-size: calc(1rem * var(--scale)); opacity: 0.92; }
 
-        .top-banner p { margin: 0; font-size: calc(1rem * var(--scale)); opacity: 0.9; }
-
-        .config-menu { position: absolute; top: 16px; right: 20px; }
+        .config-menu { position: absolute; top: 14px; right: 16px; z-index: 5; }
 
         .selector-box {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            background: rgba(0, 0, 0, 0.25);
+            padding: 9px 12px;
+            min-height: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            background: rgba(0, 0, 0, 0.35);
             color: #fff;
             font-size: calc(0.85rem * var(--scale));
+            backdrop-filter: blur(6px);
         }
-
-        [data-theme="cricket"] .selector-box { background: #fff; color: #166534; border: 2px solid #166534; }
         .selector-box option { background: #fff; color: #1f2937; }
 
-        /* --- LAYOUT --- */
-        .app-body { max-width: 1100px; margin: 0 auto; padding: 0 20px 60px; }
-
-        .action-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: -32px;
-            margin-bottom: 28px;
-            position: relative;
-            z-index: 5;
+        /* Theme decorations in the header */
+        [data-theme="light"] .banner-deco {
+            background: radial-gradient(circle at 12% 30%, rgba(255,255,255,.28) 0, transparent 38%), radial-gradient(circle at 88% 70%, rgba(255,255,255,.2) 0, transparent 40%);
+        }
+        [data-theme="dark"] .banner-deco {
+            background-image:
+                radial-gradient(1.5px 1.5px at 8% 25%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 24% 60%, #cbd5e1, transparent),
+                radial-gradient(2px 2px at 47% 18%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 68% 52%, #e2e8f0, transparent),
+                radial-gradient(2px 2px at 83% 22%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 93% 64%, #cbd5e1, transparent);
+            animation: twinkle 5s ease-in-out infinite;
+        }
+        [data-theme="harry-potter"] .banner-deco {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 80' preserveAspectRatio='none'%3E%3Cpath fill='%23120812' d='M0 80V58h18V44l6-14 6 14v14h16V40h8V22l8-16 8 16v18h8v18h22V48l6-12 6 12v10h28V34h6V18l8-18 8 18v16h6v24h28V50h14V38l6-14 6 14v12h18v8h22V42l6-14 6 14v16h26V30h8V12l8-12 8 12v18h8v28h24V48l6-10 6 10v10h30V36h6V20l8-20 8 20v16h6v22h20V52h18V40l6-12 6 12v12h18V80z'/%3E%3C/svg%3E"),
+                radial-gradient(1.6px 1.6px at 6% 20%, #fff, transparent),
+                radial-gradient(1.2px 1.2px at 17% 44%, #f3e5ab, transparent),
+                radial-gradient(1.8px 1.8px at 31% 14%, #fff, transparent),
+                radial-gradient(1.2px 1.2px at 44% 36%, #f3e5ab, transparent),
+                radial-gradient(1.8px 1.8px at 58% 12%, #fff, transparent),
+                radial-gradient(1.2px 1.2px at 71% 40%, #f3e5ab, transparent),
+                radial-gradient(1.8px 1.8px at 84% 16%, #fff, transparent),
+                radial-gradient(1.2px 1.2px at 95% 38%, #f3e5ab, transparent);
+            background-repeat: repeat-x, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+            background-position: bottom center, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+            background-size: auto 78px, auto, auto, auto, auto, auto, auto, auto, auto;
+        }
+        [data-theme="minecraft"] .banner-deco {
+            background:
+                linear-gradient(90deg, rgba(255,255,255,.18) 50%, transparent 50%) 0 100% / 32px 8px repeat-x,
+                linear-gradient(#5fa832 0 10px, #4a7227 10px 16px, #7a5230 16px 100%) 0 100% / 100% 26px no-repeat;
+            image-rendering: pixelated;
+        }
+        [data-theme="cricket"] .banner-deco {
+            background:
+                radial-gradient(ellipse 120px 220px at 10% -10%, rgba(255,255,230,.55), transparent 70%),
+                radial-gradient(ellipse 120px 220px at 90% -10%, rgba(255,255,230,.55), transparent 70%),
+                repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 60px, transparent 60px 120px);
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        .input-container { position: relative; flex-grow: 1; }
+        /* Floating bits created by JS */
+        .fx { position: absolute; will-change: transform; }
+        .fx.candle { font-size: 1.6rem; animation: float 5s ease-in-out infinite, flicker 1.6s linear infinite; filter: drop-shadow(0 0 10px rgba(255, 210, 120, 0.8)); }
+        .fx.cloud { top: 0; width: 64px; height: 20px; background: #fff; box-shadow: 16px -12px 0 #fff, 32px -12px 0 #fff, 48px 0 0 #fff, -16px 0 0 #fff; opacity: 0.92; animation: drift linear infinite; image-rendering: pixelated; }
+        .fx.ball { bottom: 14px; left: 0; font-size: 1.6rem; animation: roll linear infinite; }
+        .fx.spark { width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 3px rgba(160, 200, 255, 0.8); animation: twinkle 3s ease-in-out infinite; }
+
+        /* =====================================================================
+           LAYOUT
+           ===================================================================== */
+        .app-body { position: relative; max-width: 1240px; margin: 0 auto; padding: 0 20px 56px; }
+
+        .action-row {
+            display: flex; align-items: center; gap: 12px;
+            margin-top: -34px; margin-bottom: 26px;
+            position: relative; z-index: 5;
+        }
+        .input-container { position: relative; flex: 1; }
 
         .main-search {
             width: 100%;
-            padding: 17px 44px 17px 50px;
+            min-height: 54px;
+            padding: 15px 44px 15px 50px;
             border: var(--border-element);
             border-radius: var(--radius-main);
             background: var(--card-bg);
@@ -204,41 +303,32 @@
             font-size: calc(0.95rem * var(--scale));
             box-shadow: var(--shadow-style);
         }
-
         .main-search::placeholder { color: var(--text-sub); opacity: 1; }
-
-        .prefix-icon {
-            position: absolute; left: 18px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem; pointer-events: none;
-        }
-
+        .prefix-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; pointer-events: none; }
         .clear-search {
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
             border: 0; background: none; color: var(--text-sub);
-            font-size: 1.1rem; padding: 6px 8px; border-radius: 8px;
+            font-size: 1.1rem; min-width: 40px; min-height: 40px; border-radius: 10px;
         }
 
-        .action-btn {
-            padding: 17px 28px;
+        .action-btn, .btn-primary {
+            min-height: 54px;
+            padding: 12px 26px;
             background: var(--btn-add-bg);
             color: var(--btn-add-text);
             border: var(--border-element);
             border-radius: var(--radius-main);
-            font-weight: 600;
+            font-weight: 700;
             font-size: calc(1rem * var(--scale));
             box-shadow: var(--shadow-style);
             white-space: nowrap;
+            transition: transform 0.12s, filter 0.12s;
         }
+        .action-btn:hover, .btn-primary:hover { filter: brightness(1.08); }
+        .action-btn:active, .btn-primary:active, .btn-trigger:active, .category-element:active { transform: scale(0.97); }
+        .btn-primary:disabled { opacity: 0.55; cursor: default; filter: none; }
 
-        .action-btn:active, .btn-trigger:active, .category-element:active { transform: scale(0.97); }
-
-        .content-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 340px;
-            gap: 28px;
-            align-items: start;
-        }
+        .content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; }
 
         .layout-title {
             font-size: calc(1.25rem * var(--scale));
@@ -246,18 +336,21 @@
             margin: 0 0 14px;
             display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
         }
-
         .badge {
             background: var(--chip-active-bg); color: var(--chip-active-text);
-            border-radius: 999px; padding: 1px 10px;
-            font-size: calc(0.8rem * var(--scale)); font-weight: 600;
+            border-radius: 999px; padding: 1px 11px;
+            font-size: calc(0.8rem * var(--scale)); font-weight: 700;
         }
+        [data-theme="minecraft"] .badge { border-radius: 0; }
 
-        /* --- CATEGORIES --- */
+        /* =====================================================================
+           CATEGORIES + CATALOG
+           ===================================================================== */
         .horizontal-scroller {
             display: flex; gap: 10px; overflow-x: auto;
-            padding: 4px 4px 12px; margin: 0 -4px 22px;
+            padding: 4px 4px 14px; margin: 0 -4px 20px;
             scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
         }
 
         .category-element {
@@ -265,148 +358,327 @@
             color: var(--text-main);
             border: var(--border-element);
             border-radius: var(--radius-main);
-            min-width: 82px;
-            padding: 12px 14px;
+            min-width: 84px; min-height: 64px;
+            padding: 10px 14px;
             text-align: center;
             box-shadow: var(--shadow-style);
             flex-shrink: 0;
+            transition: transform 0.12s;
         }
-
         .category-element.active { background: var(--chip-active-bg); color: var(--chip-active-text); }
-        .element-ico { font-size: 1.5rem; display: block; margin-bottom: 4px; }
-        .element-lbl { font-size: calc(0.8rem * var(--scale)); font-weight: 500; }
+        .element-ico { font-size: 1.5rem; display: block; margin-bottom: 2px; }
+        .element-lbl { font-size: calc(0.8rem * var(--scale)); font-weight: 600; }
 
-        /* --- CATALOG --- */
-        .items-showcase {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 16px;
-        }
+        .items-showcase { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 16px; }
 
         .item-box {
+            position: relative;
             background: var(--card-bg);
-            border: var(--border-element);
+            border: var(--card-edge);
             border-radius: var(--radius-card);
-            padding: 18px 14px;
+            padding: 16px 12px 14px;
             text-align: center;
             box-shadow: var(--shadow-style);
+            transition: transform 0.18s, box-shadow 0.18s;
+            animation: rise 0.4s both;
+            animation-delay: calc(var(--i, 0) * 20ms);
         }
+        .item-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
 
-        .item-ico { font-size: 2.4rem; margin-bottom: 8px; line-height: 1.1; }
-        .item-name { font-size: calc(1rem * var(--scale)); font-weight: 600; margin: 0 0 2px; }
-        .item-tag { font-size: calc(0.8rem * var(--scale)); color: var(--text-sub); margin-bottom: 14px; }
+        .item-art {
+            width: 84px; height: 84px; margin: 0 auto 10px;
+            border-radius: 50%;
+            background: var(--art-bg);
+            display: grid; place-items: center;
+            box-shadow: inset 0 -6px 12px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+        [data-theme="minecraft"] .item-art { border-radius: 0; box-shadow: inset -4px -4px 0 rgba(0,0,0,.35), inset 4px 4px 0 rgba(255,255,255,.25); }
+        [data-theme="harry-potter"] .item-art { box-shadow: inset 0 0 0 1px rgba(212,175,55,.7), 0 0 18px rgba(212,175,55,.18); }
+        [data-theme="cricket"] .item-art { box-shadow: inset 0 0 0 3px rgba(255,255,255,.7), inset 0 -6px 12px rgba(0,0,0,.2); }
+
+        .item-ico { font-size: 2.6rem; line-height: 1; filter: drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
+        .item-name { font-size: calc(1rem * var(--scale)); font-weight: 700; margin: 0 0 2px; line-height: 1.2; }
+        .item-tag { font-size: calc(0.8rem * var(--scale)); color: var(--text-sub); margin-bottom: 12px; }
 
         .btn-trigger {
             width: 100%;
-            padding: 10px;
+            min-height: 44px;
+            padding: 8px 10px;
             background: var(--btn-action-bg);
             color: var(--btn-action-text);
             border: var(--border-element);
-            border-radius: 10px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: calc(0.9rem * var(--scale));
+            transition: transform 0.12s, filter 0.12s;
         }
-
+        .btn-trigger:hover { filter: brightness(1.15); }
+        .btn-trigger:disabled { opacity: 0.7; cursor: default; }
         [data-theme="minecraft"] .btn-trigger { border-radius: 0; }
-        [data-theme="cricket"] .btn-trigger { border-radius: 16px; }
+        [data-theme="harry-potter"] .btn-trigger { border-radius: 4px; }
+        [data-theme="cricket"] .btn-trigger { border-radius: 18px; }
 
-        .empty {
-            color: var(--text-sub);
-            text-align: center;
-            padding: 28px 12px;
-            grid-column: 1 / -1;
-        }
+        .empty { color: var(--text-sub); text-align: center; padding: 26px 12px; grid-column: 1 / -1; margin: 0; }
 
-        /* --- SHOPPING LIST PANEL --- */
-        .list-panel {
+        /* =====================================================================
+           SIDEBAR PANELS
+           ===================================================================== */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+        .panel {
             background: var(--card-bg);
-            border: var(--border-element);
+            border: var(--card-edge);
             border-radius: var(--radius-card);
             padding: 18px;
             box-shadow: var(--shadow-style);
-            position: sticky;
-            top: 16px;
         }
+        .panel-title { margin: 0 0 6px; font-size: calc(1.2rem * var(--scale)); font-weight: 700; }
+        .panel-sub { margin: 0 0 14px; color: var(--text-sub); font-size: calc(0.85rem * var(--scale)); }
 
-        .list-panel ul { list-style: none; margin: 0; padding: 0; max-height: 55vh; overflow-y: auto; }
-
+        .list-panel ul { list-style: none; margin: 0; padding: 0; max-height: 50vh; overflow-y: auto; }
         .list-row {
             display: flex; align-items: center; gap: 10px;
             padding: 10px 0;
-            border-bottom: 1px solid color-mix(in srgb, var(--text-sub) 30%, transparent);
+            border-bottom: 1px solid color-mix(in srgb, var(--text-sub) 28%, transparent);
         }
-
         .list-row:last-child { border-bottom: 0; }
-        .list-row input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--chip-active-bg); }
+        .list-row input[type="checkbox"] { width: 22px; height: 22px; flex-shrink: 0; accent-color: #d4af37; }
         .list-label { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: calc(0.95rem * var(--scale)); }
-        .list-row.done .list-label { text-decoration: line-through; color: var(--text-sub); }
-
+        .list-row.done .list-label { text-decoration: line-through; opacity: 0.65; }
         .qty { display: flex; align-items: center; gap: 4px; }
-
         .qty button, .remove-btn {
-            width: 30px; height: 30px; padding: 0;
+            width: 34px; height: 34px; padding: 0;
             border: var(--border-element);
             border-radius: 8px;
             background: var(--btn-action-bg);
             color: var(--btn-action-text);
             font-weight: 700; line-height: 1;
         }
-
-        .qty span { min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+        [data-theme="minecraft"] .qty button, [data-theme="minecraft"] .remove-btn { border-radius: 0; }
+        .qty span { min-width: 22px; text-align: center; font-variant-numeric: tabular-nums; }
         .remove-btn { background: none; color: var(--danger); border-color: transparent; }
-
         .list-footer { display: flex; gap: 8px; margin-top: 14px; }
         .list-footer .btn-trigger { flex: 1; }
 
-        /* --- THEMED "ADD TO CART" EFFECTS --- */
-        .item-box { position: relative; }
-        .btn-trigger:disabled { opacity: 0.7; cursor: default; }
-
-        .fly {
-            position: fixed; left: 0; top: 0; z-index: 1000;
-            pointer-events: none; will-change: transform;
-            font-size: 2.4rem; line-height: 1;
+        .field {
+            width: 100%; min-height: 46px; padding: 10px 12px;
+            border: var(--border-element); border-radius: 10px;
+            background: rgba(0, 0, 0, 0.25); color: var(--text-main);
+            font-size: calc(0.95rem * var(--scale));
         }
+        [data-theme="harry-potter"] .field, [data-theme="cricket"] .field { background: rgba(0, 0, 0, 0.3); }
+        .field option { background: #2a142a; color: #f6ecc0; }
+
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .chip {
+            min-height: 38px; padding: 6px 12px;
+            border: var(--border-element); border-radius: 999px;
+            background: var(--chip-bg); color: var(--text-main);
+            font-size: calc(0.8rem * var(--scale)); font-weight: 600;
+        }
+        .chip[aria-pressed="true"] { background: var(--chip-active-bg); color: var(--chip-active-text); }
+        [data-theme="minecraft"] .chip { border-radius: 0; }
+
+        /* ---------- Harry Potter: Dueling corner ---------- */
+        .duel-setup { display: flex; gap: 8px; }
+        .duel-setup .btn-primary { min-height: 46px; padding: 8px 16px; }
+        .opp-blurb { margin: 10px 0 12px; font-size: calc(0.85rem * var(--scale)); color: var(--text-sub); min-height: 2.6em; }
+
+        .duel-arena {
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
+            padding: 14px 8px;
+            border-radius: 10px;
+            background: radial-gradient(ellipse at 50% 100%, rgba(212,175,55,.2), transparent 70%), linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
+            border: 1px solid rgba(212, 175, 55, 0.35);
+        }
+        .fighter { text-align: center; min-width: 0; }
+        .avatar {
+            width: 68px; height: 68px; margin: 0 auto 6px; border-radius: 50%;
+            display: grid; place-items: center; font-size: 2.1rem;
+            background: radial-gradient(circle at 30% 25%, #7a3b7a, #2a142a 75%);
+            border: 2px solid #d4af37;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .fighter.hurt .avatar { animation: hurt 0.35s; }
+        .fighter.shielded .avatar { box-shadow: 0 0 0 4px rgba(120, 200, 255, 0.8), 0 0 24px 8px rgba(120, 200, 255, 0.6); }
+        .fighter.ko .avatar { filter: grayscale(1); transform: rotate(80deg) scale(0.9); }
+        @keyframes hurt { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
+        .f-name { font-size: calc(0.8rem * var(--scale)); font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+        .hp { height: 10px; margin: 6px 4px 2px; border-radius: 6px; background: rgba(0,0,0,.45); overflow: hidden; border: 1px solid rgba(255,255,255,.18); }
+        .hp i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--hp-bad), #f59e0b 50%, var(--hp-good)); transition: width 0.4s; }
+        .hp-num { font-size: calc(0.75rem * var(--scale)); color: var(--text-sub); font-variant-numeric: tabular-nums; }
+        .vs { font-weight: 700; color: var(--text-sub); font-size: calc(1.1rem * var(--scale)); }
+
+        .duel-log { margin: 12px 0; padding: 10px 12px; min-height: 4.2em; border-radius: 8px; background: rgba(0,0,0,.28); font-size: calc(0.85rem * var(--scale)); }
+        .duel-moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .move-btn {
+            min-height: 64px; padding: 8px 4px;
+            border: var(--border-element); border-radius: 8px;
+            background: var(--btn-action-bg); color: var(--btn-action-text);
+            font-weight: 700; font-size: calc(0.8rem * var(--scale)); line-height: 1.2;
+        }
+        .move-btn small { display: block; font-weight: 500; opacity: 0.85; font-size: 0.85em; }
+        .move-btn:disabled { opacity: 0.45; cursor: default; }
+        .duel-record { margin-top: 10px; text-align: center; color: var(--text-sub); font-size: calc(0.8rem * var(--scale)); }
+
+        /* ---------- Minecraft: update log ---------- */
+        .mc-status { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: calc(0.75rem * var(--scale)); color: var(--text-sub); }
+        .mc-status .dot { width: 10px; height: 10px; display: inline-block; background: #7c7c7c; }
+        .mc-status.live .dot { background: #55ff55; box-shadow: 0 0 8px #55ff55; }
+        .mc-status .btn-trigger { width: auto; min-height: 36px; padding: 4px 10px; }
+        .mc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; max-height: 56vh; overflow-y: auto; }
+        .mc-entry { border: 3px solid #1d120a; background: #333; box-shadow: inset -3px -3px 0 rgba(0,0,0,.4), inset 3px 3px 0 rgba(255,255,255,.12); padding: 10px 12px; }
+        .mc-entry summary { cursor: pointer; list-style: none; display: grid; gap: 4px; }
+        .mc-entry summary::-webkit-details-marker { display: none; }
+        .mc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .mc-ver { font-size: calc(0.9rem * var(--scale)); font-weight: 700; }
+        .mc-date { color: var(--text-sub); font-size: calc(0.72rem * var(--scale)); }
+        .mc-title { font-size: calc(0.78rem * var(--scale)); color: #ffe27a; }
+        .tag { display: inline-block; padding: 2px 6px; font-size: calc(0.62rem * var(--scale)); background: #555; color: #fff; }
+        .tag.release { background: #3f8f1f; }
+        .tag.snapshot { background: #b8791a; }
+        .tag.bedrock { background: #2b6bd6; }
+        .tag.latest { background: #d33a3a; animation: pulse 2s infinite; }
+        .mc-entry ul { margin: 10px 0 6px; padding-left: 18px; font-size: calc(0.72rem * var(--scale)); line-height: 1.7; }
+        .mc-entry a { color: #8fd1ff; font-size: calc(0.7rem * var(--scale)); }
+
+        /* ---------- Cricket: mock match ---------- */
+        .ck-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; text-align: center; }
+        .ck-board div { background: rgba(0,0,0,.3); border-radius: 12px; padding: 4px 2px; font-size: calc(0.75rem * var(--scale)); color: var(--text-sub); line-height: 1.1; }
+        .ck-board b { display: block; font-size: calc(1.5rem * var(--scale)); color: #fff; font-variant-numeric: tabular-nums; }
+        .ck-stage { position: relative; border-radius: 18px; overflow: hidden; border: 2px solid rgba(255,255,255,.85); background: #0a1630; }
+        #ck-canvas { display: block; width: 100%; aspect-ratio: 4 / 5; touch-action: manipulation; cursor: pointer; }
+        .ck-overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 16px; background: rgba(4, 18, 10, 0.62); text-align: center; backdrop-filter: blur(2px); }
+        .ck-ov-card { max-width: 260px; }
+        .ck-ov-card h3 { margin: 0 0 6px; font-size: calc(1.6rem * var(--scale)); }
+        .ck-ov-card p { margin: 0 0 14px; font-size: calc(0.9rem * var(--scale)); }
+        .ck-swing { width: 100%; margin-top: 12px; min-height: 60px; font-size: calc(1.3rem * var(--scale)); }
+
+        /* =====================================================================
+           WAND (Harry Potter) + PATRONUS MODAL
+           ===================================================================== */
+        .wand-wrap { position: fixed; right: max(6px, env(safe-area-inset-right)); top: 46%; transform: translateY(-50%); z-index: 60; }
+        .wand { background: none; border: 0; padding: 0; display: block; filter: drop-shadow(0 6px 10px rgba(0,0,0,.6)); }
+        .wand svg { display: block; transform: rotate(-10deg); transform-origin: 50% 92%; transition: transform 0.2s; overflow: visible; }
+        .wand:hover svg { transform: rotate(-4deg); }
+        #wand-tip { animation: pulse 1.8s ease-in-out infinite; }
+        .wand-bubble {
+            position: absolute; right: 54px; top: 6px; width: 210px;
+            padding: 10px 12px; border-radius: 10px;
+            background: #2a142a; color: #f6ecc0; border: 1px solid #d4af37;
+            font-family: 'Cinzel', Georgia, serif; font-size: 0.78rem; line-height: 1.35;
+            opacity: 0; transform: translateX(8px); pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+        }
+        .wand-bubble.show { opacity: 1; transform: none; }
+
+        .modal { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 16px; background: rgba(4, 2, 14, 0.78); backdrop-filter: blur(4px); }
+        .modal-card {
+            width: min(560px, 100%); max-height: 92vh; overflow-y: auto;
+            padding: 20px 18px; text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, #2f3f7a 0%, #160c33 70%);
+            border: 1px solid #9be7ff; border-radius: 14px;
+            box-shadow: 0 0 40px rgba(155, 231, 255, 0.35);
+            color: #eaf8ff;
+            font-family: 'Cinzel', Georgia, serif;
+        }
+        .modal-card h2 { margin: 0 0 6px; font-size: 1.5rem; text-shadow: 0 0 14px #9be7ff; }
+        .modal-card p { margin: 0 0 14px; font-size: 0.9rem; }
+        .patronus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 10px; margin-bottom: 14px; }
+        .patronus-opt {
+            min-height: 96px; padding: 8px 4px;
+            border: 1px solid rgba(155, 231, 255, 0.5); border-radius: 10px;
+            background: rgba(155, 231, 255, 0.08); color: #eaf8ff;
+            font-family: inherit; font-size: 0.78rem; line-height: 1.25;
+            transition: transform 0.12s, background 0.12s;
+        }
+        .patronus-opt:hover, .patronus-opt:focus-visible { background: rgba(155, 231, 255, 0.22); transform: translateY(-2px); }
+        .patronus-opt .pi { display: block; font-size: 2.2rem; margin-bottom: 4px; filter: grayscale(1) brightness(1.9) drop-shadow(0 0 8px #9be7ff); }
+        .patronus-opt small { display: block; opacity: 0.75; }
+        .btn-ghost { background: none; border: 1px solid rgba(255,255,255,.4); color: inherit; border-radius: 8px; padding: 10px 16px; min-height: 44px; font-family: inherit; }
+
+        /* =====================================================================
+           THEMED EFFECT PARTICLES
+           ===================================================================== */
+        .fly { position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; will-change: transform; font-size: 2.4rem; line-height: 1; }
         .fly.glow { filter: drop-shadow(0 0 8px #facc15) drop-shadow(0 0 16px #f59e0b); }
-        .fly.block { width: 10px; height: 10px; font-size: 0; image-rendering: pixelated; border: 1px solid rgba(0, 0, 0, 0.5); }
         .fly.small { font-size: 1.6rem; }
+        .fly.block { width: 10px; height: 10px; font-size: 0; border: 1px solid rgba(0,0,0,.5); }
+        .fly.patronus { font-size: 3.4rem; filter: grayscale(1) brightness(2) drop-shadow(0 0 10px #9be7ff) drop-shadow(0 0 24px #7cc8ff); }
+        .fly.carried { filter: drop-shadow(0 0 8px #9be7ff); }
+        .fly.bolt { width: 18px; height: 18px; font-size: 0; border-radius: 50%; }
+        .fly.bolt.stupefy { background: radial-gradient(circle, #fff 0, #ff5a5a 55%, transparent 72%); box-shadow: 0 0 14px 7px rgba(255, 70, 70, .75); }
+        .fly.bolt.expelliarmus { background: radial-gradient(circle, #fff 0, #ffb347 55%, transparent 72%); box-shadow: 0 0 14px 7px rgba(255, 170, 60, .75); }
+        .wisp { position: fixed; left: 0; top: 0; z-index: 999; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, #fff, rgba(155, 231, 255, .6) 55%, transparent 72%); }
+        .pop { position: fixed; left: 0; top: 0; z-index: 1001; pointer-events: none; will-change: transform, opacity; font-weight: 700; font-size: 1.3rem; white-space: nowrap; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
 
-        .pop {
-            position: fixed; left: 0; top: 0; z-index: 1001;
-            pointer-events: none; will-change: transform, opacity;
-            font-weight: 700; font-size: 1.3rem; white-space: nowrap;
-            color: #fff; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-        }
-
-        /* Minecraft: cracks grow as you mine the block */
         [data-theme="minecraft"] .item-box::after {
             content: ''; position: absolute; inset: 0; pointer-events: none;
             opacity: var(--crack, 0);
             background:
-                repeating-linear-gradient(135deg, transparent 0 14px, rgba(0, 0, 0, 0.6) 14px 16px),
-                repeating-linear-gradient(45deg, transparent 0 22px, rgba(0, 0, 0, 0.5) 22px 24px);
+                repeating-linear-gradient(135deg, transparent 0 14px, rgba(0,0,0,.6) 14px 16px),
+                repeating-linear-gradient(45deg, transparent 0 22px, rgba(0,0,0,.5) 22px 24px);
             transition: opacity 0.12s;
         }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 860px) {
-            .content-grid { grid-template-columns: 1fr; }
-            .list-panel { position: static; order: -1; }
+        /* =====================================================================
+           MOBILE CART BAR
+           ===================================================================== */
+        .cart-bar {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+            display: none; align-items: center; justify-content: space-between; gap: 10px;
+            width: 100%; min-height: 56px;
+            padding: 8px 18px calc(8px + env(safe-area-inset-bottom));
+            border: 0; border-top: var(--border-element);
+            background: var(--chip-active-bg); color: var(--chip-active-text);
+            font-weight: 700; font-size: calc(1rem * var(--scale));
+            box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+        }
+        .cart-bar b { display: inline-block; min-width: 1.6em; text-align: center; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,.28); }
+
+        /* =====================================================================
+           RESPONSIVE
+           ===================================================================== */
+        @media (min-width: 1000px) {
+            .sidebar { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
         }
 
-        @media (max-width: 520px) {
-            .top-banner { padding: 64px 16px 84px; }
-            .action-row { flex-direction: column; align-items: stretch; margin-top: -30px; }
+        @media (max-width: 999px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .cart-bar { display: flex; }
+            .app-body { padding-bottom: 96px; }
+        }
+
+        @media (min-width: 640px) and (max-width: 999px) {
+            .sidebar { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+            .sidebar .panel:only-of-type { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 639px) {
+            .top-banner { padding-top: 64px; }
+            .action-row { flex-direction: column; align-items: stretch; margin-top: -30px; gap: 10px; }
             .items-showcase { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .item-art { width: 72px; height: 72px; }
+            .item-ico { font-size: 2.2rem; }
+            .app-body { padding-left: 14px; padding-right: 14px; }
+            [data-theme="harry-potter"] .app-body { padding-right: 52px; }
+            .wand svg { width: 34px; height: auto; }
+            .wand-bubble { right: 40px; width: 180px; }
+            .panel { padding: 14px; }
+        }
+
+        @media (pointer: coarse) {
+            .qty button, .remove-btn { width: 40px; height: 40px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            * { transition: none !important; }
+            *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition: none !important; }
         }
     </style>
 </head>
 <body>
     <header class="top-banner">
+        <div class="banner-deco" aria-hidden="true"></div>
+        <div class="banner-fx" id="banner-fx" aria-hidden="true"></div>
         <div class="config-menu">
             <label for="theme-select" class="sr-only">Theme</label>
             <select id="theme-select" class="selector-box">
@@ -417,8 +689,11 @@
                 <option value="cricket">🏏 Cricket</option>
             </select>
         </div>
-        <h1>Home Shopping</h1>
-        <p>Pick what you need. Tick it off when it's in the basket.</p>
+        <div class="banner-inner">
+            <div class="brand-ico" id="brand-ico" aria-hidden="true">🛒</div>
+            <h1 id="brand-title">Home Shopping</h1>
+            <p id="brand-sub">Pick what you need. Tick it off when it's in the basket.</p>
+        </div>
     </header>
 
     <main class="app-body">
@@ -426,7 +701,7 @@
             <div class="input-container">
                 <span class="prefix-icon" aria-hidden="true">🔍</span>
                 <label for="search" class="sr-only">Search or add an item</label>
-                <input id="search" class="main-search" type="text" maxlength="40" placeholder="Search items, or type a new one to add…">
+                <input id="search" class="main-search" type="text" maxlength="40" enterkeyhint="done" placeholder="Search items, or type a new one to add…">
                 <button type="button" class="clear-search" id="clear-search" aria-label="Clear search" hidden>✕</button>
             </div>
             <button type="submit" class="action-btn" id="add-btn">Add to list</button>
@@ -441,21 +716,134 @@
                 <div class="items-showcase" id="catalog"></div>
             </section>
 
-            <aside class="list-panel" aria-labelledby="list-title">
-                <h2 class="layout-title" id="list-title">Your list <span class="badge" id="list-count">0</span></h2>
-                <ul id="list" aria-live="polite"></ul>
-                <div class="list-footer" id="list-footer" hidden>
-                    <button type="button" class="btn-trigger" id="clear-done">Remove ticked</button>
-                    <button type="button" class="btn-trigger" id="clear-all">Clear all</button>
-                </div>
+            <aside class="sidebar">
+                <section class="panel list-panel" id="list-panel" aria-labelledby="list-title">
+                    <h2 class="layout-title" id="list-title"><span id="list-title-text">Your list</span> <span class="badge" id="list-count">0</span></h2>
+                    <ul id="list" aria-live="polite"></ul>
+                    <div class="list-footer" id="list-footer" hidden>
+                        <button type="button" class="btn-trigger" id="clear-done">Remove ticked</button>
+                        <button type="button" class="btn-trigger" id="clear-all">Clear all</button>
+                    </div>
+                </section>
+
+                <!-- Harry Potter: Dueling corner -->
+                <section class="panel" id="panel-hp" data-theme-panel="harry-potter" hidden aria-labelledby="duel-title">
+                    <h2 class="panel-title" id="duel-title">⚔️ Dueling Corner</h2>
+                    <p class="panel-sub">Pick an opponent and trade spells. Protego beats Stupefy, Stupefy beats Expelliarmus, Expelliarmus beats Protego. Reduce them to zero first.</p>
+                    <div class="duel-setup">
+                        <label for="duel-opponent" class="sr-only">Opponent</label>
+                        <select id="duel-opponent" class="field"></select>
+                        <button type="button" class="btn-primary" id="duel-start">Challenge</button>
+                    </div>
+                    <div class="opp-blurb" id="opp-blurb"></div>
+                    <div class="duel-arena" id="duel-arena">
+                        <div class="fighter" id="f-you">
+                            <div class="avatar" id="av-you" aria-hidden="true">🧙</div>
+                            <div class="f-name">You</div>
+                            <div class="hp"><i id="hp-you"></i></div>
+                            <div class="hp-num" id="hpn-you">100</div>
+                        </div>
+                        <div class="vs" aria-hidden="true">VS</div>
+                        <div class="fighter" id="f-foe">
+                            <div class="avatar" id="av-foe" aria-hidden="true">⚡</div>
+                            <div class="f-name" id="foe-name">Opponent</div>
+                            <div class="hp"><i id="hp-foe"></i></div>
+                            <div class="hp-num" id="hpn-foe">100</div>
+                        </div>
+                    </div>
+                    <div class="duel-log" id="duel-log" aria-live="polite">Choose an opponent and press Challenge.</div>
+                    <div class="duel-moves" role="group" aria-label="Your spells">
+                        <button type="button" class="move-btn" data-move="stupefy" disabled>⚡ Stupefy<small>hits 18</small></button>
+                        <button type="button" class="move-btn" data-move="expelliarmus" disabled>🌀 Expelliarmus<small>hits 14</small></button>
+                        <button type="button" class="move-btn" data-move="protego" disabled>🛡️ Protego<small>reflects 8</small></button>
+                    </div>
+                    <div class="duel-record" id="duel-record"></div>
+                </section>
+
+                <!-- Minecraft: update log -->
+                <section class="panel" id="panel-mc" data-theme-panel="minecraft" hidden aria-labelledby="mc-title">
+                    <h2 class="panel-title" id="mc-title">📜 Update Log</h2>
+                    <p class="panel-sub">What's new in Minecraft, checked against Mojang's version feed whenever you open this theme.</p>
+                    <div class="mc-status" id="mc-status"><span class="dot"></span><span id="mc-status-text">Checking…</span><button type="button" class="btn-trigger" id="mc-refresh">⟳ Sync</button></div>
+                    <div class="chips" id="mc-filters" role="group" aria-label="Filter updates">
+                        <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
+                        <button type="button" class="chip" data-f="release" aria-pressed="false">Releases</button>
+                        <button type="button" class="chip" data-f="snapshot" aria-pressed="false">Snapshots</button>
+                        <button type="button" class="chip" data-f="bedrock" aria-pressed="false">Bedrock</button>
+                    </div>
+                    <ol class="mc-list" id="mc-list"></ol>
+                </section>
+
+                <!-- Cricket: mock match -->
+                <section class="panel" id="panel-ck" data-theme-panel="cricket" hidden aria-labelledby="ck-title">
+                    <h2 class="panel-title" id="ck-title">🏏 Nets: Mock Match</h2>
+                    <p class="panel-sub">One over, two wickets. Tap the pitch or press Swing just as the ball reaches you. Perfect timing is a six.</p>
+                    <div class="ck-board" aria-live="polite">
+                        <div>Runs<b id="ck-runs">0</b></div>
+                        <div>Balls<b id="ck-balls">0/6</b></div>
+                        <div>Wickets<b id="ck-wk">0/2</b></div>
+                        <div>Best<b id="ck-best">0</b></div>
+                    </div>
+                    <div class="ck-stage">
+                        <canvas id="ck-canvas" tabindex="0" role="img" aria-label="Cricket nets. Tap or press Space to swing the bat as the ball arrives."></canvas>
+                        <div class="ck-overlay" id="ck-overlay">
+                            <div class="ck-ov-card">
+                                <h3 id="ck-ov-title">Ready to bat?</h3>
+                                <p id="ck-ov-text">Six balls. Two wickets. Time your swing.</p>
+                                <button type="button" class="btn-primary" id="ck-start">Play over</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-primary ck-swing" id="ck-swing">🏏 Swing</button>
+                </section>
             </aside>
         </div>
     </main>
+
+    <!-- Wand (Harry Potter theme only) -->
+    <div class="wand-wrap" id="wand-wrap" hidden>
+        <div class="wand-bubble" id="wand-bubble" role="status">Tap any item and I'll cast for you. About 1 cast in 5 summons a Patronus.</div>
+        <button type="button" class="wand" id="wand" aria-expanded="false" aria-label="Your wand. Tap any item to cast a spell. About one cast in five summons a Patronus.">
+            <svg id="wand-svg" viewBox="0 0 48 190" width="46" height="182" aria-hidden="true" focusable="false">
+                <defs>
+                    <linearGradient id="wandWood" x1="0" x2="1" y1="0" y2="0">
+                        <stop offset="0" stop-color="#5a3416"/><stop offset="0.5" stop-color="#c58a4a"/><stop offset="1" stop-color="#4f2d12"/>
+                    </linearGradient>
+                    <radialGradient id="wandGlow">
+                        <stop offset="0" stop-color="#ffffff"/><stop offset="0.35" stop-color="#9be7ff"/><stop offset="1" stop-color="#9be7ff" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <circle id="wand-tip" cx="24" cy="16" r="13" fill="url(#wandGlow)"/>
+                <path d="M22 16 L26 16 L30 176 Q24 188 18 176 Z" fill="url(#wandWood)" stroke="#2b1507" stroke-width="0.8"/>
+                <rect x="19" y="118" width="10" height="5" rx="2" fill="#d4af37"/>
+                <rect x="19" y="128" width="10" height="3" rx="1.5" fill="#d4af37"/>
+                <rect x="18.5" y="150" width="11" height="22" rx="4" fill="#3a1e0b"/>
+                <path d="M20 154 L28 158 M20 160 L28 164 M20 166 L28 170" stroke="#8a5a2b" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+
+    <button type="button" class="cart-bar" id="cart-bar" aria-label="Jump to your list">
+        <span>🛒 <b id="bar-count">0</b> <span id="bar-label">in your list</span></span>
+        <span aria-hidden="true">View list ›</span>
+    </button>
+
+    <div class="modal" id="patronus-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title" hidden>
+        <div class="modal-card">
+            <h2 id="pm-title">Expecto Patronum!</h2>
+            <p>Silver light bursts from your wand. Choose the Patronus that will fetch <b id="pm-item">your item</b>.</p>
+            <div class="patronus-grid" id="patronus-grid"></div>
+            <button type="button" class="btn-ghost" id="pm-skip">Skip, just cast a spell</button>
+        </div>
+    </div>
 
 <script>
 (function () {
     'use strict';
 
+    /* =====================================================================
+       DATA
+       ===================================================================== */
     var CATEGORIES = [
         { id: 'all',       label: 'All',       icon: '🛒' },
         { id: 'fruit',     label: 'Fruit',     icon: '🍎' },
@@ -481,33 +869,111 @@
         ['Toilet paper','🧻','household'], ['Dish soap','🧴','household'], ['Detergent','🧺','household'], ['Trash bags','🗑️','household'], ['Batteries','🔋','household']
     ].map(function (r, i) { return { id: 'c' + i, name: r[0], icon: r[1], cat: r[2] }; });
 
-    var STORE_KEY = 'home-shopping.v1';
     var THEMES = ['light', 'dark', 'harry-potter', 'minecraft', 'cricket'];
 
-    var state = { list: [], theme: null, cat: 'all', query: '' };
+    var THEME_COPY = {
+        'light':        { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
+        'dark':         { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
+        'harry-potter': { icon: '🪄', title: 'Diagon Alley Shopping', sub: 'Tap an item and let your wand do the rest.',                list: 'Your trunk', bar: 'in your trunk' },
+        'minecraft':    { icon: '⛏️', title: 'Village Market',       sub: 'Mine it, craft it, stash it in your inventory.',            list: 'Inventory',  bar: 'in inventory' },
+        'cricket':      { icon: '🏏', title: 'Match Day Mart',       sub: 'Smash every item straight into the kit bag.',               list: 'Kit bag',    bar: 'in the kit bag' }
+    };
 
-    // ---- storage (guarded: can fail in private mode) ----
+    var PATRONUSES = [
+        { id: 'stag',     name: 'Stag',            note: "Harry's",      icon: '🦌' },
+        { id: 'otter',    name: 'Otter',           note: "Hermione's",   icon: '🦦' },
+        { id: 'terrier',  name: "Ron's Patronus",  note: 'Jack Russell', icon: '🐕' },
+        { id: 'cat',      name: 'Cat',             note: "McGonagall's", icon: '🐈' },
+        { id: 'hippogriff', name: 'Hippogriff',    note: 'Buckbeak',     icon: '🦅🐎' },
+        { id: 'hare',     name: 'Hare',            note: "Luna's",       icon: '🐇' },
+        { id: 'phoenix',  name: 'Phoenix',         note: "Dumbledore's", icon: '🐦‍🔥' },
+        { id: 'horse',    name: 'Horse',           note: "Ginny's",      icon: '🐎' },
+        { id: 'wolf',     name: 'Wolf',            note: "Tonks'",       icon: '🐺' },
+        { id: 'swan',     name: 'Swan',            note: "Cho's",        icon: '🦢' }
+    ];
+
+    var DUELISTS = [
+        { id: 'dumbledore', name: 'Albus Dumbledore', icon: '🧙‍♂️', hp: 120, skill: 0.55, weights: [0.3, 0.3, 0.4],
+          blurb: 'Headmaster. Rarely wrong about what you will do next.',
+          taunt: 'Ah, a challenger. Do try to surprise me.', win: 'A fine effort. Perhaps after some lemon drops?', lose: 'Well duelled indeed. I am impressed.' },
+        { id: 'harry', name: 'Harry Potter', icon: '⚡', hp: 100, skill: 0.35, weights: [0.25, 0.5, 0.25],
+          blurb: 'Loves Expelliarmus. Has beaten far worse than you.',
+          taunt: "Let's do this. Expelliarmus!", win: "Good duel. Don't feel bad.", lose: "Brilliant! You'd make a great Auror." },
+        { id: 'hermione', name: 'Hermione Granger', icon: '📚', hp: 100, skill: 0.45, weights: [0.3, 0.3, 0.4],
+          blurb: 'Studied every duelling book. Reads patterns fast.',
+          taunt: "I've read about your style. Ready?", win: 'Statistically, you were never going to win.', lose: 'Oh! Well done. I should revise.' },
+        { id: 'ron', name: 'Ronald Weasley', icon: '♟️', hp: 100, skill: 0.25, weights: [0.4, 0.25, 0.35],
+          blurb: 'Plays duels like wizard chess. Sacrifices, then strikes.',
+          taunt: 'Bloody hell, okay. Bring it on.', win: 'Yes! Told you chess helps.', lose: "Blimey, you actually got me." },
+        { id: 'cedric', name: 'Cedric Diggory', icon: '🏆', hp: 100, skill: 0.3, weights: [0.33, 0.33, 0.34],
+          blurb: 'Fair, balanced, and very hard to rattle.',
+          taunt: "May the best wizard win. Good luck.", win: 'Good game. Hufflepuff pride!', lose: 'Fair and square. Well done.' },
+        { id: 'luna', name: 'Luna Lovegood', icon: '🌙', hp: 100, skill: 0, weights: [0.34, 0.33, 0.33],
+          blurb: 'Unpredictable. Sometimes gets distracted by Nargles.',
+          taunt: 'The Wrackspurts are quiet today. Shall we?', win: "That was lovely. You have a few Nargles, though.", lose: 'Oh, you were quicker than the Nargles!',
+          event: { chance: 0.15, type: 'daydream' } },
+        { id: 'dean', name: 'Dean Thomas', icon: '🎨', hp: 100, skill: 0.2, weights: [0.4, 0.3, 0.3],
+          blurb: 'Steady, a bit of a showman. Easy to read if you pay attention.',
+          taunt: "I'm better with a pencil, but let's go.", win: "Ha, I'll draw this victory later.", lose: 'Fair play! I would sketch that spell.' },
+        { id: 'weasleys', name: 'Fred & George Weasley', icon: '🎆', hp: 110, skill: 0.15, weights: [0.45, 0.1, 0.45],
+          blurb: 'Gred and Forge. Expect fireworks. Both of you may get hurt.',
+          taunt: "Gred: Ready? Forge: We've got a surprise for you.", win: 'Another satisfied customer. Fancy a Skiving Snackbox?', lose: "Oi, we've been out-pranked!",
+          event: { chance: 0.2, type: 'prank' } }
+    ];
+
+    /* Minecraft updates: curated copy checked 30 Oct 2026, refreshed live when the Mojang feed is reachable. */
+    var MC_CHECKED = '2026-10-30';
+    var MC_CURATED = [
+        { id: '26.4-snapshot-5', edition: 'java', kind: 'snapshot', date: '2026-10-20', title: '26.4 Snapshot 5',
+          bullets: ['Packed Ice Bricks in several variants', 'New Frostbite advancement', 'Experimental "Prefer DXGI Present" option on Windows', 'Login protocol change and many bug fixes'] },
+        { id: '26.4-snapshot-4', edition: 'java', kind: 'snapshot', date: '2026-10-13', title: '26.4 Snapshot 4',
+          bullets: ['Brittle Ice now generates in Ice Caves', 'Jukebox playlists: discs stored in a chest above the jukebox play in turn', 'Ice and mob tweaks, plus bug fixes'] },
+        { id: '26.4-snapshot-2', edition: 'java', kind: 'snapshot', date: '2026-09-29', title: '26.4 Snapshot 2',
+          bullets: ['Sky and clouds blend into distance fog when Improved Transparency is on', 'New sky occluder', 'Redesigned F3 debug screen'] },
+        { id: '26.4-snapshot-1', edition: 'java', kind: 'snapshot', date: '2026-09-22', title: '26.4 Snapshot 1',
+          bullets: ['Vulkan becomes the default graphics API', 'World generation and server protocol changes'] },
+        { id: 'bedrock-26.52', edition: 'bedrock', kind: 'bedrock', date: '2026-09-25', title: 'Bedrock 26.52 hotfix',
+          bullets: ['Hotfix on top of the Wilderness Bound release'], url: 'https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3' },
+        { id: '26.3', edition: 'java', kind: 'release', date: '2026-09-15', title: '26.3: Wilderness Bound',
+          bullets: ['Dappled Forest biome with Poplar trees, Shelf Mushrooms and Red Shrubs', 'Abandoned Camp structures with loot', 'Cushions to sit on, and Straw Beds that do not set spawn', 'Wool and Concrete stairs and slabs in every colour', 'Explorer Maps are now separate items; Realms Invite Codes', 'SDL3 replaces GLFW; Borderless Fullscreen is the default'],
+          url: 'https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3' },
+        { id: 'bedrock-26.50', edition: 'bedrock', kind: 'bedrock', date: '2026-09-15', title: 'Bedrock 26.50: Wilderness Bound',
+          bullets: ['Wilderness Bound content arrives on Bedrock Edition'], url: 'https://www.minecraft.net/en-us/article/minecraft-java-edition-26-3' },
+        { id: '26.2', edition: 'java', kind: 'release', date: '2026-06-16', title: '26.2: Chaos Cubed',
+          bullets: ['Sulfur Cube mob that absorbs blocks and changes behaviour', 'Sulfur Caves biome, Cinnabar and Sulfur block sets', 'Friends List on the title and pause screens', 'Experimental Vulkan renderer via a new Graphics API setting', 'New music disc, five tracks and five languages'],
+          url: 'https://www.minecraft.net/en-us/article/minecraft-java-edition-26-2' },
+        { id: '26.1', edition: 'java', kind: 'release', date: '2026-03-24', title: '26.1', bullets: [] }
+    ];
+
+    var STORE_KEY = 'home-shopping.v1';
+
+    var state = { list: [], theme: null, cat: 'all', query: '', stats: { w: 0, l: 0, d: 0, ckBest: 0 } };
+
+    /* =====================================================================
+       STORAGE (guarded: can throw in private mode)
+       ===================================================================== */
     function load() {
         try {
             var raw = localStorage.getItem(STORE_KEY);
             if (!raw) return;
             var data = JSON.parse(raw);
-            if (Array.isArray(data.list)) {
-                state.list = data.list.filter(function (x) { return x && typeof x.name === 'string'; });
-            }
+            if (Array.isArray(data.list)) state.list = data.list.filter(function (x) { return x && typeof x.name === 'string'; });
             if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
-        } catch (e) { /* ignore corrupt or unavailable storage */ }
-    }
-
-    function save() {
-        try {
-            localStorage.setItem(STORE_KEY, JSON.stringify({ list: state.list, theme: state.theme }));
+            if (data.stats && typeof data.stats === 'object') {
+                ['w', 'l', 'd', 'ckBest'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
+            }
         } catch (e) { /* ignore */ }
     }
+    function save() {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify({ list: state.list, theme: state.theme, stats: state.stats })); } catch (e) { /* ignore */ }
+    }
 
-    // ---- helpers ----
+    /* =====================================================================
+       HELPERS
+       ===================================================================== */
     var $ = function (id) { return document.getElementById(id); };
     var norm = function (s) { return s.trim().toLowerCase(); };
+    var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
     function el(tag, className, text) {
         var node = document.createElement(tag);
@@ -515,31 +981,104 @@
         if (text != null) node.textContent = text;
         return node;
     }
+    function rand(a, b) { return a + Math.random() * (b - a); }
+    function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+    function center(node) {
+        var r = node.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+    function tf(p, scale, rot) {
+        return 'translate(' + p.x + 'px,' + p.y + 'px) translate(-50%,-50%) scale(' + scale + ') rotate(' + rot + 'deg)';
+    }
+    function makeFloat(cls, text) {
+        var n = el('div', cls, text);
+        n.setAttribute('aria-hidden', 'true');
+        n.style.transform = 'translate(-999px,-999px)';
+        document.body.appendChild(n);
+        return n;
+    }
+
+    /* Moves a node along a curve. Resolves when finished; the node stays in the DOM. */
+    function move(node, from, to, o) {
+        var mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 - (o.arc || 0) };
+        var spin = o.spin || 0;
+        var a = node.animate([
+            { transform: tf(from, o.s0, 0), opacity: 1 },
+            { transform: tf(mid, (o.s0 + o.s1) / 2, spin / 2), opacity: 1, offset: 0.5 },
+            { transform: tf(to, o.s1, spin), opacity: o.fade ? 0 : 1 }
+        ], { duration: o.dur, delay: o.delay || 0, easing: o.ease || 'ease-in', fill: 'both' });
+        return a.finished.then(function () {}, function () {});
+    }
+    /* Same, but removes the node afterwards. */
+    function fly(node, from, to, o) {
+        return move(node, from, to, o).then(function () { node.remove(); });
+    }
+    function pop(text, at, color) {
+        var n = makeFloat('pop', text);
+        if (color) n.style.color = color;
+        var p = function (dy, s) { return 'translate(' + at.x + 'px,' + (at.y + dy) + 'px) translate(-50%,-50%) scale(' + s + ')'; };
+        var a = n.animate([
+            { transform: p(0, 0.6), opacity: 0 },
+            { transform: p(-24, 1.1), opacity: 1, offset: 0.25 },
+            { transform: p(-64, 1), opacity: 0 }
+        ], { duration: 1000, easing: 'ease-out', fill: 'both' });
+        a.finished.then(function () { n.remove(); }, function () { n.remove(); });
+    }
+    function wisp(at) {
+        var w = makeFloat('wisp');
+        w.style.transform = tf(at, 1, 0);
+        var a = w.animate([
+            { transform: tf(at, 1, 0), opacity: 0.9 },
+            { transform: tf({ x: at.x + rand(-14, 14), y: at.y + rand(-18, 4) }, 0.2, 0), opacity: 0 }
+        ], { duration: 650, easing: 'ease-out', fill: 'both' });
+        a.finished.then(function () { w.remove(); }, function () { w.remove(); });
+    }
+    function shake(node) {
+        if (!node.animate) return;
+        node.animate([
+            { transform: 'translate(0,0)' }, { transform: 'translate(-4px,2px)' },
+            { transform: 'translate(4px,-2px)' }, { transform: 'translate(-3px,0)' }, { transform: 'translate(0,0)' }
+        ], { duration: 180 });
+    }
+
+    /* Where flying items should land: whichever cart indicator is on screen. */
+    function cartTarget() {
+        var ids = ['list-count', 'bar-count'];
+        for (var i = 0; i < ids.length; i++) {
+            var r = $(ids[i]).getBoundingClientRect();
+            if (r.width > 0 && r.bottom > 0 && r.top < window.innerHeight) return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        }
+        return { x: window.innerWidth / 2, y: window.innerHeight - 28 };
+    }
+    function bump() {
+        ['list-count', 'bar-count'].forEach(function (id) {
+            var b = $(id);
+            if (b.animate) b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.6)' }, { transform: 'scale(1)' }], { duration: 320 });
+        });
+    }
 
     function findOnList(name) {
         var n = norm(name);
-        for (var i = 0; i < state.list.length; i++) {
-            if (norm(state.list[i].name) === n) return state.list[i];
-        }
+        for (var i = 0; i < state.list.length; i++) if (norm(state.list[i].name) === n) return state.list[i];
         return null;
     }
-
     function addToList(name, icon) {
         var existing = findOnList(name);
-        if (existing) {
-            existing.qty += 1;
-            existing.done = false;
-        } else {
-            state.list.push({ name: name, icon: icon || '🛒', qty: 1, done: false });
-        }
+        if (existing) { existing.qty = Math.min(99, existing.qty + 1); existing.done = false; }
+        else state.list.push({ name: name, icon: icon || '🛒', qty: 1, done: false });
         save();
         render();
     }
 
-    // ---- themed "add to cart" interactions ----
-    var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    var HITS_NEEDED = 3;
+    /* =====================================================================
+       CATALOG RENDERING
+       ===================================================================== */
+    var cardRefs = {};
+    var catalogSig = '';
     var hits = {};
+    var HITS_NEEDED = 3;
 
     function actionLabel(i) {
         var onList = findOnList(i.name);
@@ -553,155 +1092,6 @@
         }
     }
 
-    function center(node) {
-        var r = node.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-    }
-
-    function tf(p, scale, rot) {
-        return 'translate(' + p.x + 'px,' + p.y + 'px) translate(-50%,-50%) scale(' + scale + ') rotate(' + rot + 'deg)';
-    }
-
-    function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-    function rand(a, b) { return a + Math.random() * (b - a); }
-
-    function makeFloat(cls, text) {
-        var n = el('div', cls, text);
-        n.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(n);
-        return n;
-    }
-
-    // Moves a node from -> to along a curve (arc = how high it bows upwards, in px).
-    function fly(node, from, to, o) {
-        var mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 - (o.arc || 0) };
-        var spin = o.spin || 0;
-        node.style.transform = tf(from, o.s0, 0);
-        var a = node.animate([
-            { transform: tf(from, o.s0, 0), opacity: 1 },
-            { transform: tf(mid, (o.s0 + o.s1) / 2, spin / 2), opacity: 1, offset: 0.5 },
-            { transform: tf(to, o.s1, spin), opacity: 0.9 }
-        ], { duration: o.dur, delay: o.delay || 0, easing: o.ease || 'ease-in', fill: 'both' });
-        var cleanup = function () { node.remove(); };
-        a.finished.then(cleanup, cleanup);
-    }
-
-    function pop(text, at, color) {
-        var n = makeFloat('pop', text);
-        if (color) n.style.color = color;
-        var p = function (dy, s) { return 'translate(' + at.x + 'px,' + (at.y + dy) + 'px) translate(-50%,-50%) scale(' + s + ')'; };
-        var a = n.animate([
-            { transform: p(0, 0.6), opacity: 0 },
-            { transform: p(-24, 1.1), opacity: 1, offset: 0.25 },
-            { transform: p(-64, 1), opacity: 0 }
-        ], { duration: 950, easing: 'ease-out', fill: 'both' });
-        var cleanup = function () { n.remove(); };
-        a.finished.then(cleanup, cleanup);
-    }
-
-    function shake(card) {
-        card.animate([
-            { transform: 'translate(0,0)' }, { transform: 'translate(-4px,2px)' },
-            { transform: 'translate(4px,-2px)' }, { transform: 'translate(-3px,0)' },
-            { transform: 'translate(0,0)' }
-        ], { duration: 180 });
-    }
-
-    function bump() {
-        var b = $('list-count');
-        if (b.animate) b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.6)' }, { transform: 'scale(1)' }], { duration: 320 });
-    }
-
-    function landed(item) {
-        delete hits[item.id];
-        addToList(item.name, item.icon);
-        bump();
-    }
-
-    function collect(item, card, btn) {
-        var theme = state.theme;
-        var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket';
-        if (!themed || REDUCED || !card.animate) { delete hits[item.id]; addToList(item.name, item.icon); return; }
-        if (card.dataset.busy) return;
-
-        var ico = card.querySelector('.item-ico');
-        var from = center(ico);
-        var to = center($('list-count'));
-
-        if (theme === 'harry-potter') {
-            // Flick the wand, cast the spell: the item is summoned into the list on a trail of sparks.
-            card.dataset.busy = '1'; btn.disabled = true;
-            var wandPos = { x: from.x - 42, y: from.y + 34 };
-            var wand = makeFloat('fly', '🪄');
-            wand.style.transform = tf(wandPos, 1, -40);
-            wand.animate([{ transform: tf(wandPos, 1, -40) }, { transform: tf(wandPos, 1, 30) }],
-                { duration: 300, easing: 'ease-out', fill: 'forwards' });
-            pop(Math.random() < 0.5 ? 'Accio!' : 'Wingardium Leviosa!', { x: from.x, y: from.y - 40 }, '#f3e5ab');
-            wait(300).then(function () {
-                ico.style.visibility = 'hidden';
-                wand.remove();
-                for (var k = 0; k < 4; k++) {
-                    fly(makeFloat('fly glow small', '✨'), from, to,
-                        { dur: 760, arc: 100, s0: 1.2, s1: 0.5, spin: 360, delay: k * 70, ease: 'ease-in-out' });
-                }
-                fly(makeFloat('fly glow', item.icon), from, to, { dur: 760, arc: 100, s0: 1, s1: 0.4, spin: 200, ease: 'ease-in-out' });
-                return wait(840);
-            }).then(function () { landed(item); });
-            return;
-        }
-
-        if (theme === 'minecraft') {
-            // Swing the pickaxe: three hits crack the block open and the drop flies to the list.
-            hits[item.id] = (hits[item.id] || 0) + 1;
-            shake(card);
-            pop('⛏️', { x: from.x + 34, y: from.y - 30 });
-            card.style.setProperty('--crack', String(hits[item.id] / HITS_NEEDED));
-            if (hits[item.id] < HITS_NEEDED) {
-                btn.textContent = actionLabel(item);
-                return;
-            }
-            card.dataset.busy = '1'; btn.disabled = true;
-            ico.style.visibility = 'hidden';
-            var colours = ['#6b4a2b', '#4a7227', '#8a8a8a', '#3c2a1a'];
-            for (var p = 0; p < 8; p++) {
-                var chip = makeFloat('fly block');
-                chip.style.background = colours[p % colours.length];
-                fly(chip, from, { x: from.x + rand(-70, 70), y: from.y + rand(20, 70) },
-                    { dur: 450, arc: rand(30, 60), s0: 1, s1: 1, spin: rand(-180, 180), ease: 'ease-out' });
-            }
-            wait(420).then(function () {
-                pop('+1 ' + item.name, { x: from.x, y: from.y - 20 });
-                fly(makeFloat('fly small', item.icon), { x: from.x, y: from.y + 30 }, to,
-                    { dur: 700, arc: 60, s0: 0.9, s1: 0.4, spin: 0, ease: 'ease-in' });
-                return wait(720);
-            }).then(function () { landed(item); });
-            return;
-        }
-
-        if (theme === 'cricket') {
-            // Swing the bat: the item is the ball and gets smashed into the list.
-            card.dataset.busy = '1'; btn.disabled = true;
-            var batPos = { x: from.x - 40, y: from.y + 6 };
-            var bat = makeFloat('fly', '🏏');
-            bat.style.transform = tf(batPos, 1, -80);
-            bat.animate([{ transform: tf(batPos, 1, -80) }, { transform: tf(batPos, 1.15, 70) }],
-                { duration: 260, easing: 'ease-in', fill: 'forwards' });
-            wait(170).then(function () {
-                ico.style.visibility = 'hidden';
-                pop(Math.random() < 0.5 ? 'SIX!' : 'FOUR!', { x: from.x, y: from.y - 40 }, '#fde047');
-                fly(makeFloat('fly', item.icon), from, to, { dur: 900, arc: 180, s0: 1, s1: 0.4, spin: 720, ease: 'ease-in-out' });
-                return wait(930);
-            }).then(function () { bat.remove(); landed(item); });
-        }
-    }
-
-    function setTheme(t) {
-        state.theme = t;
-        document.documentElement.setAttribute('data-theme', t);
-        $('theme-select').value = t;
-    }
-
-    // ---- rendering ----
     function renderCategories() {
         var box = $('categories');
         box.textContent = '';
@@ -709,7 +1099,9 @@
             var b = el('button', 'category-element' + (state.cat === c.id ? ' active' : ''));
             b.type = 'button';
             b.setAttribute('aria-pressed', String(state.cat === c.id));
-            b.appendChild(el('span', 'element-ico', c.icon)).setAttribute('aria-hidden', 'true');
+            var ico = el('span', 'element-ico', c.icon);
+            ico.setAttribute('aria-hidden', 'true');
+            b.appendChild(ico);
             b.appendChild(el('span', 'element-lbl', c.label));
             b.addEventListener('click', function () { state.cat = c.id; render(); });
             box.appendChild(b);
@@ -721,35 +1113,46 @@
         var items = CATALOG.filter(function (i) {
             return (state.cat === 'all' || i.cat === state.cat) && (!q || i.name.toLowerCase().indexOf(q) !== -1);
         });
-
+        var sig = state.theme + '|' + state.cat + '|' + q;
         var grid = $('catalog');
+
+        if (sig === catalogSig) {
+            // Same cards: just refresh labels so animations are not interrupted.
+            items.forEach(function (i) {
+                var ref = cardRefs[i.id];
+                if (ref && !ref.card.dataset.busy) ref.btn.textContent = actionLabel(i);
+            });
+            return;
+        }
+        catalogSig = sig;
+        cardRefs = {};
         grid.textContent = '';
 
         if (!items.length) {
-            var msg = q
+            grid.appendChild(el('p', 'empty', q
                 ? 'No match for "' + state.query.trim() + '". Press "Add to list" to add it as a new item.'
-                : 'Nothing in this category.';
-            grid.appendChild(el('p', 'empty', msg));
+                : 'Nothing in this category.'));
             return;
         }
 
-        items.forEach(function (i) {
-            var onList = findOnList(i.name);
+        items.forEach(function (i, idx) {
             var card = el('div', 'item-box');
-            var ico = el('div', 'item-ico', i.icon);
-            ico.setAttribute('aria-hidden', 'true');
-            card.appendChild(ico);
-            card.appendChild(el('h3', 'item-name', i.name));
-            var catLabel = CATEGORIES.filter(function (c) { return c.id === i.cat; })[0].label;
-            card.appendChild(el('div', 'item-tag', catLabel));
-
+            card.style.setProperty('--i', String(idx % 14));
             card.style.setProperty('--crack', String((hits[i.id] || 0) / HITS_NEEDED));
+            var art = el('div', 'item-art');
+            var ico = el('span', 'item-ico', i.icon);
+            ico.setAttribute('aria-hidden', 'true');
+            art.appendChild(ico);
+            card.appendChild(art);
+            card.appendChild(el('h3', 'item-name', i.name));
+            card.appendChild(el('div', 'item-tag', CATEGORIES.filter(function (c) { return c.id === i.cat; })[0].label));
             var btn = el('button', 'btn-trigger', actionLabel(i));
             btn.type = 'button';
             btn.setAttribute('aria-label', 'Add ' + i.name + ' to list');
             btn.addEventListener('click', function () { collect(i, card, btn); });
             card.appendChild(btn);
             grid.appendChild(card);
+            cardRefs[i.id] = { card: card, ico: ico, btn: btn, item: i };
         });
     }
 
@@ -757,16 +1160,15 @@
         var ul = $('list');
         ul.textContent = '';
         $('list-count').textContent = String(state.list.length);
+        $('bar-count').textContent = String(state.list.length);
         $('list-footer').hidden = state.list.length === 0;
 
         if (!state.list.length) {
-            ul.appendChild(el('li', 'empty', 'Your list is empty. Add something from the items.'));
+            ul.appendChild(el('li', 'empty', 'Nothing here yet. Add something from the items.'));
             return;
         }
-
         state.list.forEach(function (item, idx) {
             var li = el('li', 'list-row' + (item.done ? ' done' : ''));
-
             var cb = el('input');
             cb.type = 'checkbox';
             cb.checked = item.done;
@@ -779,9 +1181,7 @@
             var minus = el('button', null, '−');
             minus.type = 'button';
             minus.setAttribute('aria-label', 'Decrease quantity of ' + item.name);
-            minus.addEventListener('click', function () {
-                if (item.qty > 1) { item.qty -= 1; save(); render(); }
-            });
+            minus.addEventListener('click', function () { if (item.qty > 1) { item.qty -= 1; save(); render(); } });
             var count = el('span', null, String(item.qty));
             var plus = el('button', null, '+');
             plus.type = 'button';
@@ -806,63 +1206,944 @@
         $('clear-search').hidden = !state.query;
     }
 
-    // ---- events ----
+    /* =====================================================================
+       THEME SWITCHING
+       ===================================================================== */
+    function buildBannerFx(theme) {
+        var fx = $('banner-fx');
+        fx.textContent = '';
+        if (REDUCED) return;
+        var i, n;
+        if (theme === 'harry-potter') {
+            for (i = 0; i < 8; i++) {
+                n = el('span', 'fx candle', '🕯️');
+                n.style.left = (6 + i * 12 + rand(-3, 3)) + '%';
+                n.style.top = rand(6, 46) + '%';
+                n.style.animationDelay = (-rand(0, 5)) + 's, ' + (-rand(0, 2)) + 's';
+                fx.appendChild(n);
+            }
+        } else if (theme === 'minecraft') {
+            for (i = 0; i < 4; i++) {
+                n = el('span', 'fx cloud');
+                n.style.top = (18 + i * 26) + 'px';
+                n.style.animationDuration = (60 + i * 25) + 's';
+                n.style.animationDelay = (-rand(0, 60)) + 's';
+                fx.appendChild(n);
+            }
+        } else if (theme === 'cricket') {
+            n = el('span', 'fx ball', '🏏');
+            n.style.animationDuration = '14s';
+            fx.appendChild(n);
+            n = el('span', 'fx ball', '🔴');
+            n.style.animationDuration = '9s';
+            n.style.animationDelay = '-3s';
+            n.style.bottom = '30px';
+            fx.appendChild(n);
+        } else if (theme === 'dark') {
+            for (i = 0; i < 14; i++) {
+                n = el('span', 'fx spark');
+                n.style.left = rand(2, 98) + '%';
+                n.style.top = rand(6, 70) + '%';
+                n.style.animationDelay = (-rand(0, 3)) + 's';
+                n.style.transform = 'scale(' + rand(0.4, 0.9) + ')';
+                fx.appendChild(n);
+            }
+        }
+    }
+
+    function setTheme(t) {
+        var prev = state.theme;
+        state.theme = t;
+        document.documentElement.setAttribute('data-theme', t);
+        $('theme-select').value = t;
+
+        var copy = THEME_COPY[t];
+        $('brand-ico').textContent = copy.icon;
+        $('brand-title').textContent = copy.title;
+        $('brand-sub').textContent = copy.sub;
+        $('list-title-text').textContent = copy.list;
+        $('bar-label').textContent = copy.bar;
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-theme-panel]'), function (p) {
+            p.hidden = p.getAttribute('data-theme-panel') !== t;
+        });
+        $('wand-wrap').hidden = t !== 'harry-potter';
+
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
+        meta.content = { light: '#7c3aed', dark: '#131a3a', 'harry-potter': '#170d38', minecraft: '#5d9bff', cricket: '#0f4a25' }[t];
+
+        buildBannerFx(t);
+        if (prev === 'cricket' && t !== 'cricket') Cricket.leave();
+        if (prev === 'harry-potter' && t !== 'harry-potter') Duel.leave();
+        if (t === 'minecraft') MC.open();
+        if (t === 'cricket') Cricket.enter();
+        if (t === 'harry-potter') Duel.enter();
+    }
+
+    /* =====================================================================
+       ADD-TO-CART INTERACTIONS
+       ===================================================================== */
+    function finishCard(item) {
+        var ref = cardRefs[item.id];
+        if (!ref) return;
+        ref.ico.style.visibility = '';
+        delete ref.card.dataset.busy;
+        ref.btn.disabled = false;
+        ref.btn.textContent = actionLabel(item);
+    }
+    function landed(item) {
+        delete hits[item.id];
+        addToList(item.name, item.icon);
+        bump();
+        finishCard(item);
+    }
+
+    function collect(item, card, btn) {
+        var theme = state.theme;
+        var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket';
+        if (!themed || REDUCED || !card.animate) { delete hits[item.id]; addToList(item.name, item.icon); return; }
+        if (card.dataset.busy) return;
+        var ref = cardRefs[item.id];
+        var ico = ref.ico;
+        var from = center(ico);
+
+        if (theme === 'harry-potter') { castHP(item, card, btn, ico); return; }
+
+        var to = cartTarget();
+
+        if (theme === 'minecraft') {
+            hits[item.id] = (hits[item.id] || 0) + 1;
+            shake(card);
+            pop('⛏️', { x: from.x + 34, y: from.y - 30 });
+            card.style.setProperty('--crack', String(hits[item.id] / HITS_NEEDED));
+            if (hits[item.id] < HITS_NEEDED) { btn.textContent = actionLabel(item); return; }
+            card.dataset.busy = '1'; btn.disabled = true;
+            ico.style.visibility = 'hidden';
+            var colours = ['#6b4a2b', '#4a7227', '#8a8a8a', '#3c2a1a'];
+            for (var p = 0; p < 8; p++) {
+                var chip = makeFloat('fly block');
+                chip.style.background = colours[p % colours.length];
+                fly(chip, from, { x: from.x + rand(-70, 70), y: from.y + rand(20, 70) },
+                    { dur: 450, arc: rand(30, 60), s0: 1, s1: 1, spin: rand(-180, 180), ease: 'ease-out' });
+            }
+            wait(420).then(function () {
+                pop('+1 ' + item.name, { x: from.x, y: from.y - 20 });
+                return fly(makeFloat('fly small', item.icon), { x: from.x, y: from.y + 30 }, cartTarget(),
+                    { dur: 700, arc: 60, s0: 0.9, s1: 0.4, ease: 'ease-in' });
+            }).then(function () { landed(item); });
+            return;
+        }
+
+        if (theme === 'cricket') {
+            card.dataset.busy = '1'; btn.disabled = true;
+            var batPos = { x: from.x - 40, y: from.y + 6 };
+            var bat = makeFloat('fly', '🏏');
+            bat.style.transform = tf(batPos, 1, -80);
+            bat.animate([{ transform: tf(batPos, 1, -80) }, { transform: tf(batPos, 1.15, 70) }], { duration: 260, easing: 'ease-in', fill: 'forwards' });
+            wait(170).then(function () {
+                ico.style.visibility = 'hidden';
+                pop(Math.random() < 0.5 ? 'SIX!' : 'FOUR!', { x: from.x, y: from.y - 40 }, '#fde047');
+                return fly(makeFloat('fly', item.icon), from, cartTarget(), { dur: 900, arc: 180, s0: 1, s1: 0.4, spin: 720, ease: 'ease-in-out' });
+            }).then(function () { bat.remove(); landed(item); });
+        }
+    }
+
+    /* ---------- Harry Potter: wand, spell, Patronus ---------- */
+    var wandCasts = 0;
+    var patronusCount = 0;
+    var pendingPick = null;
+
+    function flickWand() {
+        var svg = $('wand-svg');
+        if (!svg.animate) return;
+        svg.animate([
+            { transform: 'rotate(-10deg)' }, { transform: 'rotate(-38deg)' },
+            { transform: 'rotate(18deg)' }, { transform: 'rotate(-10deg)' }
+        ], { duration: 460, easing: 'ease-in-out' });
+    }
+
+    async function castHP(item, card, btn, ico) {
+        card.dataset.busy = '1'; btn.disabled = true;
+        wandCasts++;
+        var from = center(ico);
+        var tip = center($('wand-tip'));
+        flickWand();
+        await wait(220);
+        tip = center($('wand-tip'));
+        // Bolt of light from the wand tip to the item.
+        await fly(makeFloat('fly glow small', '✨'), tip, from, { dur: 380, arc: 24, s0: 0.8, s1: 1.2, spin: 180, ease: 'ease-in' });
+
+        var summon = Math.random() < 0.2;
+        var choice = null;
+        if (summon) {
+            pop('Expecto Patronum!', { x: from.x, y: from.y - 46 }, '#cdefff');
+            for (var s = 0; s < 6; s++) wisp({ x: from.x + rand(-40, 40), y: from.y + rand(-30, 30) });
+            await wait(450);
+            choice = await choosePatronus(item.name);
+        }
+        if (choice) {
+            patronusCount++;
+            await runPatronus(choice, item, ico);
+        } else {
+            await plainSpell(item, ico);
+        }
+        landed(item);
+    }
+
+    async function plainSpell(item, ico) {
+        var from = center(ico);
+        ico.style.visibility = 'hidden';
+        pop(Math.random() < 0.5 ? 'Accio!' : 'Wingardium Leviosa!', { x: from.x, y: from.y - 44 }, '#f3e5ab');
+        var to = cartTarget();
+        for (var k = 0; k < 4; k++) {
+            fly(makeFloat('fly glow small', '✨'), from, to, { dur: 760, arc: 100, s0: 1.2, s1: 0.5, spin: 360, delay: k * 70, ease: 'ease-in-out' });
+        }
+        await fly(makeFloat('fly glow', item.icon), from, to, { dur: 760, arc: 100, s0: 1, s1: 0.4, spin: 200, ease: 'ease-in-out' });
+    }
+
+    async function runPatronus(p, item, ico) {
+        var from = center(ico);
+        var tip = center($('wand-tip'));
+        var pat = makeFloat('fly patronus', p.icon);
+        var trail = setInterval(function () { var r = pat.getBoundingClientRect(); if (r.width) wisp({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); }, 55);
+        try {
+            // 1. Materialise at the wand tip.
+            await move(pat, tip, tip, { dur: 380, arc: 0, s0: 0.2, s1: 1.2, ease: 'ease-out' });
+            // 2. Run to the item.
+            await move(pat, tip, from, { dur: 720, arc: 60, s0: 1.2, s1: 1.2, ease: 'ease-in-out' });
+            // 3. Pick it up and carry it towards the cart.
+            ico.style.visibility = 'hidden';
+            var thing = makeFloat('fly carried', item.icon);
+            var cart = cartTarget();
+            var stop = { x: cart.x + (from.x - cart.x) * 0.28, y: cart.y + (from.y - cart.y) * 0.28 };
+            pop('Fetch!', { x: from.x, y: from.y - 40 }, '#cdefff');
+            await Promise.all([
+                move(pat, from, stop, { dur: 900, arc: 90, s0: 1.2, s1: 1.15, ease: 'ease-in-out' }),
+                move(thing, from, { x: stop.x - 8, y: stop.y + 6 }, { dur: 900, arc: 90, s0: 1, s1: 0.9, ease: 'ease-in-out' })
+            ]);
+            // 4. Throw it into the cart.
+            var target = cartTarget();
+            var throwing = move(thing, { x: stop.x - 8, y: stop.y + 6 }, target, { dur: 560, arc: 90, s0: 0.9, s1: 0.4, spin: 540, ease: 'ease-in' });
+            pat.animate([{ transform: tf(stop, 1.15, 0) }, { transform: tf(stop, 1.3, -12) }, { transform: tf(stop, 1.15, 0) }], { duration: 400, fill: 'forwards' });
+            await throwing;
+            thing.remove();
+            // 5. Dissolve into silver mist.
+            for (var k = 0; k < 8; k++) wisp({ x: stop.x + rand(-30, 30), y: stop.y + rand(-30, 30) });
+            await pat.animate([{ opacity: 1, transform: tf(stop, 1.15, 0) }, { opacity: 0, transform: tf(stop, 1.9, 0) }], { duration: 600, fill: 'forwards' }).finished.catch(function () {});
+        } finally {
+            clearInterval(trail);
+            pat.remove();
+        }
+    }
+
+    function choosePatronus(itemName) {
+        return new Promise(function (resolve) {
+            var modal = $('patronus-modal');
+            $('pm-item').textContent = itemName;
+            pendingPick = function (v) {
+                pendingPick = null;
+                modal.hidden = true;
+                resolve(v);
+            };
+            modal.hidden = false;
+            var first = modal.querySelector('.patronus-opt');
+            if (first) first.focus();
+        });
+    }
+
+    function initPatronusModal() {
+        var grid = $('patronus-grid');
+        PATRONUSES.forEach(function (p) {
+            var b = el('button', 'patronus-opt');
+            b.type = 'button';
+            var pi = el('span', 'pi', p.icon);
+            pi.setAttribute('aria-hidden', 'true');
+            b.appendChild(pi);
+            b.appendChild(document.createTextNode(p.name));
+            b.appendChild(el('small', null, p.note));
+            b.addEventListener('click', function () { if (pendingPick) pendingPick(p); });
+            grid.appendChild(b);
+        });
+        $('pm-skip').addEventListener('click', function () { if (pendingPick) pendingPick(null); });
+        $('patronus-modal').addEventListener('click', function (e) { if (e.target === this && pendingPick) pendingPick(null); });
+        $('patronus-modal').addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && pendingPick) { pendingPick(null); return; }
+            if (e.key === 'Tab') {
+                var f = this.querySelectorAll('button');
+                var firstB = f[0], lastB = f[f.length - 1];
+                if (e.shiftKey && document.activeElement === firstB) { e.preventDefault(); lastB.focus(); }
+                else if (!e.shiftKey && document.activeElement === lastB) { e.preventDefault(); firstB.focus(); }
+            }
+        });
+
+        var wand = $('wand'), bubble = $('wand-bubble'), t;
+        wand.addEventListener('click', function () {
+            var on = !bubble.classList.contains('show');
+            bubble.classList.toggle('show', on);
+            wand.setAttribute('aria-expanded', String(on));
+            flickWand();
+            clearTimeout(t);
+            if (on) t = setTimeout(function () { bubble.classList.remove('show'); wand.setAttribute('aria-expanded', 'false'); }, 5000);
+        });
+    }
+
+    /* =====================================================================
+       DUELING CORNER
+       ===================================================================== */
+    var Duel = (function () {
+        var BEATS = { stupefy: 'expelliarmus', expelliarmus: 'protego', protego: 'stupefy' };
+        var DMG = { stupefy: 18, expelliarmus: 14, protego: 8 };
+        var NAMES = { stupefy: 'Stupefy', expelliarmus: 'Expelliarmus', protego: 'Protego' };
+        var foe = DUELISTS[0];
+        var hp = { you: 100, foe: 100 };
+        var max = { you: 100, foe: 100 };
+        var active = false, busy = false;
+        var hist = { stupefy: 0, expelliarmus: 0, protego: 0 };
+        var inited = false;
+
+        function log(msg) { $('duel-log').textContent = msg; }
+        function bars() {
+            ['you', 'foe'].forEach(function (k) {
+                $('hp-' + k).style.width = (clamp(hp[k], 0, max[k]) / max[k] * 100) + '%';
+                $('hpn-' + k).textContent = Math.max(0, hp[k]) + ' / ' + max[k];
+            });
+        }
+        function moves(enabled) {
+            Array.prototype.forEach.call(document.querySelectorAll('.move-btn'), function (b) { b.disabled = !enabled; });
+        }
+        function record() {
+            var s = state.stats;
+            $('duel-record').textContent = 'Record: ' + s.w + ' won · ' + s.l + ' lost · ' + s.d + ' drawn';
+        }
+        function pickFoe() {
+            var id = $('duel-opponent').value;
+            foe = DUELISTS.filter(function (d) { return d.id === id; })[0] || DUELISTS[0];
+            $('av-foe').textContent = foe.icon;
+            $('foe-name').textContent = foe.name;
+            $('opp-blurb').textContent = foe.blurb;
+        }
+        function reset() {
+            active = false; busy = false;
+            max.you = 100; max.foe = foe.hp;
+            hp.you = 100; hp.foe = foe.hp;
+            hist = { stupefy: 0, expelliarmus: 0, protego: 0 };
+            ['f-you', 'f-foe'].forEach(function (id) { $(id).classList.remove('ko', 'hurt', 'shielded'); });
+            moves(false);
+            bars();
+        }
+
+        function foeMove() {
+            if (foe.skill && Math.random() < foe.skill) {
+                // Predict: counter whatever the player uses most.
+                var fav = null, best = -1;
+                Object.keys(hist).forEach(function (m) { if (hist[m] > best || (hist[m] === best && Math.random() < 0.5)) { best = hist[m]; fav = m; } });
+                if (best > 0) { for (var m in BEATS) if (BEATS[m] === fav) return m; }
+            }
+            var r = Math.random(), w = foe.weights;
+            return r < w[0] ? 'stupefy' : (r < w[0] + w[1] ? 'expelliarmus' : 'protego');
+        }
+
+        function resolve(pm, fm) {
+            // Returns damage dealt to each side and a description.
+            var toYou = 0, toFoe = 0, text;
+            var fn = foe.name.split(' ')[0];
+            if (pm === fm) {
+                if (pm === 'protego') text = 'Both of you raise a shield. Nothing happens.';
+                else { toYou = 6; toFoe = 6; text = 'Your ' + NAMES[pm] + 's collide! You both take 6.'; }
+            } else if (BEATS[pm] === fm) {
+                toFoe = DMG[pm];
+                text = pm === 'stupefy' ? 'Stupefy overpowers ' + fn + "'s Expelliarmus! " + fn + ' takes ' + toFoe + '.'
+                     : pm === 'expelliarmus' ? 'Expelliarmus cracks ' + fn + "'s Protego! " + fn + ' takes ' + toFoe + '.'
+                     : 'Your Protego reflects ' + fn + "'s Stupefy! " + fn + ' takes ' + toFoe + '.';
+            } else {
+                toYou = DMG[fm];
+                text = fm === 'stupefy' ? fn + "'s Stupefy overpowers your Expelliarmus! You take " + toYou + '.'
+                     : fm === 'expelliarmus' ? fn + "'s Expelliarmus cracks your Protego! You take " + toYou + '.'
+                     : fn + "'s Protego reflects your Stupefy! You take " + toYou + '.';
+            }
+            return { toYou: toYou, toFoe: toFoe, text: text };
+        }
+
+        function hurt(id, amount) {
+            var f = $(id);
+            f.classList.remove('hurt'); void f.offsetWidth; f.classList.add('hurt');
+            pop('-' + amount, center(f), '#ff8a8a');
+        }
+
+        async function play(pm) {
+            if (!active || busy) return;
+            busy = true; moves(false);
+            hist[pm]++;
+            var fn = foe.name.split(' ')[0];
+            var res, fm, event = null;
+            if (foe.event && Math.random() < foe.event.chance) event = foe.event.type;
+
+            var youEl = $('av-you'), foeEl = $('av-foe');
+            if (event === 'daydream') {
+                fm = null;
+                res = { toYou: 0, toFoe: pm === 'protego' ? 0 : DMG[pm], text: fn + ' gets distracted by a Nargle and forgets to cast!' + (pm === 'protego' ? '' : ' Your ' + NAMES[pm] + ' lands for ' + DMG[pm] + '.') };
+            } else if (event === 'prank') {
+                fm = null;
+                res = { toYou: 6, toFoe: 6, text: 'Fireworks! A Weasley Wizard Wheeze goes off and you both take 6.' };
+            } else {
+                fm = foeMove();
+                res = resolve(pm, fm);
+            }
+
+            // Animate the exchange.
+            var shots = [];
+            if (pm !== 'protego' && event !== 'prank') shots.push(fly(makeFloat('fly bolt ' + pm), center(youEl), center(foeEl), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+            if (fm && fm !== 'protego') shots.push(fly(makeFloat('fly bolt ' + fm), center(foeEl), center(youEl), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+            if (pm === 'protego') { $('f-you').classList.add('shielded'); pop('🛡️', center(youEl)); }
+            if (fm === 'protego') { $('f-foe').classList.add('shielded'); pop('🛡️', center(foeEl)); }
+            if (event === 'prank') pop('🎆', center($('duel-arena')));
+            if (!REDUCED) await Promise.all(shots.concat([wait(450)]));
+            $('f-you').classList.remove('shielded'); $('f-foe').classList.remove('shielded');
+
+            hp.you -= res.toYou; hp.foe -= res.toFoe;
+            if (res.toYou) hurt('f-you', res.toYou);
+            if (res.toFoe) hurt('f-foe', res.toFoe);
+            bars();
+            log('You cast ' + NAMES[pm] + (fm ? '; ' + fn + ' cast ' + NAMES[fm] + '. ' : '. ') + res.text);
+
+            if (hp.you <= 0 || hp.foe <= 0) {
+                active = false;
+                var s = state.stats;
+                if (hp.you <= 0 && hp.foe <= 0) { s.d++; log(res.text + ' You both fall. A draw!'); }
+                else if (hp.foe <= 0) { s.w++; $('f-foe').classList.add('ko'); log(res.text + ' Victory! ' + foe.name + ': "' + foe.lose + '"'); }
+                else { s.l++; $('f-you').classList.add('ko'); log(res.text + ' Defeated. ' + foe.name + ': "' + foe.win + '"'); }
+                save(); record();
+                $('duel-start').textContent = 'Rematch';
+                $('duel-start').disabled = false;
+                busy = false;
+                return;
+            }
+            busy = false;
+            moves(true);
+        }
+
+        function start() {
+            pickFoe();
+            reset();
+            active = true;
+            $('duel-start').textContent = 'Restart';
+            log(foe.name + ': "' + foe.taunt + '" Choose your spell.');
+            moves(true);
+        }
+
+        function init() {
+            if (inited) return;
+            inited = true;
+            var sel = $('duel-opponent');
+            DUELISTS.forEach(function (d) {
+                var o = el('option', null, d.icon + ' ' + d.name);
+                o.value = d.id;
+                sel.appendChild(o);
+            });
+            sel.addEventListener('change', function () { pickFoe(); reset(); $('duel-start').textContent = 'Challenge'; log('Press Challenge when you are ready.'); });
+            $('duel-start').addEventListener('click', start);
+            Array.prototype.forEach.call(document.querySelectorAll('.move-btn'), function (b) {
+                b.addEventListener('click', function () { play(b.getAttribute('data-move')); });
+            });
+            pickFoe(); reset(); record();
+        }
+
+        return {
+            enter: function () { init(); },
+            leave: function () { if (inited) { reset(); $('duel-start').textContent = 'Challenge'; log('Choose an opponent and press Challenge.'); } }
+        };
+    })();
+
+    /* =====================================================================
+       MINECRAFT UPDATE LOG
+       ===================================================================== */
+    var MC = (function () {
+        var filter = 'all';
+        var live = null;       // { latestRelease, latestSnapshot, versions, at }
+        var syncing = false;
+        var opened = false;
+
+        var wikiUrl = function (id) { return 'https://minecraft.wiki/w/Java_Edition_' + encodeURIComponent(id); };
+
+        function pretty(id) {
+            var m = /^(\d+\.\d+(?:\.\d+)?)-snapshot-(\d+)$/.exec(id);
+            return m ? m[1] + ' Snapshot ' + m[2] : id;
+        }
+        function fmtDate(s) {
+            var p = s.split('-');
+            var d = new Date(+p[0], +p[1] - 1, +p[2]);
+            return isNaN(d) ? s : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function entries() {
+            var byId = {}, out = MC_CURATED.slice();
+            MC_CURATED.forEach(function (e) { byId[e.id] = e; });
+            if (live) {
+                live.versions.slice(0, 14).forEach(function (v) {
+                    if (byId[v.id] || /-(pre|rc)-?\d+$/.test(v.id)) return;
+                    out.push({ id: v.id, edition: 'java', kind: v.type === 'release' ? 'release' : 'snapshot', date: v.releaseTime.slice(0, 10), title: pretty(v.id), bullets: [], fresh: true });
+                });
+            }
+            out.sort(function (a, b) { return a.date < b.date ? 1 : (a.date > b.date ? -1 : 0); });
+            var java = out.filter(function (e) { return e.edition === 'java'; });
+            var latestRel = live ? live.latestRelease : (java.filter(function (e) { return e.kind === 'release'; })[0] || {}).id;
+            var latestSnap = live ? live.latestSnapshot : (java.filter(function (e) { return e.kind === 'snapshot'; })[0] || {}).id;
+            out.forEach(function (e) { e.latest = e.id === latestRel ? 'Latest release' : (e.id === latestSnap ? 'Latest snapshot' : ''); });
+            return out;
+        }
+
+        function render() {
+            var ol = $('mc-list');
+            ol.textContent = '';
+            var shown = entries().filter(function (e) { return filter === 'all' || e.kind === filter; }).slice(0, 12);
+            if (!shown.length) { ol.appendChild(el('li', 'empty', 'No updates in this filter.')); return; }
+            shown.forEach(function (e) {
+                var li = el('li');
+                var d = el('details', 'mc-entry');
+                if (e.latest === 'Latest release' || e.latest === 'Latest snapshot') d.open = e === shown[0] || e.latest === 'Latest release';
+                var sum = el('summary');
+                var head = el('div', 'mc-head');
+                head.appendChild(el('span', 'mc-ver', e.edition === 'bedrock' ? e.title : pretty(e.id)));
+                head.appendChild(el('span', 'tag ' + e.kind, e.kind === 'bedrock' ? 'Bedrock' : (e.kind === 'release' ? 'Release' : 'Snapshot')));
+                if (e.latest) head.appendChild(el('span', 'tag latest', e.latest));
+                sum.appendChild(head);
+                sum.appendChild(el('span', 'mc-date', fmtDate(e.date)));
+                if (e.edition !== 'bedrock' && e.title && e.title !== pretty(e.id)) sum.appendChild(el('span', 'mc-title', e.title));
+                d.appendChild(sum);
+                if (e.bullets && e.bullets.length) {
+                    var ul = el('ul');
+                    e.bullets.forEach(function (b) { ul.appendChild(el('li', null, b)); });
+                    d.appendChild(ul);
+                } else {
+                    d.appendChild(el('ul')).appendChild(el('li', null, e.fresh ? 'Newly published. Open the full notes for details.' : 'See the full notes for details.'));
+                }
+                var a = el('a', null, 'Full notes ↗');
+                a.href = e.url || wikiUrl(e.id);
+                a.target = '_blank'; a.rel = 'noopener noreferrer';
+                d.appendChild(a);
+                li.appendChild(d);
+                ol.appendChild(li);
+            });
+        }
+
+        function status() {
+            var box = $('mc-status'), txt = $('mc-status-text');
+            if (syncing) { box.classList.remove('live'); txt.textContent = 'Syncing with Mojang…'; return; }
+            if (live) {
+                box.classList.add('live');
+                txt.textContent = 'Live. Release ' + live.latestRelease + ', snapshot ' + live.latestSnapshot + '. Synced ' + new Date(live.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else {
+                box.classList.remove('live');
+                txt.textContent = 'Saved copy from ' + fmtDate(MC_CHECKED) + '. Could not reach the live feed.';
+            }
+        }
+
+        async function sync() {
+            if (syncing) return;
+            syncing = true; status();
+            var ctrl = ('AbortController' in window) ? new AbortController() : null;
+            var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 7000);
+            try {
+                var res = await fetch('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json', { cache: 'no-store', signal: ctrl ? ctrl.signal : undefined });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                if (!data || !data.latest || !Array.isArray(data.versions)) throw new Error('Unexpected feed');
+                live = { latestRelease: String(data.latest.release), latestSnapshot: String(data.latest.snapshot), versions: data.versions, at: Date.now() };
+            } catch (e) {
+                /* keep whatever we had: live data from earlier, or the saved copy */
+            } finally {
+                clearTimeout(timer);
+                syncing = false;
+            }
+            status(); render();
+        }
+
+        function init() {
+            $('mc-refresh').addEventListener('click', sync);
+            Array.prototype.forEach.call(document.querySelectorAll('#mc-filters .chip'), function (c) {
+                c.addEventListener('click', function () {
+                    filter = c.getAttribute('data-f');
+                    Array.prototype.forEach.call(document.querySelectorAll('#mc-filters .chip'), function (o) { o.setAttribute('aria-pressed', String(o === c)); });
+                    render();
+                });
+            });
+        }
+
+        return {
+            open: function () {
+                if (!opened) { opened = true; init(); }
+                render(); status();
+                sync();
+            }
+        };
+    })();
+
+    /* =====================================================================
+       CRICKET MOCK MATCH (canvas)
+       ===================================================================== */
+    var Cricket = (function () {
+        var cv, ctx, W = 0, H = 0, dpr = 1;
+        var BALLS = 6, WICKETS = 2;
+        var PACES = [
+            { name: 'Fast', dur: 0.85 }, { name: 'Medium', dur: 1.1 }, { name: 'Medium', dur: 1.15 }, { name: 'Slow', dur: 1.45 }
+        ];
+        var G = { state: 'idle', runs: 0, balls: 0, wk: 0, t: 0, p: 0, dur: 1.1, pace: PACES[1], xEnd: 0.5, swung: false, swingT: -9,
+                  hit: null, popup: null, bowled: false, stateT: 0 };
+        var raf = 0, last = 0, inited = false, crowd = [];
+
+        var ease = function (u) { return 1 - Math.pow(1 - u, 3); };
+        var lerp = function (a, b, u) { return a + (b - a) * u; };
+
+        function hud() {
+            $('ck-runs').textContent = G.runs;
+            $('ck-balls').textContent = G.balls + '/' + BALLS;
+            $('ck-wk').textContent = G.wk + '/' + WICKETS;
+            $('ck-best').textContent = state.stats.ckBest;
+        }
+
+        function size() {
+            if (!cv) return;
+            var r = cv.getBoundingClientRect();
+            if (!r.width) return;
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            W = Math.round(r.width); H = Math.round(r.height);
+            cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+            draw(0);
+        }
+
+        /* ----- ball path ----- */
+        function ballAt(p) {
+            var pb = 0.62;
+            var x = lerp(0.5, G.xEnd, Math.min(p, 1.4));
+            var gy = 0.33 + 0.53 * Math.pow(Math.max(p, 0), 1.25);
+            var hh = p < pb ? 0.08 * (1 - p / pb) : 0.09 * Math.pow(Math.min((p - pb) / (1 - pb), 1.4), 0.8);
+            var r = W * (0.008 + 0.028 * Math.pow(Math.max(p, 0), 1.2));
+            return { x: x * W, gy: gy * H, y: (gy - hh) * H, r: r, hh: hh * H };
+        }
+
+        /* ----- game flow ----- */
+        function start() {
+            G.runs = 0; G.balls = 0; G.wk = 0; G.hit = null; G.popup = null; G.bowled = false;
+            hud();
+            $('ck-overlay').hidden = true;
+            nextBall();
+            if ($('ck-canvas')) cv.focus({ preventScroll: true });
+        }
+
+        function nextBall() {
+            G.state = 'runup'; G.stateT = 0; G.swung = false; G.hit = null; G.bowled = false; G.swingT = -9;
+            G.pace = G.balls === 0 ? PACES[1] : PACES[Math.floor(Math.random() * PACES.length)];
+            G.dur = G.pace.dur * rand(0.95, 1.08);
+            G.xEnd = rand(0.46, 0.56);
+            G.p = 0;
+            loop();
+        }
+
+        function popup(text, sub, color) { G.popup = { text: text, sub: sub || '', color: color || '#fff', t: 0 }; }
+
+        function endBall() {
+            G.balls++;
+            hud();
+            if (G.balls >= BALLS || G.wk >= WICKETS) { finish(); return; }
+            nextBall();
+        }
+
+        function finish() {
+            G.state = 'over';
+            var newBest = G.runs > state.stats.ckBest;
+            if (newBest) { state.stats.ckBest = G.runs; save(); }
+            hud();
+            $('ck-ov-title').textContent = G.wk >= WICKETS ? 'All out!' : 'Over complete';
+            $('ck-ov-text').textContent = G.runs + ' runs, ' + G.wk + (G.wk === 1 ? ' wicket' : ' wickets') + (newBest && G.runs > 0 ? '. New personal best!' : '.');
+            $('ck-start').textContent = 'Play again';
+            $('ck-overlay').hidden = false;
+            draw(0);
+        }
+
+        function swing() {
+            if (G.state !== 'flight' || G.swung) return;
+            G.swung = true; G.swingT = G.t;
+            var td = (G.p - 1) * G.dur;       // seconds; negative = early
+            var a = Math.abs(td);
+            var from = ballAt(G.p);
+            var timing = td < -0.02 ? 'Early' : (td > 0.02 ? 'Late' : 'Perfect timing');
+            var runs = 0, hitKind = null, text, color = '#fff', sub = timing;
+
+            if (a <= 0.07) { runs = 6; hitKind = 'six'; text = 'SIX!'; color = '#fde047'; sub = 'Perfect timing'; }
+            else if (a <= 0.14) { runs = 4; hitKind = 'four'; text = 'FOUR!'; color = '#86efac'; }
+            else if (a <= 0.22) {
+                if (Math.random() < 0.35) { G.wk++; hitKind = 'catch'; text = 'CAUGHT!'; color = '#fca5a5'; sub = 'Edged it. ' + timing; }
+                else { runs = Math.random() < 0.5 ? 1 : 2; hitKind = 'edge'; text = runs + (runs === 1 ? ' RUN' : ' RUNS'); sub = 'Edged. ' + timing; }
+            } else { text = 'MISS'; sub = 'Swung ' + timing.toLowerCase(); }
+
+            G.runs += runs; hud();
+            if (hitKind) {
+                var tx, ty, dur, arc, endR;
+                if (hitKind === 'six') { tx = rand(0.18, 0.82) * W; ty = 0.1 * H; dur = 1.3; arc = 0.34 * H; endR = W * 0.008; }
+                else if (hitKind === 'four') { tx = (Math.random() < 0.5 ? rand(0.04, 0.3) : rand(0.7, 0.96)) * W; ty = rand(0.34, 0.46) * H; dur = 0.95; arc = 0.04 * H; endR = W * 0.012; }
+                else if (hitKind === 'catch') { tx = rand(0.3, 0.7) * W; ty = rand(0.5, 0.6) * H; dur = 0.7; arc = 0.22 * H; endR = W * 0.02; }
+                else { tx = rand(0.2, 0.8) * W; ty = rand(0.6, 0.72) * H; dur = 0.75; arc = 0.05 * H; endR = W * 0.02; }
+                G.hit = { fx: from.x, fy: from.y, tx: tx, ty: ty, t: 0, dur: dur, arc: arc, r0: from.r, r1: endR, kind: hitKind };
+                G.state = 'hit';
+            } else {
+                G.state = 'result';
+            }
+            G.stateT = 0;
+            popup(text, sub, color);
+        }
+
+        function bowled() {
+            G.bowled = true; G.wk++; hud();
+            G.state = 'result'; G.stateT = 0;
+            popup('BOWLED!', 'You never swung', '#fca5a5');
+        }
+
+        /* ----- update ----- */
+        function update(dt) {
+            G.t += dt; G.stateT += dt;
+            if (G.popup) G.popup.t += dt;
+            if (G.state === 'runup') {
+                if (G.stateT >= 0.75) { G.state = 'flight'; G.stateT = 0; G.p = 0; }
+            } else if (G.state === 'flight') {
+                G.p += dt / G.dur;
+                if (!G.swung && G.p > 1.1) bowled();
+            } else if (G.state === 'hit') {
+                G.hit.t += dt;
+                if (G.hit.t >= G.hit.dur + 0.35) endBall();
+            } else if (G.state === 'result') {
+                if (!G.swung || G.bowled) { /* bowled: ball stays hidden in the stumps */ }
+                else G.p += dt / G.dur;       // missed ball carries on past the bat
+                if (G.stateT >= 1.1) endBall();
+            }
+        }
+
+        /* ----- drawing ----- */
+        function pitchHalf(y) { return 0.055 + (0.2 - 0.055) * ((y - 0.34) / 0.63); }
+
+        function stumps(x, yBase, hh, tipped) {
+            var w = W * 0.012 * (hh / (H * 0.085)) + 1.5;
+            ctx.save();
+            ctx.translate(x, yBase);
+            if (tipped) ctx.rotate(0.5);
+            ctx.fillStyle = '#f2e0b2';
+            for (var i = -1; i <= 1; i++) ctx.fillRect(i * w * 2 - w / 2, -hh, w, hh);
+            ctx.fillStyle = '#b8902a';
+            ctx.fillRect(-w * 2.5, -hh - w * 0.8, w * 2, w * 0.8);
+            ctx.fillRect(w * 0.5, -hh - w * 0.8, w * 2, w * 0.8);
+            ctx.restore();
+        }
+
+        function person(x, yFeet, h, shirt, pants, helmet) {
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = pants; ctx.lineWidth = h * 0.085;
+            ctx.beginPath(); ctx.moveTo(x - h * 0.05, yFeet - h * 0.4); ctx.lineTo(x - h * 0.08, yFeet); ctx.moveTo(x + h * 0.05, yFeet - h * 0.4); ctx.lineTo(x + h * 0.09, yFeet); ctx.stroke();
+            ctx.fillStyle = shirt;
+            ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - h * 0.12, yFeet - h * 0.78, h * 0.24, h * 0.4, h * 0.05) : ctx.rect(x - h * 0.12, yFeet - h * 0.78, h * 0.24, h * 0.4); ctx.fill();
+            ctx.fillStyle = '#e0a97a';
+            ctx.beginPath(); ctx.arc(x, yFeet - h * 0.86, h * 0.075, 0, 7); ctx.fill();
+            if (helmet) { ctx.fillStyle = helmet; ctx.beginPath(); ctx.arc(x, yFeet - h * 0.88, h * 0.082, Math.PI, 0); ctx.fill(); ctx.fillRect(x - h * 0.082, yFeet - h * 0.88, h * 0.164, h * 0.02); }
+        }
+
+        function draw(t) {
+            if (!ctx || !W) return;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, W, H);
+            var w = W, h = H, i, g;
+
+            // Sky and stands
+            g = ctx.createLinearGradient(0, 0, 0, h * 0.3); g.addColorStop(0, '#0a1630'); g.addColorStop(1, '#2c4a8a');
+            ctx.fillStyle = g; ctx.fillRect(0, 0, w, h * 0.3);
+            for (i = 0; i < crowd.length; i++) { var c = crowd[i]; ctx.fillStyle = c.c; ctx.fillRect(c.x * w, c.y * h, Math.max(2, w * 0.009), Math.max(2, w * 0.009)); }
+            [[0.1, 0.02], [0.9, 0.02]].forEach(function (L) {
+                var gg = ctx.createRadialGradient(L[0] * w, L[1] * h, 0, L[0] * w, L[1] * h, w * 0.35);
+                gg.addColorStop(0, 'rgba(255,255,230,.7)'); gg.addColorStop(1, 'rgba(255,255,230,0)');
+                ctx.fillStyle = gg; ctx.fillRect(0, 0, w, h * 0.3);
+            });
+
+            // Outfield with mowing stripes
+            g = ctx.createLinearGradient(0, h * 0.3, 0, h); g.addColorStop(0, '#2b9a4a'); g.addColorStop(1, '#14602d');
+            ctx.fillStyle = g; ctx.fillRect(0, h * 0.3, w, h * 0.7);
+            var ys = [0.3, 0.33, 0.365, 0.405, 0.45, 0.5, 0.56, 0.63, 0.71, 0.8, 0.9, 1.0];
+            for (i = 0; i < ys.length - 1; i++) { ctx.fillStyle = i % 2 ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.07)'; ctx.fillRect(0, ys[i] * h, w, (ys[i + 1] - ys[i]) * h); }
+            // Boundary rope
+            ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 3; ctx.setLineDash([10, 6]);
+            ctx.beginPath(); ctx.moveTo(0, h * 0.3); ctx.lineTo(w, h * 0.3); ctx.stroke(); ctx.setLineDash([]);
+
+            // Pitch
+            var y0 = 0.34, y1 = 0.97;
+            g = ctx.createLinearGradient(0, y0 * h, 0, y1 * h); g.addColorStop(0, '#b99a62'); g.addColorStop(1, '#d9bb84');
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.moveTo((0.5 - pitchHalf(y0)) * w, y0 * h); ctx.lineTo((0.5 + pitchHalf(y0)) * w, y0 * h);
+            ctx.lineTo((0.5 + pitchHalf(y1)) * w, y1 * h); ctx.lineTo((0.5 - pitchHalf(y1)) * w, y1 * h);
+            ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 2;
+            [0.36, 0.8].forEach(function (yy) { ctx.beginPath(); ctx.moveTo((0.5 - pitchHalf(yy)) * w, yy * h); ctx.lineTo((0.5 + pitchHalf(yy)) * w, yy * h); ctx.stroke(); });
+
+            // Stumps
+            stumps(0.5 * w, 0.345 * h, h * 0.032, false);
+            stumps(0.5 * w, 0.845 * h, h * 0.085, G.bowled && G.state === 'result');
+
+            // Bowler
+            var runT = G.state === 'runup' ? clamp(G.stateT / 0.75, 0, 1) : (G.state === 'idle' || G.state === 'over' ? 0 : 1);
+            var bowlerY = (0.325 + 0.02 * runT) * h, bowlerH = h * (0.12 + 0.02 * runT);
+            person(0.5 * w, bowlerY, bowlerH, '#f8fafc', '#e5e7eb', null);
+            var arm = G.state === 'runup' ? runT * Math.PI * 2 : (G.state === 'flight' ? Math.PI * 2 + clamp(G.p * 3, 0, 1) * 0.6 : 0);
+            ctx.strokeStyle = '#e0a97a'; ctx.lineWidth = bowlerH * 0.06; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(0.5 * w, bowlerY - bowlerH * 0.74);
+            ctx.lineTo(0.5 * w + Math.sin(arm) * bowlerH * 0.3, bowlerY - bowlerH * 0.74 - Math.cos(arm) * bowlerH * 0.3); ctx.stroke();
+            if (G.state === 'runup') {
+                ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.arc(0.5 * w + Math.sin(arm) * bowlerH * 0.32, bowlerY - bowlerH * 0.74 - Math.cos(arm) * bowlerH * 0.32, w * 0.008, 0, 7); ctx.fill();
+            }
+
+            // Ball
+            var bp = null;
+            if (G.state === 'flight' || (G.state === 'result' && G.swung && !G.bowled)) bp = ballAt(G.p);
+            else if (G.state === 'hit' && G.hit) {
+                var u = clamp(G.hit.t / G.hit.dur, 0, 1), eu = ease(u);
+                var gx = lerp(G.hit.fx, G.hit.tx, eu), gyy = lerp(G.hit.fy, G.hit.ty, eu);
+                var lift = 4 * G.hit.arc * u * (1 - u);
+                bp = { x: gx, y: gyy - lift, gy: lerp(G.hit.fy, G.hit.ty, eu), r: lerp(G.hit.r0, G.hit.r1, eu), hh: lift };
+                if (u >= 1) bp = null;
+            }
+            if (bp && bp.y < h * 1.05) {
+                ctx.fillStyle = 'rgba(0,0,0,.28)';
+                ctx.beginPath(); ctx.ellipse(bp.x, bp.gy, bp.r * 1.1, bp.r * 0.4, 0, 0, 7); ctx.fill();
+                var bg = ctx.createRadialGradient(bp.x - bp.r * 0.3, bp.y - bp.r * 0.3, 0, bp.x, bp.y, bp.r);
+                bg.addColorStop(0, '#ff6b5e'); bg.addColorStop(1, '#a31616');
+                ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(bp.x, bp.y, Math.max(bp.r, 2), 0, 7); ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = Math.max(1, bp.r * 0.15);
+                ctx.beginPath(); ctx.arc(bp.x, bp.y, Math.max(bp.r, 2) * 0.7, -0.9, 0.9); ctx.stroke();
+            }
+
+            // Batter and bat
+            var bx = 0.4 * w, by = 0.95 * h, bh = 0.3 * h;
+            person(bx, by, bh, '#1d4ed8', '#f8fafc', '#0b2a6f');
+            var hx = bx + bh * 0.14, hy = by - bh * 0.5;
+            var sa = G.t - G.swingT;
+            var theta = (G.swung && sa >= 0 && sa < 0.5) ? lerp(-2.6, 0.9, ease(clamp(sa / 0.22, 0, 1))) : (G.swung && sa >= 0.5 ? 0.9 : -2.6);
+            if (G.swung && sa >= 0.5) theta = lerp(0.9, -2.6, clamp((sa - 0.5) / 0.4, 0, 1));
+            ctx.strokeStyle = '#e0a97a'; ctx.lineWidth = bh * 0.05; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(bx, by - bh * 0.72); ctx.lineTo(hx, hy); ctx.stroke();
+            ctx.save(); ctx.translate(hx, hy); ctx.rotate(-theta);
+            var bl = bh * 0.62;
+            ctx.fillStyle = '#3b2a1a'; ctx.fillRect(-bl * 0.03, -bl * 0.08, bl * 0.06, bl * 0.34);
+            var bgr = ctx.createLinearGradient(-bl * 0.09, 0, bl * 0.09, 0); bgr.addColorStop(0, '#d9a85b'); bgr.addColorStop(1, '#a8743a');
+            ctx.fillStyle = bgr;
+            if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(-bl * 0.09, bl * 0.26, bl * 0.18, bl * 0.74, bl * 0.04); ctx.fill(); } else ctx.fillRect(-bl * 0.09, bl * 0.26, bl * 0.18, bl * 0.74);
+            ctx.restore();
+
+            // Delivery tag
+            if (G.state === 'flight' || G.state === 'runup') {
+                ctx.font = '700 ' + Math.round(w * 0.04) + 'px Inter, sans-serif';
+                ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(w * 0.03, h * 0.31, w * 0.2, w * 0.07);
+                ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(G.pace.name.toUpperCase(), w * 0.05, h * 0.31 + w * 0.035);
+            }
+
+            // Popup
+            if (G.popup && G.popup.t < 1.1) {
+                var pt = G.popup.t, sc = pt < 0.18 ? lerp(0.4, 1.15, pt / 0.18) : lerp(1.15, 1, clamp((pt - 0.18) / 0.15, 0, 1));
+                var al = pt > 0.85 ? 1 - (pt - 0.85) / 0.25 : 1;
+                ctx.save(); ctx.globalAlpha = clamp(al, 0, 1); ctx.translate(w / 2, h * 0.5); ctx.scale(sc, sc);
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.font = '800 ' + Math.round(w * 0.17) + 'px Teko, Impact, sans-serif';
+                ctx.lineWidth = w * 0.02; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.strokeText(G.popup.text, 0, 0);
+                ctx.fillStyle = G.popup.color; ctx.fillText(G.popup.text, 0, 0);
+                if (G.popup.sub) {
+                    ctx.font = '700 ' + Math.round(w * 0.05) + 'px Inter, sans-serif';
+                    ctx.lineWidth = w * 0.01; ctx.strokeText(G.popup.sub, 0, w * 0.11); ctx.fillStyle = '#fff'; ctx.fillText(G.popup.sub, 0, w * 0.11);
+                }
+                ctx.restore();
+            }
+        }
+
+        /* ----- loop ----- */
+        function frame(ts) {
+            raf = 0;
+            var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
+            last = ts;
+            update(dt);
+            draw(ts / 1000);
+            if (G.state !== 'idle' && G.state !== 'over') raf = requestAnimationFrame(frame);
+            else last = 0;
+        }
+        function loop() { if (!raf) { last = 0; raf = requestAnimationFrame(frame); } }
+
+        function init() {
+            if (inited) return;
+            inited = true;
+            cv = $('ck-canvas'); ctx = cv.getContext('2d');
+            var pal = ['#f87171', '#fbbf24', '#60a5fa', '#f9fafb', '#34d399', '#c084fc', '#fb923c'];
+            for (var i = 0; i < 520; i++) crowd.push({ x: Math.random(), y: 0.085 + Math.random() * 0.2, c: pal[i % pal.length] });
+            cv.addEventListener('pointerdown', function (e) { e.preventDefault(); swing(); });
+            cv.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); swing(); } });
+            $('ck-swing').addEventListener('click', function () { swing(); });
+            $('ck-start').addEventListener('click', start);
+            window.addEventListener('resize', size);
+            if (window.ResizeObserver) new ResizeObserver(size).observe(cv);
+        }
+
+        return {
+            enter: function () {
+                init(); hud();
+                G.state = 'idle'; G.popup = null; G.hit = null; G.swung = false; G.bowled = false;
+                $('ck-overlay').hidden = false;
+                $('ck-ov-title').textContent = 'Ready to bat?';
+                $('ck-ov-text').textContent = 'Six balls. Two wickets. Time your swing.';
+                $('ck-start').textContent = 'Play over';
+                requestAnimationFrame(function () { size(); draw(0); });
+            },
+            leave: function () { if (raf) cancelAnimationFrame(raf); raf = 0; G.state = 'idle'; }
+        };
+    })();
+
+    /* =====================================================================
+       EVENTS
+       ===================================================================== */
     $('add-form').addEventListener('submit', function (e) {
         e.preventDefault();
         var raw = state.query.trim().replace(/\s+/g, ' ');
         if (!raw) { $('search').focus(); return; }
-
         var match = CATALOG.filter(function (i) { return norm(i.name) === norm(raw); })[0];
-        if (match) {
-            addToList(match.name, match.icon);
-        } else {
-            var name = raw.charAt(0).toUpperCase() + raw.slice(1);
-            addToList(name, '🛒');
-        }
+        if (match) addToList(match.name, match.icon);
+        else addToList(raw.charAt(0).toUpperCase() + raw.slice(1), '🛒');
         state.query = '';
         $('search').value = '';
         render();
         $('search').focus();
     });
 
-    $('search').addEventListener('input', function (e) {
-        state.query = e.target.value;
-        render();
-    });
-
-    $('clear-search').addEventListener('click', function () {
-        state.query = '';
-        $('search').value = '';
-        render();
-        $('search').focus();
-    });
+    $('search').addEventListener('input', function (e) { state.query = e.target.value; render(); });
+    $('clear-search').addEventListener('click', function () { state.query = ''; $('search').value = ''; render(); $('search').focus(); });
 
     $('theme-select').addEventListener('change', function (e) {
-        setTheme(e.target.value);
         hits = {};
+        setTheme(e.target.value);
         save();
         render();
     });
 
-    $('clear-done').addEventListener('click', function () {
-        state.list = state.list.filter(function (i) { return !i.done; });
-        save(); render();
-    });
-
+    $('clear-done').addEventListener('click', function () { state.list = state.list.filter(function (i) { return !i.done; }); save(); render(); });
     $('clear-all').addEventListener('click', function () {
-        if (state.list.length && window.confirm('Remove all items from your list?')) {
-            state.list = [];
-            save(); render();
-        }
+        if (state.list.length && window.confirm('Remove all items from your list?')) { state.list = []; save(); render(); }
+    });
+    $('cart-bar').addEventListener('click', function () {
+        $('list-panel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
     });
 
-    // ---- init ----
+    /* =====================================================================
+       INIT
+       ===================================================================== */
     load();
+    initPatronusModal();
     if (!state.theme) {
         var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         state.theme = prefersDark ? 'dark' : 'light';
     }
-    setTheme(state.theme);
+    var startTheme = state.theme;
+    state.theme = null;
+    setTheme(startTheme);
     render();
 })();
 </script>
