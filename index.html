@@ -259,10 +259,13 @@
             background-position: bottom center, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
             background-size: auto 78px, auto, auto, auto, auto, auto, auto, auto, auto;
         }
+        [data-theme="minecraft"] .top-banner { padding-bottom: 150px; }
         [data-theme="minecraft"] .banner-deco {
             background:
-                linear-gradient(90deg, rgba(255,255,255,.18) 50%, transparent 50%) 0 100% / 32px 8px repeat-x,
-                linear-gradient(#5fa832 0 10px, #4a7227 10px 16px, #7a5230 16px 100%) 0 100% / 100% 26px no-repeat;
+                linear-gradient(90deg, rgba(255,255,255,.16) 50%, transparent 50%) 0 calc(100% - 40px) / 32px 14px repeat-x,
+                linear-gradient(#5fa832 0 10px, #4a7227 10px 14px) 0 calc(100% - 40px) / 100% 14px no-repeat,
+                linear-gradient(90deg, rgba(0,0,0,.12) 50%, transparent 50%) 0 100% / 32px 40px repeat-x,
+                linear-gradient(#7a5230, #6b4a2b) 0 100% / 100% 40px no-repeat;
             image-rendering: pixelated;
         }
         [data-theme="cricket"] .banner-deco {
@@ -543,6 +546,9 @@
         .mc-entry a { color: #8fd1ff; font-size: calc(0.7rem * var(--scale)); }
 
         /* ---------- Cricket: mock match ---------- */
+        .ck-bowler { margin-bottom: 12px; }
+        .ck-bowler label { display: block; margin-bottom: 6px; font-weight: 700; font-size: calc(0.9rem * var(--scale)); }
+        .ck-bowler .opp-blurb { margin-bottom: 0; }
         .ck-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; text-align: center; }
         .ck-board div { background: rgba(0,0,0,.3); border-radius: 12px; padding: 4px 2px; font-size: calc(0.75rem * var(--scale)); color: var(--text-sub); line-height: 1.1; }
         .ck-board b { display: block; font-size: calc(1.5rem * var(--scale)); color: #fff; font-variant-numeric: tabular-nums; }
@@ -611,14 +617,18 @@
         .wisp { position: fixed; left: 0; top: 0; z-index: 999; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, #fff, rgba(155, 231, 255, .6) 55%, transparent 72%); }
         .pop { position: fixed; left: 0; top: 0; z-index: 1001; pointer-events: none; will-change: transform, opacity; font-weight: 700; font-size: 1.3rem; white-space: nowrap; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
 
-        [data-theme="minecraft"] .item-box::after {
-            content: ''; position: absolute; inset: 0; pointer-events: none;
-            opacity: var(--crack, 0);
-            background:
-                repeating-linear-gradient(135deg, transparent 0 14px, rgba(0,0,0,.6) 14px 16px),
-                repeating-linear-gradient(45deg, transparent 0 22px, rgba(0,0,0,.5) 22px 24px);
-            transition: opacity 0.12s;
-        }
+        /* Minecraft mob yard: mobs roam under the Villager Market heading */
+        .mob-yard { position: absolute; left: 0; right: 0; bottom: 54px; height: 62px; z-index: 3; pointer-events: none; }
+        .mob { position: absolute; left: 0; bottom: 0; width: 44px; height: 58px; pointer-events: auto; cursor: pointer; will-change: transform; }
+        .mob-in { position: absolute; inset: 0; display: grid; place-items: end center; transform-origin: 50% 100%; }
+        .mob-shadow { position: absolute; left: 6px; right: 6px; bottom: -3px; height: 7px; border-radius: 50%; background: rgba(0, 0, 0, 0.28); }
+        .spr svg { display: block; width: auto; image-rendering: pixelated; shape-rendering: crispEdges; }
+        .emo { font-size: 34px; line-height: 1; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.22)); }
+        .fly-mob { position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; width: 44px; height: 58px; will-change: transform; display: grid; place-items: end center; }
+        .fly-mob > .spr, .fly-mob > .emo { display: block; transform-origin: 50% 100%; }
+        .fly-mob .carry { position: absolute; left: 50%; top: -26px; transform: translateX(-50%); font-size: 1.6rem; display: none; filter: drop-shadow(0 2px 0 rgba(0,0,0,.3)); }
+        .fly-mob.has .carry { display: block; }
+        .pop.chat { font-family: 'Press Start 2P', monospace; font-size: 0.7rem; background: rgba(0, 0, 0, 0.6); padding: 6px 10px; color: #ffff55; text-shadow: 2px 2px 0 #3f3f15; }
 
         /* =====================================================================
            MOBILE CART BAR
@@ -642,8 +652,10 @@
             .sidebar { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
         }
 
+        .content-grid > * { min-width: 0; }
+
         @media (max-width: 999px) {
-            .content-grid { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: minmax(0, 1fr); }
             .cart-bar { display: flex; }
             .app-body { padding-bottom: 96px; }
         }
@@ -679,6 +691,7 @@
     <header class="top-banner">
         <div class="banner-deco" aria-hidden="true"></div>
         <div class="banner-fx" id="banner-fx" aria-hidden="true"></div>
+        <div class="mob-yard" id="mob-yard" aria-hidden="true" hidden></div>
         <div class="config-menu">
             <label for="theme-select" class="sr-only">Theme</label>
             <select id="theme-select" class="selector-box">
@@ -778,6 +791,11 @@
                 <section class="panel" id="panel-ck" data-theme-panel="cricket" hidden aria-labelledby="ck-title">
                     <h2 class="panel-title" id="ck-title">🏏 Nets: Mock Match</h2>
                     <p class="panel-sub">One over, two wickets. Tap the pitch or press Swing just as the ball reaches you. Perfect timing is a six.</p>
+                    <div class="ck-bowler">
+                        <label for="ck-bowler-select">Choose your bowler</label>
+                        <select id="ck-bowler-select" class="field"></select>
+                        <p class="opp-blurb" id="ck-bowler-desc"></p>
+                    </div>
                     <div class="ck-board" aria-live="polite">
                         <div>Runs<b id="ck-runs">0</b></div>
                         <div>Balls<b id="ck-balls">0/6</b></div>
@@ -875,7 +893,7 @@
         'light':        { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
         'dark':         { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
         'harry-potter': { icon: '🪄', title: 'Diagon Alley Shopping', sub: 'Tap an item and let your wand do the rest.',                list: 'Your trunk', bar: 'in your trunk' },
-        'minecraft':    { icon: '⛏️', title: 'Village Market',       sub: 'Mine it, craft it, stash it in your inventory.',            list: 'Inventory',  bar: 'in inventory' },
+        'minecraft':    { icon: '⛏️', title: 'Villager Market',      sub: 'Click an item and a villager fetches it for you. One time in ten, a player drops in.', list: 'Inventory',  bar: 'in inventory' },
         'cricket':      { icon: '🏏', title: 'Match Day Mart',       sub: 'Smash every item straight into the kit bag.',               list: 'Kit bag',    bar: 'in the kit bag' }
     };
 
@@ -892,31 +910,33 @@
         { id: 'swan',     name: 'Swan',            note: "Cho's",        icon: '🦢' }
     ];
 
+    /* Dumbledore, Harry and Hermione are the "Hard" trio (same strength as each other).
+       Everyone else is "Easy": less health, weaker predictions, and their spells hit softer. */
     var DUELISTS = [
-        { id: 'dumbledore', name: 'Albus Dumbledore', icon: '🧙‍♂️', hp: 120, skill: 0.55, weights: [0.3, 0.3, 0.4],
+        { id: 'dumbledore', name: 'Albus Dumbledore', icon: '🧙‍♂️', tier: 'Hard', hp: 110, skill: 0.5, dmgMul: 1, weights: [0.3, 0.3, 0.4],
           blurb: 'Headmaster. Rarely wrong about what you will do next.',
           taunt: 'Ah, a challenger. Do try to surprise me.', win: 'A fine effort. Perhaps after some lemon drops?', lose: 'Well duelled indeed. I am impressed.' },
-        { id: 'harry', name: 'Harry Potter', icon: '⚡', hp: 100, skill: 0.35, weights: [0.25, 0.5, 0.25],
+        { id: 'harry', name: 'Harry Potter', icon: '⚡', tier: 'Hard', hp: 110, skill: 0.5, dmgMul: 1, weights: [0.25, 0.5, 0.25],
           blurb: 'Loves Expelliarmus. Has beaten far worse than you.',
           taunt: "Let's do this. Expelliarmus!", win: "Good duel. Don't feel bad.", lose: "Brilliant! You'd make a great Auror." },
-        { id: 'hermione', name: 'Hermione Granger', icon: '📚', hp: 100, skill: 0.45, weights: [0.3, 0.3, 0.4],
+        { id: 'hermione', name: 'Hermione Granger', icon: '📚', tier: 'Hard', hp: 110, skill: 0.5, dmgMul: 1, weights: [0.3, 0.3, 0.4],
           blurb: 'Studied every duelling book. Reads patterns fast.',
           taunt: "I've read about your style. Ready?", win: 'Statistically, you were never going to win.', lose: 'Oh! Well done. I should revise.' },
-        { id: 'ron', name: 'Ronald Weasley', icon: '♟️', hp: 100, skill: 0.25, weights: [0.4, 0.25, 0.35],
-          blurb: 'Plays duels like wizard chess. Sacrifices, then strikes.',
+        { id: 'ron', name: 'Ronald Weasley', icon: '♟️', tier: 'Easy', hp: 80, skill: 0.08, dmgMul: 0.7, weights: [0.4, 0.25, 0.35],
+          blurb: 'Plays duels like wizard chess, but still learning the spells.',
           taunt: 'Bloody hell, okay. Bring it on.', win: 'Yes! Told you chess helps.', lose: "Blimey, you actually got me." },
-        { id: 'cedric', name: 'Cedric Diggory', icon: '🏆', hp: 100, skill: 0.3, weights: [0.33, 0.33, 0.34],
-          blurb: 'Fair, balanced, and very hard to rattle.',
+        { id: 'cedric', name: 'Cedric Diggory', icon: '🏆', tier: 'Easy', hp: 80, skill: 0.1, dmgMul: 0.7, weights: [0.33, 0.33, 0.34],
+          blurb: 'Fair and friendly. Plays it safe and a little predictable.',
           taunt: "May the best wizard win. Good luck.", win: 'Good game. Hufflepuff pride!', lose: 'Fair and square. Well done.' },
-        { id: 'luna', name: 'Luna Lovegood', icon: '🌙', hp: 100, skill: 0, weights: [0.34, 0.33, 0.33],
-          blurb: 'Unpredictable. Sometimes gets distracted by Nargles.',
+        { id: 'luna', name: 'Luna Lovegood', icon: '🌙', tier: 'Easy', hp: 80, skill: 0, dmgMul: 0.7, weights: [0.34, 0.33, 0.33],
+          blurb: 'Dreamy and unpredictable. Sometimes distracted by Nargles.',
           taunt: 'The Wrackspurts are quiet today. Shall we?', win: "That was lovely. You have a few Nargles, though.", lose: 'Oh, you were quicker than the Nargles!',
-          event: { chance: 0.15, type: 'daydream' } },
-        { id: 'dean', name: 'Dean Thomas', icon: '🎨', hp: 100, skill: 0.2, weights: [0.4, 0.3, 0.3],
-          blurb: 'Steady, a bit of a showman. Easy to read if you pay attention.',
+          event: { chance: 0.2, type: 'daydream' } },
+        { id: 'dean', name: 'Dean Thomas', icon: '🎨', tier: 'Easy', hp: 80, skill: 0.05, dmgMul: 0.7, weights: [0.4, 0.3, 0.3],
+          blurb: 'Steady, a bit of a showman. Easy to read.',
           taunt: "I'm better with a pencil, but let's go.", win: "Ha, I'll draw this victory later.", lose: 'Fair play! I would sketch that spell.' },
-        { id: 'weasleys', name: 'Fred & George Weasley', icon: '🎆', hp: 110, skill: 0.15, weights: [0.45, 0.1, 0.45],
-          blurb: 'Gred and Forge. Expect fireworks. Both of you may get hurt.',
+        { id: 'weasleys', name: 'Fred & George Weasley', icon: '🎆', tier: 'Easy', hp: 80, skill: 0.05, dmgMul: 0.7, weights: [0.45, 0.1, 0.45],
+          blurb: 'Gred and Forge. More fireworks than skill. Pranks hurt both of you.',
           taunt: "Gred: Ready? Forge: We've got a surprise for you.", win: 'Another satisfied customer. Fancy a Skiving Snackbox?', lose: "Oi, we've been out-pranked!",
           event: { chance: 0.2, type: 'prank' } }
     ];
@@ -947,7 +967,7 @@
 
     var STORE_KEY = 'home-shopping.v1';
 
-    var state = { list: [], theme: null, cat: 'all', query: '', stats: { w: 0, l: 0, d: 0, ckBest: 0 } };
+    var state = { list: [], theme: null, cat: 'all', query: '', stats: { w: 0, l: 0, d: 0, ckBests: {} } };
 
     /* =====================================================================
        STORAGE (guarded: can throw in private mode)
@@ -960,7 +980,9 @@
             if (Array.isArray(data.list)) state.list = data.list.filter(function (x) { return x && typeof x.name === 'string'; });
             if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
             if (data.stats && typeof data.stats === 'object') {
-                ['w', 'l', 'd', 'ckBest'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
+                ['w', 'l', 'd'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
+                var cb = data.stats.ckBests;
+                if (cb && typeof cb === 'object') Object.keys(cb).forEach(function (k) { if (typeof cb[k] === 'number') state.stats.ckBests[k] = cb[k]; });
             }
         } catch (e) { /* ignore */ }
     }
@@ -1015,8 +1037,8 @@
     function fly(node, from, to, o) {
         return move(node, from, to, o).then(function () { node.remove(); });
     }
-    function pop(text, at, color) {
-        var n = makeFloat('pop', text);
+    function pop(text, at, color, cls) {
+        var n = makeFloat('pop' + (cls ? ' ' + cls : ''), text);
         if (color) n.style.color = color;
         var p = function (dy, s) { return 'translate(' + at.x + 'px,' + (at.y + dy) + 'px) translate(-50%,-50%) scale(' + s + ')'; };
         var a = n.animate([
@@ -1077,16 +1099,12 @@
        ===================================================================== */
     var cardRefs = {};
     var catalogSig = '';
-    var hits = {};
-    var HITS_NEEDED = 3;
-
     function actionLabel(i) {
         var onList = findOnList(i.name);
-        var n = hits[i.id] || 0;
-        var prefix = onList && !n ? '✓ ×' + onList.qty + ' · ' : '';
+        var prefix = onList ? '✓ ×' + onList.qty + ' · ' : '';
         switch (state.theme) {
             case 'harry-potter': return prefix + '🪄 Cast spell';
-            case 'minecraft':    return prefix + '⛏️ Mine' + (n ? ' ' + n + '/' + HITS_NEEDED : '');
+            case 'minecraft':    return prefix + '🧑‍🌾 Send villager';
             case 'cricket':      return prefix + '🏏 Hit it';
             default:             return onList ? '✓ On list (' + onList.qty + ') · add more' : '+ Add';
         }
@@ -1138,7 +1156,6 @@
         items.forEach(function (i, idx) {
             var card = el('div', 'item-box');
             card.style.setProperty('--i', String(idx % 14));
-            card.style.setProperty('--crack', String((hits[i.id] || 0) / HITS_NEEDED));
             var art = el('div', 'item-art');
             var ico = el('span', 'item-ico', i.icon);
             ico.setAttribute('aria-hidden', 'true');
@@ -1276,7 +1293,8 @@
         buildBannerFx(t);
         if (prev === 'cricket' && t !== 'cricket') Cricket.leave();
         if (prev === 'harry-potter' && t !== 'harry-potter') Duel.leave();
-        if (t === 'minecraft') MC.open();
+        if (prev === 'minecraft' && t !== 'minecraft') Yard.stop();
+        if (t === 'minecraft') { MC.open(); Yard.start(); }
         if (t === 'cricket') Cricket.enter();
         if (t === 'harry-potter') Duel.enter();
     }
@@ -1293,7 +1311,6 @@
         ref.btn.textContent = actionLabel(item);
     }
     function landed(item) {
-        delete hits[item.id];
         addToList(item.name, item.icon);
         bump();
         finishCard(item);
@@ -1302,7 +1319,7 @@
     function collect(item, card, btn) {
         var theme = state.theme;
         var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket';
-        if (!themed || REDUCED || !card.animate) { delete hits[item.id]; addToList(item.name, item.icon); return; }
+        if (!themed || REDUCED || !card.animate) { addToList(item.name, item.icon); return; }
         if (card.dataset.busy) return;
         var ref = cardRefs[item.id];
         var ico = ref.ico;
@@ -1310,30 +1327,7 @@
 
         if (theme === 'harry-potter') { castHP(item, card, btn, ico); return; }
 
-        var to = cartTarget();
-
-        if (theme === 'minecraft') {
-            hits[item.id] = (hits[item.id] || 0) + 1;
-            shake(card);
-            pop('⛏️', { x: from.x + 34, y: from.y - 30 });
-            card.style.setProperty('--crack', String(hits[item.id] / HITS_NEEDED));
-            if (hits[item.id] < HITS_NEEDED) { btn.textContent = actionLabel(item); return; }
-            card.dataset.busy = '1'; btn.disabled = true;
-            ico.style.visibility = 'hidden';
-            var colours = ['#6b4a2b', '#4a7227', '#8a8a8a', '#3c2a1a'];
-            for (var p = 0; p < 8; p++) {
-                var chip = makeFloat('fly block');
-                chip.style.background = colours[p % colours.length];
-                fly(chip, from, { x: from.x + rand(-70, 70), y: from.y + rand(20, 70) },
-                    { dur: 450, arc: rand(30, 60), s0: 1, s1: 1, spin: rand(-180, 180), ease: 'ease-out' });
-            }
-            wait(420).then(function () {
-                pop('+1 ' + item.name, { x: from.x, y: from.y - 20 });
-                return fly(makeFloat('fly small', item.icon), { x: from.x, y: from.y + 30 }, cartTarget(),
-                    { dur: 700, arc: 60, s0: 0.9, s1: 0.4, ease: 'ease-in' });
-            }).then(function () { landed(item); });
-            return;
-        }
+        if (theme === 'minecraft') { mcFetch(item, card, btn, ico); return; }
 
         if (theme === 'cricket') {
             card.dataset.busy = '1'; btn.disabled = true;
@@ -1521,7 +1515,7 @@
             foe = DUELISTS.filter(function (d) { return d.id === id; })[0] || DUELISTS[0];
             $('av-foe').textContent = foe.icon;
             $('foe-name').textContent = foe.name;
-            $('opp-blurb').textContent = foe.blurb;
+            $('opp-blurb').textContent = foe.tier + ' · ' + foe.blurb;
         }
         function reset() {
             active = false; busy = false;
@@ -1548,16 +1542,17 @@
             // Returns damage dealt to each side and a description.
             var toYou = 0, toFoe = 0, text;
             var fn = foe.name.split(' ')[0];
+            var mul = foe.dmgMul || 1;
             if (pm === fm) {
                 if (pm === 'protego') text = 'Both of you raise a shield. Nothing happens.';
-                else { toYou = 6; toFoe = 6; text = 'Your ' + NAMES[pm] + 's collide! You both take 6.'; }
+                else { toYou = Math.round(6 * mul); toFoe = 6; text = 'Both ' + NAMES[pm] + ' spells collide! You take ' + toYou + ', ' + fn + ' takes 6.'; }
             } else if (BEATS[pm] === fm) {
                 toFoe = DMG[pm];
                 text = pm === 'stupefy' ? 'Stupefy overpowers ' + fn + "'s Expelliarmus! " + fn + ' takes ' + toFoe + '.'
                      : pm === 'expelliarmus' ? 'Expelliarmus cracks ' + fn + "'s Protego! " + fn + ' takes ' + toFoe + '.'
                      : 'Your Protego reflects ' + fn + "'s Stupefy! " + fn + ' takes ' + toFoe + '.';
             } else {
-                toYou = DMG[fm];
+                toYou = Math.round(DMG[fm] * mul);
                 text = fm === 'stupefy' ? fn + "'s Stupefy overpowers your Expelliarmus! You take " + toYou + '.'
                      : fm === 'expelliarmus' ? fn + "'s Expelliarmus cracks your Protego! You take " + toYou + '.'
                      : fn + "'s Protego reflects your Stupefy! You take " + toYou + '.';
@@ -1637,7 +1632,7 @@
             inited = true;
             var sel = $('duel-opponent');
             DUELISTS.forEach(function (d) {
-                var o = el('option', null, d.icon + ' ' + d.name);
+                var o = el('option', null, d.icon + ' ' + d.name + ' · ' + d.tier);
                 o.value = d.id;
                 sel.appendChild(o);
             });
@@ -1780,16 +1775,326 @@
     })();
 
     /* =====================================================================
+       MINECRAFT MOB YARD AND ERRANDS
+       ===================================================================== */
+    var R = function (x, y, w, h, c) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + c + '"/>'; };
+    var svgOf = function (w, h, inner) {
+        return '<svg viewBox="0 0 ' + w + ' ' + h + '" style="height:' + Math.round(h * 1.75) + 'px" shape-rendering="crispEdges" aria-hidden="true" focusable="false">' + inner + '</svg>';
+    };
+    var SPRITES = {
+        villager: function () {
+            return svgOf(16, 26, R(4, 18, 4, 8, '#5a3d22') + R(8, 18, 4, 8, '#4a3119') + R(3, 10, 10, 10, '#6b4a2b') + R(3, 13, 10, 3, '#8a6238') +
+                R(4, 2, 8, 8, '#c79a73') + R(4, 4, 8, 1, '#3a2a1a') + R(5, 5, 2, 2, '#ffffff') + R(6, 5, 1, 2, '#3b7a3b') + R(9, 5, 2, 2, '#ffffff') + R(10, 5, 1, 2, '#3b7a3b') + R(7, 6, 2, 5, '#a97b56'));
+        },
+        zombie: function () {
+            return svgOf(16, 26, R(4, 18, 4, 8, '#3b3a8a') + R(8, 18, 4, 8, '#34337a') + R(4, 10, 8, 8, '#2f7fa6') + R(0, 10, 4, 8, '#4f8a3b') + R(12, 10, 4, 8, '#4f8a3b') +
+                R(4, 2, 8, 8, '#5a9a45') + R(5, 5, 2, 2, '#1a1a1a') + R(9, 5, 2, 2, '#1a1a1a') + R(6, 8, 4, 1, '#2d5a22'));
+        },
+        skeleton: function () {
+            return svgOf(16, 26, R(5, 18, 2, 8, '#d9d9d9') + R(9, 18, 2, 8, '#d9d9d9') + R(5, 10, 6, 8, '#cfcfcf') + R(5, 12, 6, 1, '#777777') + R(5, 14, 6, 1, '#777777') + R(5, 16, 6, 1, '#777777') +
+                R(2, 10, 2, 9, '#d9d9d9') + R(12, 10, 2, 9, '#d9d9d9') + R(4, 2, 8, 8, '#e6e6e6') + R(5, 5, 2, 2, '#222222') + R(9, 5, 2, 2, '#222222') + R(6, 8, 4, 1, '#444444'));
+        },
+        creeper: function () {
+            return svgOf(16, 26, R(4, 20, 3, 6, '#3f9a36') + R(9, 20, 3, 6, '#3f9a36') + R(5, 10, 6, 12, '#4eb142') + R(3, 1, 10, 10, '#58c24a') +
+                R(4, 4, 2, 2, '#111111') + R(10, 4, 2, 2, '#111111') + R(7, 6, 2, 2, '#111111') + R(6, 8, 4, 2, '#111111') + R(5, 9, 1, 2, '#111111') + R(10, 9, 1, 2, '#111111'));
+        },
+        enderman: function () {
+            return svgOf(16, 34, R(5, 22, 2, 12, '#161616') + R(9, 22, 2, 12, '#161616') + R(4, 12, 8, 10, '#1a1a1a') + R(2, 12, 2, 16, '#161616') + R(12, 12, 2, 16, '#161616') +
+                R(4, 3, 8, 8, '#1a1a1a') + R(5, 6, 2, 1, '#e080ff') + R(9, 6, 2, 1, '#e080ff'));
+        },
+        golem: function () {
+            return svgOf(20, 30, R(5, 22, 4, 8, '#bdb8ad') + R(11, 22, 4, 8, '#bdb8ad') + R(3, 10, 14, 12, '#d6d2c9') + R(5, 12, 2, 6, '#5a8a3b') + R(12, 14, 2, 6, '#5a8a3b') +
+                R(0, 10, 3, 16, '#cfcabf') + R(17, 10, 3, 16, '#cfcabf') + R(6, 2, 8, 8, '#d6d2c9') + R(9, 6, 2, 5, '#b8a98a') + R(7, 5, 2, 1, '#8a2a2a') + R(11, 5, 2, 1, '#8a2a2a') + R(7, 4, 6, 1, '#777777'));
+        },
+        steve: function () {
+            return svgOf(16, 26, R(4, 18, 4, 8, '#3c3fa0') + R(8, 18, 4, 8, '#34378f') + R(4, 24, 4, 2, '#555555') + R(8, 24, 4, 2, '#555555') + R(4, 10, 8, 8, '#12a8a8') +
+                R(0, 10, 4, 8, '#12a8a8') + R(12, 10, 4, 8, '#12a8a8') + R(0, 16, 4, 2, '#c58c6a') + R(12, 16, 4, 2, '#c58c6a') + R(4, 2, 8, 8, '#c58c6a') + R(4, 2, 8, 3, '#4a2f1c') +
+                R(4, 5, 1, 2, '#4a2f1c') + R(11, 5, 1, 2, '#4a2f1c') + R(5, 6, 2, 1, '#ffffff') + R(6, 6, 1, 1, '#3b4fa8') + R(9, 6, 2, 1, '#ffffff') + R(10, 6, 1, 1, '#3b4fa8') + R(6, 8, 4, 1, '#8a5a42'));
+        }
+    };
+
+    var STEVE = { id: 'steve', name: 'Steve', spr: 'steve', snd: 'Hmm!' };
+    var MOBS = [
+        { id: 'villager', name: 'Villager', spr: 'villager', snd: 'Hrmm!' },
+        { id: 'zombie', name: 'Zombie', spr: 'zombie', snd: 'Hrrgh...' },
+        { id: 'skeleton', name: 'Skeleton', spr: 'skeleton', snd: '*rattle*' },
+        { id: 'creeper', name: 'Creeper', spr: 'creeper', snd: 'Ssssss...' },
+        { id: 'enderman', name: 'Enderman', spr: 'enderman', snd: '*vwoop*', tp: true },
+        { id: 'golem', name: 'Iron Golem', spr: 'golem', snd: '*thud*' },
+        { id: 'snowgolem', name: 'Snow Golem', emoji: '⛄', snd: '*plop*' },
+        { id: 'pig', name: 'Pig', emoji: '🐷', snd: 'Oink!' },
+        { id: 'cow', name: 'Cow', emoji: '🐄', snd: 'Moo!' },
+        { id: 'sheep', name: 'Sheep', emoji: '🐑', snd: 'Baa!' },
+        { id: 'chicken', name: 'Chicken', emoji: '🐔', snd: 'Bawk!' },
+        { id: 'wolf', name: 'Wolf', emoji: '🐺', snd: 'Woof!' },
+        { id: 'cat', name: 'Cat', emoji: '🐈', snd: 'Meow!' },
+        { id: 'horse', name: 'Horse', emoji: '🐴', snd: 'Neigh!' },
+        { id: 'rabbit', name: 'Rabbit', emoji: '🐰', snd: '*hop*' },
+        { id: 'fox', name: 'Fox', emoji: '🦊', snd: 'Yip!' },
+        { id: 'panda', name: 'Panda', emoji: '🐼', snd: '*munch*' },
+        { id: 'bee', name: 'Bee', emoji: '🐝', snd: 'Bzzz!' },
+        { id: 'parrot', name: 'Parrot', emoji: '🦜', snd: 'Squawk!' },
+        { id: 'turtle', name: 'Turtle', emoji: '🐢', snd: '*plod*' },
+        { id: 'spider', name: 'Spider', emoji: '🕷️', snd: '*skitter*' },
+        { id: 'bat', name: 'Bat', emoji: '🦇', snd: '*screech*' },
+        { id: 'frog', name: 'Frog', emoji: '🐸', snd: 'Ribbit!' },
+        { id: 'llama', name: 'Llama', emoji: '🦙', snd: '*spit*' },
+        { id: 'goat', name: 'Goat', emoji: '🐐', snd: 'Maa!' },
+        { id: 'polar', name: 'Polar Bear', emoji: '🐻‍❄️', snd: 'Growl!' },
+        { id: 'axolotl', name: 'Axolotl', emoji: '🦎', snd: '*chirp*' },
+        { id: 'camel', name: 'Camel', emoji: '🐪', snd: 'Brrr!' },
+        { id: 'blaze', name: 'Blaze', emoji: '🔥', snd: '*whoosh*' },
+        { id: 'slime', name: 'Slime', emoji: '🟢', snd: '*squish*' },
+        { id: 'ghast', name: 'Ghast', emoji: '👻', snd: 'Wooo...' },
+        { id: 'dragon', name: 'Ender Dragon', emoji: '🐉', snd: 'ROAAR!' }
+    ];
+
+    function mobVisual(def) {
+        var n = el('span', def.spr ? 'spr' : 'emo');
+        if (def.spr) n.innerHTML = SPRITES[def.spr](); else n.textContent = def.emoji;
+        return n;
+    }
+
+    var Yard = (function () {
+        var yard, mobs = [], raf = 0, last = 0, running = false, rotateTimer = 0, inited = false;
+        var byId = {};
+        MOBS.forEach(function (m) { byId[m.id] = m; });
+
+        function place(m) {
+            m.el.style.transform = 'translate3d(' + m.x + 'px,0,0)';
+            m.inner.style.transform = 'scaleX(' + m.dir + ')';
+        }
+
+        function build(def, x) {
+            var wrap = el('div', 'mob');
+            wrap.title = def.name;
+            var inner = el('div', 'mob-in');
+            inner.appendChild(mobVisual(def));
+            wrap.appendChild(el('span', 'mob-shadow'));
+            wrap.appendChild(inner);
+            yard.appendChild(wrap);
+            var m = { def: def, el: wrap, inner: inner, x: x, dir: Math.random() < 0.5 ? -1 : 1, speed: rand(14, 38), idleUntil: 0, busy: false };
+            wrap.addEventListener('click', function () {
+                if (m.busy) return;
+                pop(def.snd, center(wrap), '#ffffff');
+                inner.animate([{ transform: 'translateY(0) scaleX(' + m.dir + ')' }, { transform: 'translateY(-16px) scaleX(' + m.dir + ')' }, { transform: 'translateY(0) scaleX(' + m.dir + ')' }], { duration: 320, easing: 'ease-out' });
+            });
+            place(m);
+            return m;
+        }
+
+        function width() { return yard.getBoundingClientRect().width || window.innerWidth; }
+
+        function populate() {
+            yard.textContent = '';
+            mobs = [];
+            var w = width();
+            var n = clamp(Math.floor(w / 105), 4, 10);
+            var villagers = n >= 6 ? 3 : 2;
+            var pool = MOBS.filter(function (d) { return d.id !== 'villager'; }).sort(function () { return Math.random() - 0.5; });
+            var i;
+            for (i = 0; i < villagers; i++) mobs.push(build(byId.villager, rand(10, Math.max(20, w - 60))));
+            for (i = 0; i < n - villagers; i++) mobs.push(build(pool[i], rand(10, Math.max(20, w - 60))));
+        }
+
+        function rotate() {
+            var cand = mobs.filter(function (m) { return !m.busy && m.def.id !== 'villager'; });
+            if (!cand.length) return;
+            var out = cand[Math.floor(Math.random() * cand.length)];
+            var shown = mobs.map(function (m) { return m.def.id; });
+            var pool = MOBS.filter(function (d) { return d.id !== 'villager' && shown.indexOf(d.id) < 0; });
+            if (!pool.length) return;
+            var def = pool[Math.floor(Math.random() * pool.length)];
+            var idx = mobs.indexOf(out);
+            var x = out.x;
+            out.el.remove();
+            mobs[idx] = build(def, x);
+        }
+
+        function frame(ts) {
+            raf = 0;
+            if (!running) return;
+            var w = width();
+            var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
+            last = ts;
+            mobs.forEach(function (m) {
+                var moving = !m.busy && ts >= m.idleUntil;
+                if (moving) {
+                    m.x += m.dir * m.speed * dt;
+                    if (m.x < 4) { m.x = 4; m.dir = 1; } else if (m.x > w - 48) { m.x = w - 48; m.dir = -1; }
+                    if (Math.random() < 0.005) m.idleUntil = ts + rand(600, 2400);
+                    if (Math.random() < 0.0012) m.dir *= -1;
+                }
+                var bob = moving ? Math.abs(Math.sin(ts / 130 + m.x * 0.05)) * 3 : 0;
+                m.el.style.transform = 'translate3d(' + m.x + 'px,' + (-bob) + 'px,0)';
+                m.inner.style.transform = 'scaleX(' + m.dir + ')';
+            });
+            raf = requestAnimationFrame(frame);
+        }
+
+        return {
+            start: function () {
+                if (!inited) { inited = true; yard = $('mob-yard'); }
+                yard.hidden = false;
+                populate();
+                running = !REDUCED;
+                if (running && !raf) raf = requestAnimationFrame(frame);
+                clearInterval(rotateTimer);
+                if (!REDUCED) rotateTimer = setInterval(rotate, 18000);
+            },
+            stop: function () {
+                running = false;
+                if (raf) cancelAnimationFrame(raf);
+                raf = 0;
+                clearInterval(rotateTimer);
+                if (yard) yard.hidden = true;
+            },
+            /* A free mob to run an errand. Villagers are four times as likely as any other mob. */
+            pick: function () {
+                var free = mobs.filter(function (m) { return !m.busy; });
+                if (!free.length) return null;
+                var total = 0;
+                var ws = free.map(function (m) { var w = m.def.id === 'villager' ? 4 : 1; total += w; return w; });
+                var r = Math.random() * total;
+                for (var i = 0; i < free.length; i++) { r -= ws[i]; if (r <= 0) return free[i]; }
+                return free[free.length - 1];
+            }
+        };
+    })();
+
+    function makeActor(def) {
+        var a = el('div', 'fly-mob');
+        a.setAttribute('aria-hidden', 'true');
+        a.style.transform = 'translate(-999px,-999px)';
+        a.appendChild(mobVisual(def));
+        a.appendChild(el('span', 'carry'));
+        document.body.appendChild(a);
+        return a;
+    }
+
+    function travelMs(a, b) { return clamp(380 + Math.hypot(b.x - a.x, b.y - a.y) * 1.3, 520, 1900); }
+
+    /* Hops from one point to another. Flips the sprite to face the direction of travel. */
+    function walkTo(node, from, to, dur, hop) {
+        var dist = Math.hypot(to.x - from.x, to.y - from.y);
+        var n = Math.max(6, Math.round(dur / 50));
+        var hops = Math.max(1, Math.round(dist / 60));
+        var dir = to.x >= from.x ? 1 : -1;
+        node.firstChild.style.transform = 'scaleX(' + dir + ')';
+        var frames = [];
+        for (var i = 0; i <= n; i++) {
+            var u = i / n;
+            var e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+            var x = from.x + (to.x - from.x) * e;
+            var y = from.y + (to.y - from.y) * e - Math.abs(Math.sin(u * Math.PI * hops)) * hop;
+            frames.push({ transform: 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)' });
+        }
+        return node.animate(frames, { duration: dur, easing: 'linear', fill: 'both' }).finished.then(function () {}, function () {});
+    }
+
+    async function teleport(node, from, to) {
+        var at = function (p, o) { return { transform: 'translate(' + p.x + 'px,' + p.y + 'px) translate(-50%,-50%)', opacity: o }; };
+        await node.animate([at(from, 1), at(from, 0)], { duration: 220, fill: 'both' }).finished.catch(function () {});
+        await node.animate([at(to, 0), at(to, 1)], { duration: 220, fill: 'both' }).finished.catch(function () {});
+    }
+
+    /* Click an item: a roaming mob (usually a villager) walks over, grabs it and throws it into the cart.
+       One time in ten, a player drops in and does it instead. */
+    async function mcFetch(item, card, btn, ico) {
+        card.dataset.busy = '1'; btn.disabled = true;
+        var player = Math.random() < 0.1;
+        var m = player ? null : Yard.pick();
+        if (!m) player = true;          // everyone is busy: a player drops in
+        var def = player ? STEVE : m.def;
+        var itemPos = center(ico);
+        var stand = { x: itemPos.x - 52, y: itemPos.y + 14 };
+        if (stand.x < 30) stand.x = itemPos.x + 52;
+        var actor = makeActor(def);
+        var done = false;
+        try {
+            var start;
+            if (player) {
+                start = { x: stand.x, y: itemPos.y - 160 };
+                pop('Steve joined the game', { x: window.innerWidth / 2, y: 84 }, '#ffff55', 'chat');
+                await walkTo(actor, start, stand, 430, 0);
+            } else {
+                m.busy = true; m.el.style.visibility = 'hidden';
+                var home = center(m.el);
+                start = home.y < -20 ? { x: itemPos.x, y: -40 } : home;
+                if (def.tp) await teleport(actor, start, stand);
+                else await walkTo(actor, start, stand, travelMs(start, stand), 7);
+            }
+
+            // Grab the item.
+            pop(def.snd, { x: stand.x, y: stand.y - 54 }, '#ffffff');
+            ico.style.visibility = 'hidden';
+            actor.classList.add('has');
+            actor.querySelector('.carry').textContent = item.icon;
+
+            // Carry it towards the cart.
+            var cart = cartTarget();
+            var spot = { x: clamp(cart.x - 64, 40, window.innerWidth - 40), y: Math.min(cart.y + 38, window.innerHeight - 100) };
+            if (def.tp) await teleport(actor, stand, spot);
+            else await walkTo(actor, stand, spot, travelMs(stand, spot), 7);
+
+            // Throw it in.
+            actor.classList.remove('has');
+            if (def.id === 'creeper') pop('Ssssss...', { x: spot.x, y: spot.y - 54 }, '#8aff8a');
+            await fly(makeFloat('fly', item.icon), { x: spot.x, y: spot.y - 36 }, cartTarget(), { dur: 540, arc: 100, s0: 0.9, s1: 0.4, spin: 540, ease: 'ease-in' });
+            done = true;
+            landed(item);
+
+            // Leave, or walk back to the yard.
+            if (player) {
+                pop('Steve left the game', { x: window.innerWidth / 2, y: 84 }, '#ffff55', 'chat');
+                await actor.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, fill: 'forwards' }).finished.catch(function () {});
+            } else {
+                var back = center(m.el);
+                if (def.tp) await teleport(actor, spot, back);
+                else await walkTo(actor, spot, back, travelMs(spot, back), 7);
+            }
+        } finally {
+            if (!done) landed(item);
+            actor.remove();
+            if (m) { m.el.style.visibility = ''; m.busy = false; }
+        }
+    }
+
+    /* =====================================================================
        CRICKET MOCK MATCH (canvas)
        ===================================================================== */
     var Cricket = (function () {
         var cv, ctx, W = 0, H = 0, dpr = 1;
         var BALLS = 6, WICKETS = 2;
-        var PACES = [
-            { name: 'Fast', dur: 0.85 }, { name: 'Medium', dur: 1.1 }, { name: 'Medium', dur: 1.15 }, { name: 'Slow', dur: 1.45 }
+        /* Bowler styles. win: timing window multiplier (below 1 means less forgiving).
+           pb: where the ball pitches (0..1 of its flight). h: height it reaches the bat. curve: air swing. spin: turn after pitching. */
+        var BOWLERS = [
+            { id: 'club', name: 'Club Medium', icon: '🟢', level: 'Easy', win: 1.3, shirt: '#e5e7eb',
+              desc: 'Friendly pace and a straight line. Perfect for warming up.',
+              d: [{ n: 'Medium', dur: [1.25, 1.5], pb: 0.62, h: 0.09, curve: 0, spin: 0, line: [0.47, 0.54] }] },
+            { id: 'swing', name: 'Swing King', icon: '🌀', level: 'Medium', win: 1.0, shirt: '#fde68a',
+              desc: 'Bends the ball in the air. Watch the line, it moves late.',
+              d: [{ n: 'Outswinger', dur: [0.95, 1.1], pb: 0.6, h: 0.09, curve: 0.07, spin: 0, line: [0.47, 0.54] },
+                  { n: 'Inswinger', dur: [0.95, 1.1], pb: 0.6, h: 0.09, curve: -0.07, spin: 0, line: [0.47, 0.54] }] },
+            { id: 'spin', name: 'Spin Wizard', icon: '🌪️', level: 'Medium', win: 1.1, shirt: '#c4b5fd',
+              desc: 'Slow, looping and tricky. It turns sharply after it pitches.',
+              d: [{ n: 'Off break', dur: [1.4, 1.7], pb: 0.66, h: 0.07, curve: 0, spin: -0.09, line: [0.5, 0.56] },
+                  { n: 'Googly', dur: [1.4, 1.7], pb: 0.66, h: 0.07, curve: 0, spin: 0.09, line: [0.44, 0.5] },
+                  { n: 'Straighter one', dur: [1.3, 1.5], pb: 0.64, h: 0.08, curve: 0, spin: 0, line: [0.47, 0.54] }] },
+            { id: 'pace', name: 'Express Pacer', icon: '⚡', level: 'Hard', win: 0.9, shirt: '#fca5a5',
+              desc: 'Raw speed. Barely any time to react.',
+              d: [{ n: 'Express', dur: [0.68, 0.8], pb: 0.6, h: 0.09, curve: 0, spin: 0, line: [0.46, 0.55] }] },
+            { id: 'yorker', name: 'Yorker Ace', icon: '🎯', level: 'Hard', win: 0.88, shirt: '#93c5fd',
+              desc: 'Fast and full, dug in at your toes. Be quick.',
+              d: [{ n: 'Yorker', dur: [0.85, 1.0], pb: 0.9, h: 0.012, curve: 0, spin: 0, line: [0.47, 0.54] }] },
+            { id: 'bouncer', name: 'Bouncer Beast', icon: '🚀', level: 'Hard', win: 0.95, shirt: '#fdba74',
+              desc: 'Short and steep. It rises at you.',
+              d: [{ n: 'Bouncer', dur: [0.85, 1.0], pb: 0.42, h: 0.15, curve: 0, spin: 0, line: [0.47, 0.54] }] },
+            { id: 'mix', name: 'Surprise Me', icon: '🎲', level: 'Mixed', win: 1.0, shirt: '#86efac',
+              desc: 'A different bowler every ball. Stay alert.', d: [] }
         ];
-        var G = { state: 'idle', runs: 0, balls: 0, wk: 0, t: 0, p: 0, dur: 1.1, pace: PACES[1], xEnd: 0.5, swung: false, swingT: -9,
-                  hit: null, popup: null, bowled: false, stateT: 0 };
+        var G = { state: 'idle', runs: 0, balls: 0, wk: 0, t: 0, p: 0, dur: 1.1, sel: BOWLERS[0], bowler: BOWLERS[0], dl: BOWLERS[0].d[0], win: 1,
+                  xEnd: 0.5, swung: false, swingT: -9, hit: null, popup: null, bowled: false, stateT: 0 };
         var raf = 0, last = 0, inited = false, crowd = [];
 
         var ease = function (u) { return 1 - Math.pow(1 - u, 3); };
@@ -1799,7 +2104,7 @@
             $('ck-runs').textContent = G.runs;
             $('ck-balls').textContent = G.balls + '/' + BALLS;
             $('ck-wk').textContent = G.wk + '/' + WICKETS;
-            $('ck-best').textContent = state.stats.ckBest;
+            $('ck-best').textContent = state.stats.ckBests[G.sel.id] || 0;
         }
 
         function size() {
@@ -1814,10 +2119,10 @@
 
         /* ----- ball path ----- */
         function ballAt(p) {
-            var pb = 0.62;
-            var x = lerp(0.5, G.xEnd, Math.min(p, 1.4));
+            var d = G.dl, pb = d.pb;
+            var x = lerp(0.5, G.xEnd, Math.min(p, 1.4)) + d.curve * Math.sin(clamp(p, 0, 1) * Math.PI) + d.spin * clamp((p - pb) / (1 - pb), 0, 1.3);
             var gy = 0.33 + 0.53 * Math.pow(Math.max(p, 0), 1.25);
-            var hh = p < pb ? 0.08 * (1 - p / pb) : 0.09 * Math.pow(Math.min((p - pb) / (1 - pb), 1.4), 0.8);
+            var hh = p < pb ? 0.08 * (1 - p / pb) : d.h * Math.pow(Math.min((p - pb) / (1 - pb), 1.4), 0.8);
             var r = W * (0.008 + 0.028 * Math.pow(Math.max(p, 0), 1.2));
             return { x: x * W, gy: gy * H, y: (gy - hh) * H, r: r, hh: hh * H };
         }
@@ -1827,15 +2132,19 @@
             G.runs = 0; G.balls = 0; G.wk = 0; G.hit = null; G.popup = null; G.bowled = false;
             hud();
             $('ck-overlay').hidden = true;
+            $('ck-bowler-select').disabled = true;
             nextBall();
             if ($('ck-canvas')) cv.focus({ preventScroll: true });
         }
 
         function nextBall() {
             G.state = 'runup'; G.stateT = 0; G.swung = false; G.hit = null; G.bowled = false; G.swingT = -9;
-            G.pace = G.balls === 0 ? PACES[1] : PACES[Math.floor(Math.random() * PACES.length)];
-            G.dur = G.pace.dur * rand(0.95, 1.08);
-            G.xEnd = rand(0.46, 0.56);
+            var b = G.sel.id === 'mix' ? BOWLERS[Math.floor(Math.random() * (BOWLERS.length - 1))] : G.sel;
+            G.bowler = b;
+            G.dl = b.d[Math.floor(Math.random() * b.d.length)];
+            G.dur = rand(G.dl.dur[0], G.dl.dur[1]);
+            G.win = b.win;
+            G.xEnd = rand(G.dl.line[0], G.dl.line[1]);
             G.p = 0;
             loop();
         }
@@ -1851,11 +2160,12 @@
 
         function finish() {
             G.state = 'over';
-            var newBest = G.runs > state.stats.ckBest;
-            if (newBest) { state.stats.ckBest = G.runs; save(); }
+            var newBest = G.runs > (state.stats.ckBests[G.sel.id] || 0);
+            if (newBest) { state.stats.ckBests[G.sel.id] = G.runs; save(); }
             hud();
+            $('ck-bowler-select').disabled = false;
             $('ck-ov-title').textContent = G.wk >= WICKETS ? 'All out!' : 'Over complete';
-            $('ck-ov-text').textContent = G.runs + ' runs, ' + G.wk + (G.wk === 1 ? ' wicket' : ' wickets') + (newBest && G.runs > 0 ? '. New personal best!' : '.');
+            $('ck-ov-text').textContent = 'Against ' + G.sel.name + ': ' + G.runs + ' runs, ' + G.wk + (G.wk === 1 ? ' wicket' : ' wickets') + (newBest && G.runs > 0 ? '. New best against this bowler!' : '.');
             $('ck-start').textContent = 'Play again';
             $('ck-overlay').hidden = false;
             draw(0);
@@ -1865,7 +2175,7 @@
             if (G.state !== 'flight' || G.swung) return;
             G.swung = true; G.swingT = G.t;
             var td = (G.p - 1) * G.dur;       // seconds; negative = early
-            var a = Math.abs(td);
+            var a = Math.abs(td) / G.win;
             var from = ballAt(G.p);
             var timing = td < -0.02 ? 'Early' : (td > 0.02 ? 'Late' : 'Perfect timing');
             var runs = 0, hitKind = null, text, color = '#fff', sub = timing;
@@ -1988,7 +2298,7 @@
             // Bowler
             var runT = G.state === 'runup' ? clamp(G.stateT / 0.75, 0, 1) : (G.state === 'idle' || G.state === 'over' ? 0 : 1);
             var bowlerY = (0.325 + 0.02 * runT) * h, bowlerH = h * (0.12 + 0.02 * runT);
-            person(0.5 * w, bowlerY, bowlerH, '#f8fafc', '#e5e7eb', null);
+            person(0.5 * w, bowlerY, bowlerH, G.bowler.shirt, '#e5e7eb', null);
             var arm = G.state === 'runup' ? runT * Math.PI * 2 : (G.state === 'flight' ? Math.PI * 2 + clamp(G.p * 3, 0, 1) * 0.6 : 0);
             ctx.strokeStyle = '#e0a97a'; ctx.lineWidth = bowlerH * 0.06; ctx.lineCap = 'round';
             ctx.beginPath(); ctx.moveTo(0.5 * w, bowlerY - bowlerH * 0.74);
@@ -2037,8 +2347,9 @@
             // Delivery tag
             if (G.state === 'flight' || G.state === 'runup') {
                 ctx.font = '700 ' + Math.round(w * 0.04) + 'px Inter, sans-serif';
-                ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(w * 0.03, h * 0.31, w * 0.2, w * 0.07);
-                ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(G.pace.name.toUpperCase(), w * 0.05, h * 0.31 + w * 0.035);
+                var tag = G.dl.n.toUpperCase();
+                ctx.fillStyle = 'rgba(0,0,0,.5)'; ctx.fillRect(w * 0.03, h * 0.31, ctx.measureText(tag).width + w * 0.04, w * 0.07);
+                ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(tag, w * 0.05, h * 0.31 + w * 0.035);
             }
 
             // Popup
@@ -2076,6 +2387,21 @@
             cv = $('ck-canvas'); ctx = cv.getContext('2d');
             var pal = ['#f87171', '#fbbf24', '#60a5fa', '#f9fafb', '#34d399', '#c084fc', '#fb923c'];
             for (var i = 0; i < 520; i++) crowd.push({ x: Math.random(), y: 0.085 + Math.random() * 0.2, c: pal[i % pal.length] });
+            var sel = $('ck-bowler-select');
+            BOWLERS.forEach(function (b) {
+                var o = el('option', null, b.icon + ' ' + b.name + ' · ' + b.level);
+                o.value = b.id;
+                sel.appendChild(o);
+            });
+            $('ck-bowler-desc').textContent = G.sel.desc;
+            sel.addEventListener('change', function () {
+                G.sel = BOWLERS.filter(function (b) { return b.id === sel.value; })[0] || BOWLERS[0];
+                G.bowler = G.sel.id === 'mix' ? BOWLERS[1] : G.sel;
+                G.dl = G.bowler.d[0];
+                $('ck-bowler-desc').textContent = G.sel.desc;
+                hud();
+                draw(0);
+            });
             cv.addEventListener('pointerdown', function (e) { e.preventDefault(); swing(); });
             cv.addEventListener('keydown', function (e) { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); swing(); } });
             $('ck-swing').addEventListener('click', function () { swing(); });
@@ -2089,12 +2415,13 @@
                 init(); hud();
                 G.state = 'idle'; G.popup = null; G.hit = null; G.swung = false; G.bowled = false;
                 $('ck-overlay').hidden = false;
+                $('ck-bowler-select').disabled = false;
                 $('ck-ov-title').textContent = 'Ready to bat?';
                 $('ck-ov-text').textContent = 'Six balls. Two wickets. Time your swing.';
                 $('ck-start').textContent = 'Play over';
                 requestAnimationFrame(function () { size(); draw(0); });
             },
-            leave: function () { if (raf) cancelAnimationFrame(raf); raf = 0; G.state = 'idle'; }
+            leave: function () { if (raf) cancelAnimationFrame(raf); raf = 0; G.state = 'idle'; var s = $('ck-bowler-select'); if (s) s.disabled = false; }
         };
     })();
 
@@ -2118,7 +2445,6 @@
     $('clear-search').addEventListener('click', function () { state.query = ''; $('search').value = ''; render(); $('search').focus(); });
 
     $('theme-select').addEventListener('change', function (e) {
-        hits = {};
         setTheme(e.target.value);
         save();
         render();
