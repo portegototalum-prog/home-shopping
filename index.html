@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="A themed home shopping list: browse items, add your own, and tick them off. Harry Potter, Minecraft and Cricket themes with mini games.">
     <title>Home Shopping</title>
+    <meta property="og:title" content="Home Shopping"><meta property="og:description" content="A themed shopping list with budgets, sharing and mini games."><meta name="twitter:card" content="summary">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛒%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
@@ -466,11 +469,11 @@
         .field {
             width: 100%; min-height: 46px; padding: 10px 12px;
             border: var(--border-element); border-radius: 10px;
-            background: rgba(0, 0, 0, 0.25); color: var(--text-main);
+            background: color-mix(in srgb, var(--text-main) 8%, transparent); color: var(--text-main);
             font-size: calc(0.95rem * var(--scale));
         }
-        [data-theme="harry-potter"] .field, [data-theme="cricket"] .field { background: rgba(0, 0, 0, 0.3); }
-        .field option { background: #2a142a; color: #f6ecc0; }
+        
+        .field option { background: Canvas; color: CanvasText; }
 
         .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
         .chip {
@@ -606,6 +609,8 @@
            THEMED EFFECT PARTICLES
            ===================================================================== */
         .fly { position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; will-change: transform; font-size: 2.4rem; line-height: 1; }
+        .cricket-bat { transform-origin: 50% 0; filter: drop-shadow(0 3px 4px rgba(0,0,0,.4)); }
+        .cricket-bat svg { display: block; }
         .fly.glow { filter: drop-shadow(0 0 8px #facc15) drop-shadow(0 0 16px #f59e0b); }
         .fly.small { font-size: 1.6rem; }
         .fly.block { width: 10px; height: 10px; font-size: 0; border: 1px solid rgba(0,0,0,.5); }
@@ -644,6 +649,109 @@
             box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
         }
         .cart-bar b { display: inline-block; min-width: 1.6em; text-align: center; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,.28); }
+
+        /* =====================================================================
+           PRO: lists, budget, toast, dialogs, shop mode, print
+           ===================================================================== */
+        .config-menu { display: flex; gap: 8px; align-items: center; }
+        .icon-btn {
+            min-width: 40px; min-height: 40px; padding: 0 10px;
+            border-radius: 10px; border: 1px solid rgba(255,255,255,.55);
+            background: rgba(0,0,0,.35); color: #fff; font-size: 1.05rem;
+            backdrop-filter: blur(6px);
+        }
+        .icon-btn:hover { background: rgba(0,0,0,.5); }
+        .mic-btn { position: absolute; right: 38px; top: 50%; transform: translateY(-50%); border: 0; background: none; min-width: 40px; min-height: 40px; font-size: 1.15rem; border-radius: 10px; }
+        .mic-btn.live { background: #dc2626; animation: twinkle 1s infinite; }
+        .main-search { padding-right: 84px; }
+
+        .usuals { max-width: 1240px; margin: 0 auto 6px; padding: 0 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .usuals-label { font-size: calc(.8rem * var(--scale)); color: var(--text-sub); font-weight: 700; }
+        .chip {
+            min-height: 36px; padding: 4px 12px; border-radius: 999px;
+            border: var(--border-element); background: var(--btn-action-bg); color: var(--btn-action-text);
+            font-size: calc(.85rem * var(--scale)); font-weight: 600;
+        }
+        .chip:hover { filter: brightness(1.15); }
+
+        .list-tools { display: flex; gap: 6px; margin: 0 0 10px; align-items: center; }
+        .list-tools .field { min-height: 40px; padding: 6px 10px; flex: 1; min-width: 0; }
+        .mini-btn { min-width: 40px; min-height: 40px; border-radius: 10px; border: var(--border-element); background: var(--btn-action-bg); color: var(--btn-action-text); font-weight: 700; }
+        .mini-btn:disabled { opacity: .4; cursor: default; }
+        .summary { margin: 0 0 10px; }
+        .prog-text { font-size: calc(.85rem * var(--scale)); font-weight: 700; margin-bottom: 4px; }
+        .prog-bar { height: 8px; border-radius: 99px; background: color-mix(in srgb, var(--text-sub) 25%, transparent); overflow: hidden; }
+        .prog-bar > i { display: block; height: 100%; width: 0; background: #22c55e; border-radius: 99px; transition: width .35s; }
+        .prog-bar.budget { margin-top: 6px; }
+        .prog-bar.budget > i { background: #3b82f6; }
+        .prog-bar.budget.warn > i { background: #f59e0b; }
+        .prog-bar.budget.over > i { background: #ef4444; }
+        .budget-line { display: block; width: 100%; text-align: left; margin-top: 6px; padding: 4px 0; border: 0; background: none; color: var(--text-sub); font-size: calc(.8rem * var(--scale)); text-decoration: underline dotted; text-underline-offset: 3px; }
+
+        .list-row { display: block; }
+        .row-main { display: flex; align-items: center; gap: 10px; }
+        .list-label { flex: 1; min-width: 0; text-align: left; border: 0; background: none; padding: 4px 0; min-height: 36px; overflow-wrap: anywhere; }
+        .row-meta { margin: 0 0 0 32px; font-size: calc(.78rem * var(--scale)); color: var(--text-sub); }
+        .row-edit { display: grid; grid-template-columns: 1fr 90px; gap: 8px; margin: 8px 0 2px 32px; }
+        .row-edit label { display: flex; flex-direction: column; gap: 3px; font-size: .75rem; color: var(--text-sub); }
+        .row-edit .wide { grid-column: 1 / -1; }
+        .field.slim { min-height: 38px; padding: 6px 10px; }
+        .btn-trigger.slim { min-height: 38px; }
+        .group-head { list-style: none; margin: 10px 0 2px; padding: 4px 0; font-size: calc(.78rem * var(--scale)); font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: .06em; border-bottom: 2px solid color-mix(in srgb, var(--text-sub) 30%, transparent); }
+        .list-footer { flex-wrap: wrap; }
+        .list-footer .btn-trigger { min-width: 40%; }
+
+        .sheet { width: min(480px, 100%); max-height: 92vh; overflow-y: auto; padding: 20px 18px; border-radius: 16px; background: var(--card-bg); color: var(--text-main); border: var(--card-edge); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+        .sheet h2 { margin: 0 0 8px; font-size: 1.25rem; }
+        .sheet p { margin: 0 0 12px; color: var(--text-sub); font-size: .9rem; }
+        .sheet .row { display: flex; gap: 8px; margin-top: 14px; justify-content: flex-end; flex-wrap: wrap; }
+        .sheet .row .btn-trigger { width: auto; min-width: 100px; }
+        .sheet .btn-trigger.danger { background: #dc2626; color: #fff; border-color: transparent; }
+        .set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--text-sub) 25%, transparent); }
+        .set-row .field { width: auto; min-height: 40px; }
+        .set-row input[type="checkbox"] { width: 22px; height: 22px; accent-color: #d4af37; }
+        textarea.field { min-height: 150px; resize: vertical; font-family: inherit; }
+        a.btn-trigger { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+
+        .toast {
+            position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 3000;
+            display: flex; align-items: center; gap: 12px; max-width: min(520px, calc(100vw - 24px));
+            padding: 12px 16px; border-radius: 12px; background: #111827; color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,.4); font-size: .9rem;
+        }
+        .toast.show { animation: rise .25s both; }
+        .toast button { border: 0; background: none; color: #93c5fd; font-weight: 700; min-height: 36px; padding: 0 6px; text-decoration: underline; }
+        @media (max-width: 999px) { .toast { bottom: 80px; } }
+
+        .shop-exit { position: fixed; top: 10px; right: 10px; z-index: 2500; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: #dc2626; color: #fff; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+        body.shop-mode .top-banner, body.shop-mode .action-row, body.shop-mode .usuals, body.shop-mode .content-grid > section,
+        body.shop-mode .sidebar > .panel:not(.list-panel), body.shop-mode .cart-bar, body.shop-mode #wand-wrap, body.shop-mode .list-tools .mini-btn,
+        body.shop-mode #list-footer .shop-hide { display: none !important; }
+        body.shop-mode .content-grid { grid-template-columns: minmax(0, 1fr); }
+        body.shop-mode .sidebar { position: static; max-height: none; }
+        body.shop-mode .list-panel ul { max-height: none; }
+        body.shop-mode .app-body { padding-top: 56px; padding-bottom: 24px; }
+        body.shop-mode .list-row { padding: 16px 0; }
+        body.shop-mode .list-row input[type="checkbox"] { width: 34px; height: 34px; }
+        body.shop-mode .list-label { font-size: 1.25rem; }
+        body.shop-mode .qty button, body.shop-mode .remove-btn { width: 44px; height: 44px; }
+
+        .buy-list { display: grid; gap: 8px; }
+        .buy-list .btn-trigger { justify-content: flex-start; padding-left: 16px; min-height: 48px; text-align: left; }
+        .item-art[role="button"] { cursor: pointer; }
+        .item-art[role="button"]:hover .item-ico { transform: scale(1.12); }
+        .item-ico { transition: transform .15s; }
+
+        @media print {
+            body { background: #fff !important; color: #000 !important; }
+            .top-banner, .action-row, .usuals, .content-grid > section, .sidebar > .panel:not(.list-panel), .cart-bar, #wand-wrap, .list-tools, #list-footer,
+            .qty button, .remove-btn, .toast, .modal, .shop-exit, .summary .budget, .budget-line, .banner-fx, .mob-yard { display: none !important; }
+            .content-grid { display: block; }
+            .panel { box-shadow: none !important; border: 0 !important; background: #fff !important; color: #000 !important; }
+            .list-panel ul { max-height: none; overflow: visible; }
+            .list-row { break-inside: avoid; }
+            .row-meta, .group-head { color: #333 !important; }
+        }
 
         /* =====================================================================
            RESPONSIVE
@@ -701,6 +809,8 @@
                 <option value="minecraft">⛏️ Minecraft</option>
                 <option value="cricket">🏏 Cricket</option>
             </select>
+            <button type="button" class="icon-btn" id="sound-btn" aria-pressed="true" aria-label="Toggle sound" title="Sound">🔊</button>
+            <button type="button" class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙️</button>
         </div>
         <div class="banner-inner">
             <div class="brand-ico" id="brand-ico" aria-hidden="true">🛒</div>
@@ -714,11 +824,13 @@
             <div class="input-container">
                 <span class="prefix-icon" aria-hidden="true">🔍</span>
                 <label for="search" class="sr-only">Search or add an item</label>
-                <input id="search" class="main-search" type="text" maxlength="40" enterkeyhint="done" placeholder="Search items, or type a new one to add…">
+                <input id="search" class="main-search" type="text" maxlength="200" enterkeyhint="done" placeholder="Search, or add: milk, 2 eggs and bread…">
                 <button type="button" class="clear-search" id="clear-search" aria-label="Clear search" hidden>✕</button>
+                <button type="button" class="mic-btn" id="mic-btn" aria-label="Add by voice" aria-pressed="false" hidden>🎤</button>
             </div>
             <button type="submit" class="action-btn" id="add-btn">Add to list</button>
         </form>
+        <div class="usuals" id="usuals" hidden><span class="usuals-label">Your usuals:</span><span id="usuals-row" style="display:contents"></span></div>
 
         <div class="content-grid">
             <section aria-labelledby="browse-title">
@@ -732,8 +844,23 @@
             <aside class="sidebar">
                 <section class="panel list-panel" id="list-panel" aria-labelledby="list-title">
                     <h2 class="layout-title" id="list-title"><span id="list-title-text">Your list</span> <span class="badge" id="list-count">0</span></h2>
+                    <div class="list-tools">
+                        <label for="list-switch" class="sr-only">Choose list</label>
+                        <select id="list-switch" class="field"></select>
+                        <button type="button" class="mini-btn" id="list-new" aria-label="New list" title="New list">＋</button>
+                        <button type="button" class="mini-btn" id="list-rename" aria-label="Rename list" title="Rename list">✎</button>
+                        <button type="button" class="mini-btn" id="list-delete" aria-label="Delete list" title="Delete list">🗑</button>
+                    </div>
+                    <div class="summary">
+                        <div class="prog-text" id="prog-text">Nothing on this list yet</div>
+                        <div class="prog-bar" aria-hidden="true"><i id="prog-fill"></i></div>
+                        <div class="prog-bar budget" id="budget-bar" aria-hidden="true" hidden><i id="budget-fill"></i></div>
+                        <button type="button" class="budget-line" id="budget-btn"><span id="budget-text">Tap to set a budget</span></button>
+                    </div>
                     <ul id="list" aria-live="polite"></ul>
                     <div class="list-footer" id="list-footer" hidden>
+                        <button type="button" class="btn-trigger" id="shop-btn" aria-pressed="false">🛍️ Shop mode</button>
+                        <button type="button" class="btn-trigger" id="share-btn">📤 Share</button>
                         <button type="button" class="btn-trigger" id="clear-done">Remove ticked</button>
                         <button type="button" class="btn-trigger" id="clear-all">Clear all</button>
                     </div>
@@ -846,6 +973,81 @@
         <span aria-hidden="true">View list ›</span>
     </button>
 
+    <button type="button" class="shop-exit" id="shop-exit" hidden>Exit shop mode</button>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+        <span id="toast-msg"></span>
+        <button type="button" id="toast-undo" hidden>Undo</button>
+    </div>
+
+    <div class="modal" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-title" hidden>
+        <form class="sheet" id="dlg-form">
+            <h2 id="dlg-title"></h2>
+            <p id="dlg-text" hidden></p>
+            <label for="dlg-input" class="sr-only">Value</label>
+            <input class="field" id="dlg-input" maxlength="40" hidden>
+            <div class="row">
+                <button type="button" class="btn-trigger" id="dlg-cancel">Cancel</button>
+                <button type="submit" class="btn-trigger" id="dlg-ok">OK</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal" id="buy-modal" role="dialog" aria-modal="true" aria-labelledby="buy-title" hidden>
+        <div class="sheet">
+            <h2 id="buy-title">Get it</h2>
+            <div class="buy-list">
+                <button type="button" class="btn-trigger" id="buy-cart">🛒 Add to cart</button>
+                <a class="btn-trigger buy-blinkit" id="buy-blinkit" target="_blank" rel="noopener noreferrer">⚡ Buy on Blinkit</a>
+                <a class="btn-trigger buy-flipkart" id="buy-flipkart" target="_blank" rel="noopener noreferrer">🟦 Buy on Flipkart Minutes</a>
+                <a class="btn-trigger buy-zepto" id="buy-zepto" target="_blank" rel="noopener noreferrer">🟪 Buy on Zepto</a>
+                <a class="btn-trigger buy-instamart" id="buy-instamart" target="_blank" rel="noopener noreferrer">🟧 Buy on Instamart</a>
+            </div>
+            <p style="margin:12px 0 0">Opens the shop's search for this item in a new tab. Availability and prices depend on your location.</p>
+            <div class="row"><button type="button" class="btn-trigger" id="buy-close">Close</button></div>
+        </div>
+    </div>
+
+    <div class="modal" id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title" hidden>
+        <div class="sheet">
+            <h2 id="share-title">Share this list</h2>
+            <label for="share-text" class="sr-only">List text</label>
+            <textarea class="field" id="share-text" readonly></textarea>
+            <div class="row">
+                <button type="button" class="btn-trigger" id="share-copy">Copy</button>
+                <a class="btn-trigger" id="share-wa" target="_blank" rel="noopener">WhatsApp</a>
+                <button type="button" class="btn-trigger" id="share-native" hidden>Share…</button>
+                <button type="button" class="btn-trigger" id="share-csv">CSV</button>
+                <button type="button" class="btn-trigger" id="share-print">Print</button>
+                <button type="button" class="btn-trigger" id="share-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="set-title" hidden>
+        <div class="sheet">
+            <h2 id="set-title">Settings</h2>
+            <div class="set-row"><label for="set-currency">Currency</label>
+                <select id="set-currency" class="field"><option>₹</option><option>$</option><option>€</option><option>£</option></select></div>
+            <div class="set-row"><label for="set-motion">Animations</label>
+                <select id="set-motion" class="field"><option value="auto">Follow device</option><option value="on">Always on</option><option value="reduce">Reduced</option></select></div>
+            <div class="set-row"><label for="set-sound">Sound effects</label><input type="checkbox" id="set-sound"></div>
+            <div class="set-row"><label for="set-group">Group by aisle</label><input type="checkbox" id="set-group"></div>
+            <div class="set-row"><label for="set-sort">Bought items to the bottom</label><input type="checkbox" id="set-sort"></div>
+            <div class="set-row" style="display:block"><label for="set-sync">Shared products (database URL)</label>
+                <input class="field" id="set-sync" type="url" placeholder="https://your-project-default-rtdb.firebaseio.com" autocomplete="off" style="margin-top:6px">
+                <p id="sync-status" style="margin:6px 0 0;font-size:.8rem"></p></div>
+            <div class="row">
+                <button type="button" class="btn-trigger" id="set-export">Backup</button>
+                <button type="button" class="btn-trigger" id="set-import">Import</button>
+                <button type="button" class="btn-trigger danger" id="set-reset">Reset</button>
+                <button type="button" class="btn-trigger" id="set-close">Close</button>
+            </div>
+            <input type="file" id="set-file" accept="application/json,.json" hidden>
+            <p style="margin-top:12px">Everything is saved in this browser only. Use Backup to move it elsewhere. Prices are rough estimates in rupees.</p>
+        </div>
+    </div>
+
     <div class="modal" id="patronus-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title" hidden>
         <div class="modal-card">
             <h2 id="pm-title">Expecto Patronum!</h2>
@@ -872,20 +1074,28 @@
         { id: 'pantry',    label: 'Pantry',    icon: '🍚' },
         { id: 'snacks',    label: 'Snacks',    icon: '🍪' },
         { id: 'drinks',    label: 'Drinks',    icon: '🧃' },
-        { id: 'household', label: 'Household', icon: '🧻' }
+        { id: 'household', label: 'Household', icon: '🧻' },
+        { id: 'mine',      label: 'Mine',      icon: '⭐' }
     ];
 
+    /* [name, icon, aisle, rough price in rupees]. Prices are estimates and only show when the currency is rupees. */
     var CATALOG = [
-        ['Apples','🍎','fruit'], ['Bananas','🍌','fruit'], ['Oranges','🍊','fruit'], ['Grapes','🍇','fruit'], ['Lemons','🍋','fruit'],
-        ['Tomatoes','🍅','veg'], ['Potatoes','🥔','veg'], ['Onions','🧅','veg'], ['Carrots','🥕','veg'], ['Spinach','🥬','veg'], ['Garlic','🧄','veg'],
-        ['Milk','🥛','dairy'], ['Eggs','🥚','dairy'], ['Butter','🧈','dairy'], ['Cheese','🧀','dairy'], ['Yogurt','🥣','dairy'],
-        ['Bread','🍞','bakery'], ['Buns','🥯','bakery'], ['Croissants','🥐','bakery'],
-        ['Chicken','🍗','meat'], ['Fish','🐟','meat'], ['Mutton','🥩','meat'],
-        ['Rice','🍚','pantry'], ['Flour','🌾','pantry'], ['Lentils','🫘','pantry'], ['Cooking oil','🫒','pantry'], ['Salt','🧂','pantry'], ['Sugar','🍬','pantry'], ['Tea','🍵','pantry'], ['Coffee','☕','pantry'],
-        ['Biscuits','🍪','snacks'], ['Chips','🥔','snacks'], ['Chocolate','🍫','snacks'], ['Nuts','🥜','snacks'],
-        ['Water','💧','drinks'], ['Juice','🧃','drinks'], ['Soda','🥤','drinks'],
-        ['Toilet paper','🧻','household'], ['Dish soap','🧴','household'], ['Detergent','🧺','household'], ['Trash bags','🗑️','household'], ['Batteries','🔋','household']
-    ].map(function (r, i) { return { id: 'c' + i, name: r[0], icon: r[1], cat: r[2] }; });
+        ['Apples','🍎','fruit',180], ['Bananas','🍌','fruit',60], ['Oranges','🍊','fruit',100], ['Grapes','🍇','fruit',120], ['Lemons','🍋','fruit',40],
+        ['Mangoes','🥭','fruit',150], ['Watermelon','🍉','fruit',70], ['Pomegranate','🍎','fruit',160], ['Papaya','🍈','fruit',60], ['Strawberries','🍓','fruit',120],
+        ['Tomatoes','🍅','veg',40], ['Potatoes','🥔','veg',35], ['Onions','🧅','veg',40], ['Carrots','🥕','veg',50], ['Spinach','🥬','veg',30], ['Garlic','🧄','veg',20],
+        ['Cucumber','🥒','veg',30], ['Capsicum','🫑','veg',60], ['Cauliflower','🥦','veg',45], ['Ginger','🫚','veg',25], ['Green chillies','🌶️','veg',15], ['Coriander','🌿','veg',10],
+        ['Milk','🥛','dairy',60], ['Eggs','🥚','dairy',84], ['Butter','🧈','dairy',58], ['Cheese','🧀','dairy',110], ['Yogurt','🥣','dairy',45], ['Paneer','🧀','dairy',95], ['Ghee','🧈','dairy',320],
+        ['Bread','🍞','bakery',45], ['Buns','🥯','bakery',30], ['Croissants','🥐','bakery',90], ['Cake','🎂','bakery',450], ['Pav','🍞','bakery',35],
+        ['Chicken','🍗','meat',260], ['Fish','🐟','meat',350], ['Mutton','🥩','meat',750], ['Prawns','🦐','meat',500],
+        ['Rice','🍚','pantry',120], ['Flour','🌾','pantry',55], ['Lentils','🫘','pantry',140], ['Cooking oil','🫒','pantry',160], ['Salt','🧂','pantry',25], ['Sugar','🍬','pantry',50],
+        ['Tea','🍵','pantry',140], ['Coffee','☕','pantry',250], ['Pasta','🍝','pantry',90], ['Noodles','🍜','pantry',15], ['Honey','🍯','pantry',220], ['Jam','🍓','pantry',130],
+        ['Ketchup','🍅','pantry',110], ['Spices','🌶️','pantry',90], ['Oats','🥣','pantry',180], ['Cereal','🥣','pantry',210],
+        ['Biscuits','🍪','snacks',30], ['Chips','🥔','snacks',20], ['Chocolate','🍫','snacks',80], ['Nuts','🥜','snacks',280], ['Popcorn','🍿','snacks',60], ['Ice cream','🍨','snacks',150],
+        ['Water','💧','drinks',20], ['Juice','🧃','drinks',110], ['Soda','🥤','drinks',40], ['Energy drink','⚡','drinks',125], ['Cold coffee','🧋','drinks',60],
+        ['Toilet paper','🧻','household',250], ['Dish soap','🧴','household',110], ['Detergent','🧺','household',220], ['Trash bags','🗑️','household',90], ['Batteries','🔋','household',120],
+        ['Shampoo','🧴','household',180], ['Toothpaste','🪥','household',95], ['Soap','🧼','household',45], ['Tissues','🧻','household',60], ['Sponges','🧽','household',50],
+        ['Light bulbs','💡','household',130], ['Hand wash','🧴','household',99], ['Floor cleaner','🧹','household',150], ['Aluminium foil','🥫','household',110]
+    ].map(function (r, i) { return { id: 'c' + i, name: r[0], icon: r[1], cat: r[2], price: r[3] }; });
 
     var THEMES = ['light', 'dark', 'harry-potter', 'minecraft', 'cricket'];
 
@@ -965,29 +1175,128 @@
         { id: '26.1', edition: 'java', kind: 'release', date: '2026-03-24', title: '26.1', bullets: [] }
     ];
 
-    var STORE_KEY = 'home-shopping.v1';
+    var STORE_KEY = 'home-shopping.v2';
+    var OLD_KEY = 'home-shopping.v1';
 
-    var state = { list: [], theme: null, cat: 'all', query: '', stats: { w: 0, l: 0, d: 0, ckBests: {} } };
+    /* Shared products for everyone. Paste your Firebase Realtime Database URL here (see the notes
+       delivered with this file), e.g. 'https://my-shop-default-rtdb.firebaseio.com'. Leave empty to
+       keep products on this device only. Each person can also paste a URL in Settings. */
+    var SHARED_DB = '';
+
+    function defaultCurrency() {
+        try {
+            var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+            if (/Calcutta|Kolkata/.test(tz)) return '₹';
+        } catch (e) { /* ignore */ }
+        return '$';
+    }
+    function uid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+    var state = {
+        lists: [{ id: 'l1', name: 'Shopping list', budget: 0, items: [] }],
+        activeId: 'l1',
+        theme: null, cat: 'all', query: '',
+        stats: { w: 0, l: 0, d: 0, ckBests: {} },
+        usage: {}, custom: [], shared: [],
+        settings: { currency: defaultCurrency(), sound: true, motion: 'auto', group: true, sortDone: true, syncUrl: '' }
+    };
+    function activeList() {
+        for (var i = 0; i < state.lists.length; i++) if (state.lists[i].id === state.activeId) return state.lists[i];
+        return state.lists[0];
+    }
+    /* state.list is always the items of the active list, so older code keeps working. */
+    Object.defineProperty(state, 'list', {
+        get: function () { return activeList().items; },
+        set: function (v) { activeList().items = v; }
+    });
+
+    function cleanShared(c) {
+        if (!c || typeof c.name !== 'string') return null;
+        var name = c.name.replace(/\s+/g, ' ').trim().slice(0, 40);
+        if (!name) return null;
+        var ids = CATEGORIES.map(function (k) { return k.id; });
+        var icon = (typeof c.icon === 'string' && c.icon.trim()) ? c.icon.trim().slice(0, 8) : '🛒';
+        return { name: name, icon: icon, cat: ids.indexOf(c.cat) > 0 ? c.cat : 'mine' };
+    }
+
+    function cleanItem(x) {
+        if (!x || typeof x.name !== 'string' || !x.name.trim()) return null;
+        var p = typeof x.price === 'number' && isFinite(x.price) && x.price >= 0 ? x.price : null;
+        return {
+            name: x.name.trim().slice(0, 60),
+            icon: (typeof x.icon === 'string' && x.icon) ? x.icon.slice(0, 8) : '🛒',
+            cat: typeof x.cat === 'string' ? x.cat : '',
+            qty: Math.max(1, Math.min(99, Math.round(Number(x.qty)) || 1)),
+            done: !!x.done,
+            price: p,
+            note: typeof x.note === 'string' ? x.note.slice(0, 120) : ''
+        };
+    }
+
+    /* Used for both loading from storage and importing a backup. Returns false when the data is unusable. */
+    function applyData(data) {
+        if (!data || typeof data !== 'object') return false;
+        var lists = null;
+        if (Array.isArray(data.lists) && data.lists.length) {
+            lists = data.lists.slice(0, 30).map(function (l) {
+                var b = Number(l && l.budget);
+                return {
+                    id: (l && typeof l.id === 'string' && l.id) ? l.id : uid('l'),
+                    name: (l && typeof l.name === 'string' && l.name.trim()) ? l.name.trim().slice(0, 40) : 'List',
+                    budget: (isFinite(b) && b > 0) ? b : 0,
+                    items: (l && Array.isArray(l.items) ? l.items : []).map(cleanItem).filter(Boolean)
+                };
+            });
+        } else if (Array.isArray(data.list)) {
+            lists = [{ id: 'l1', name: 'Shopping list', budget: 0, items: data.list.map(cleanItem).filter(Boolean) }];
+        }
+        if (!lists) return false;
+        state.lists = lists;
+        state.activeId = lists.some(function (l) { return l.id === data.activeId; }) ? data.activeId : lists[0].id;
+        if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
+        if (data.stats && typeof data.stats === 'object') {
+            ['w', 'l', 'd'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
+            var cb = data.stats.ckBests;
+            if (cb && typeof cb === 'object') Object.keys(cb).forEach(function (k) { if (typeof cb[k] === 'number') state.stats.ckBests[k] = cb[k]; });
+        }
+        if (data.usage && typeof data.usage === 'object') {
+            state.usage = {};
+            Object.keys(data.usage).slice(0, 400).forEach(function (k) { if (typeof data.usage[k] === 'number') state.usage[k] = data.usage[k]; });
+        }
+        if (Array.isArray(data.custom)) {
+            var ids = CATEGORIES.map(function (c) { return c.id; });
+            state.custom = data.custom.slice(0, 200).filter(function (c) { return c && typeof c.name === 'string' && c.name; }).map(function (c) {
+                return { id: (typeof c.id === 'string' && c.id) ? c.id : uid('u'), name: c.name.slice(0, 40), icon: (typeof c.icon === 'string' && c.icon) ? c.icon.slice(0, 8) : '🛒', cat: ids.indexOf(c.cat) > 0 ? c.cat : 'mine' };
+            });
+        }
+        if (Array.isArray(data.shared)) state.shared = data.shared.slice(0, 500).map(cleanShared).filter(Boolean);
+        var s = data.settings;
+        if (s && typeof s === 'object') {
+            if (['₹', '$', '€', '£'].indexOf(s.currency) !== -1) state.settings.currency = s.currency;
+            if (['auto', 'on', 'reduce'].indexOf(s.motion) !== -1) state.settings.motion = s.motion;
+            if (typeof s.syncUrl === 'string') state.settings.syncUrl = s.syncUrl.trim().slice(0, 300);
+            ['sound', 'group', 'sortDone'].forEach(function (k) { if (typeof s[k] === 'boolean') state.settings[k] = s[k]; });
+        }
+        rebuildCustom();
+        return true;
+    }
 
     /* =====================================================================
        STORAGE (guarded: can throw in private mode)
        ===================================================================== */
     function load() {
         try {
-            var raw = localStorage.getItem(STORE_KEY);
-            if (!raw) return;
-            var data = JSON.parse(raw);
-            if (Array.isArray(data.list)) state.list = data.list.filter(function (x) { return x && typeof x.name === 'string'; });
-            if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
-            if (data.stats && typeof data.stats === 'object') {
-                ['w', 'l', 'd'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
-                var cb = data.stats.ckBests;
-                if (cb && typeof cb === 'object') Object.keys(cb).forEach(function (k) { if (typeof cb[k] === 'number') state.stats.ckBests[k] = cb[k]; });
-            }
+            var raw = localStorage.getItem(STORE_KEY) || localStorage.getItem(OLD_KEY);
+            if (raw) applyData(JSON.parse(raw));
         } catch (e) { /* ignore */ }
     }
     function save() {
-        try { localStorage.setItem(STORE_KEY, JSON.stringify({ list: state.list, theme: state.theme, stats: state.stats })); } catch (e) { /* ignore */ }
+        try {
+            localStorage.setItem(STORE_KEY, JSON.stringify({
+                v: 2, lists: state.lists, activeId: state.activeId, theme: state.theme,
+                stats: state.stats, usage: state.usage, custom: state.custom, shared: state.shared, settings: state.settings
+            }));
+        } catch (e) { /* ignore */ }
     }
 
     /* =====================================================================
@@ -995,7 +1304,8 @@
        ===================================================================== */
     var $ = function (id) { return document.getElementById(id); };
     var norm = function (s) { return s.trim().toLowerCase(); };
-    var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var SYS_REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var REDUCED = SYS_REDUCED;
 
     function el(tag, className, text) {
         var node = document.createElement(tag);
@@ -1081,17 +1391,900 @@
         });
     }
 
+    /* =====================================================================
+       PRO CORE: prices, custom items, parsing, sound, toast, dialogs, lists
+       ===================================================================== */
+    var catalogVersion = 0;
+    var editingItem = null;
+    var lastAllDone = false;
+    var celebrateReady = false;
+
     function findOnList(name) {
         var n = norm(name);
         for (var i = 0; i < state.list.length; i++) if (norm(state.list[i].name) === n) return state.list[i];
         return null;
     }
-    function addToList(name, icon) {
+    function findCatalog(name) {
+        var n = norm(name);
+        for (var i = 0; i < CATALOG.length; i++) if (norm(CATALOG[i].name) === n) return CATALOG[i];
+        return null;
+    }
+    function stem(s) { return norm(s).replace(/(es|s)$/, ''); }
+    function resolveCatalog(name) {
+        var c = findCatalog(name);
+        if (c) return c;
+        var s = stem(name);
+        for (var i = 0; i < CATALOG.length; i++) if (stem(CATALOG[i].name) === s) return CATALOG[i];
+        return null;
+    }
+    function titleCase(s) { s = s.trim(); return s.charAt(0).toUpperCase() + s.slice(1); }
+    function catInfo(id) {
+        for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === id) return CATEGORIES[i];
+        return { id: 'mine', label: 'Other', icon: '🛒' };
+    }
+    function itemCat(item) {
+        if (item.cat) return item.cat;
+        var c = findCatalog(item.name);
+        return c ? c.cat : 'mine';
+    }
+
+    /* ----- money ----- */
+    function money(n) {
+        var f;
+        try { f = n.toLocaleString(undefined, { maximumFractionDigits: (n % 1) ? 2 : 0 }); } catch (e) { f = String(Math.round(n)); }
+        return state.settings.currency + f;
+    }
+    /* Built-in prices are rough rupee estimates, so they only apply when the currency is rupees. */
+    function baseItemPrice(name) {
+        if (state.settings.currency !== '₹') return null;
+        var c = findCatalog(name);
+        return (c && typeof c.price === 'number') ? c.price : null;
+    }
+    function unitPrice(item) { return item.price != null ? item.price : baseItemPrice(item.name); }
+    function totals() {
+        var t = { sum: 0, remaining: 0, priced: 0, unpriced: 0, done: 0, count: state.list.length };
+        state.list.forEach(function (i) {
+            var p = unitPrice(i);
+            if (i.done) t.done++;
+            if (p != null) { t.priced++; t.sum += p * i.qty; if (!i.done) t.remaining += p * i.qty; }
+            else t.unpriced++;
+        });
+        return t;
+    }
+    function allDone() { return state.list.length > 0 && state.list.every(function (i) { return i.done; }); }
+
+    /* ----- custom items: guess an icon and aisle from the name ----- */
+    var GUESS = [
+        [/(milk|curd|yog[h]?urt|paneer|cheese|butter|cream|ghee|lassi|dahi)/, '🥛', 'dairy'],
+        [/(bread|bun|pav|cake|cookie|biscuit|rusk|toast|croissant|muffin)/, '🍞', 'bakery'],
+        [/(chicken|mutton|beef|lamb|pork|sausage|bacon|ham)/, '🍗', 'meat'],
+        [/(fish|prawn|shrimp|salmon|tuna|crab)/, '🐟', 'meat'],
+        [/(apple|mango|banana|orange|grape|berry|melon|fruit|lime|lemon|papaya|guava|pear|peach|plum|kiwi|pomegranate|cherry)/, '🍎', 'fruit'],
+        [/(onion|potato|tomato|carrot|spinach|veg|chill?i|garlic|ginger|cabbage|cauliflower|peas|beans|okra|brinjal|eggplant|cucumber|lettuce|beet|radish|pumpkin|gourd|salad|herb|mint|coriander)/, '🥬', 'veg'],
+        [/(rice|dal|lentil|flour|atta|maida|oil|salt|sugar|spice|masala|tea|coffee|pasta|noodle|honey|jam|sauce|ketchup|vinegar|pickle|cereal|oats|poha|sooji|rava|besan|powder|seeds)/, '🍚', 'pantry'],
+        [/(chip|snack|chocolate|candy|namkeen|popcorn|nut|almond|cashew|raisin|wafer|cracker|sweet)/, '🍫', 'snacks'],
+        [/(water|juice|soda|cola|drink|beer|wine|squash|shake|energy)/, '🥤', 'drinks'],
+        [/(soap|shampoo|tooth|detergent|cleaner|tissue|paper|foil|bag|bulb|battery|sponge|brush|towel|diaper|bleach|mop|broom|phenyl|wash|lotion|razor|sanitizer|mask)/, '🧴', 'household']
+    ];
+    function guess(name) {
+        var n = norm(name);
+        for (var i = 0; i < GUESS.length; i++) if (GUESS[i][0].test(n)) return { icon: GUESS[i][1], cat: GUESS[i][2] };
+        return { icon: '🛒', cat: 'mine' };
+    }
+    function rebuildCustom() {
+        CATALOG = CATALOG.filter(function (c) { return !c.custom; });
+        state.custom.forEach(function (c) { CATALOG.push({ id: c.id, name: c.name, icon: c.icon, cat: c.cat, custom: true, price: null }); });
+        state.shared.forEach(function (c) {
+            if (findCatalog(c.name)) return;
+            CATALOG.push({ id: 's-' + stem(c.name).replace(/[^a-z0-9]+/g, '-'), name: c.name, icon: c.icon, cat: c.cat, custom: true, shared: true, price: null });
+        });
+        catalogVersion++;
+    }
+    function ensureCustom(name) {
+        var c = resolveCatalog(name);
+        if (c) return c;
+        var g = guess(name);
+        if (state.custom.length >= 200) state.custom.shift();
+        state.custom.push({ id: uid('u'), name: name, icon: g.icon, cat: g.cat });
+        rebuildCustom();
+        var made = findCatalog(name);
+        if (made) Sync.push(made);
+        return made;
+    }
+
+    /* ----- parsing: "milk, 2 eggs and bread" -> three entries ----- */
+    var NUMWORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+    function parseEntries(text, splitAnd) {
+        var t = text.replace(/\s+/g, ' ').trim();
+        t = t.replace(/^(please\s+)?(add|buy|get|need|put|i need|we need)\s+/i, '');
+        var sep = splitAnd ? /\s*(?:,|;|\n|&|\band\b|\bthen\b|\bplus\b)\s*/i : /\s*(?:,|;|\n)\s*/;
+        return t.split(sep).map(function (p) {
+            p = p.replace(/\s+(to|on|in)\s+(my\s+|the\s+)?(shopping\s+)?(list|cart)\.?$/i, '').trim();
+            if (!p) return null;
+            var qty = 1, name = p;
+            var m = /^(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)(?:\s*[x×]\s*|\s+)(?:(?:packs?|pieces?|kg|dozen|bottles?|cartons?)\s+)?(?:of\s+)?(.+)$/i.exec(p);
+            if (m && m[2]) {
+                var q = /^\d/.test(m[1]) ? parseInt(m[1], 10) : NUMWORDS[m[1].toLowerCase()];
+                if (q) { qty = clamp(q, 1, 99); name = m[2]; }
+            }
+            name = name.replace(/[.!?]+$/, '').trim().slice(0, 40);
+            return name ? { name: name, qty: qty } : null;
+        }).filter(Boolean);
+    }
+
+    /* ----- adding ----- */
+    function addToList(name, icon, opts) {
+        opts = opts || {};
+        var qty = clamp(opts.qty || 1, 1, 99);
         var existing = findOnList(name);
-        if (existing) { existing.qty = Math.min(99, existing.qty + 1); existing.done = false; }
-        else state.list.push({ name: name, icon: icon || '🛒', qty: 1, done: false });
+        if (existing) { existing.qty = Math.min(99, existing.qty + qty); existing.done = false; }
+        else {
+            var c = findCatalog(name);
+            state.list.push({ name: name, icon: icon || (c && c.icon) || '🛒', cat: opts.cat || (c && c.cat) || '', qty: qty, done: false, price: null, note: '' });
+        }
+        state.usage[name] = (state.usage[name] || 0) + 1;
+        Snd.play('add');
         save();
         render();
+    }
+
+    function addEntries(entries) {
+        if (!entries.length) { toast('Nothing to add. Type or say an item.'); return; }
+        var snap = snapshot(), id = state.activeId, names = [];
+        entries.forEach(function (e) {
+            var c = ensureCustom(titleCase(e.name));
+            addToList(c.name, c.icon, { qty: e.qty, cat: c.cat });
+            names.push(c.name + (e.qty > 1 ? ' ×' + e.qty : ''));
+        });
+        toast('Added ' + names.join(', '), function () { restoreItems(id, snap); });
+    }
+
+    /* ----- undo ----- */
+    function snapshot() { return JSON.parse(JSON.stringify(state.list)); }
+    function restoreItems(listId, snap) {
+        for (var i = 0; i < state.lists.length; i++) {
+            if (state.lists[i].id === listId) { state.lists[i].items = snap; state.activeId = listId; save(); render(); return; }
+        }
+    }
+    function withUndo(msg, fn) {
+        var snap = snapshot(), id = state.activeId;
+        fn();
+        save(); render();
+        toast(msg, function () { restoreItems(id, snap); });
+    }
+
+    /* ----- sound effects (synthesised, nothing to download) ----- */
+    var Snd = (function () {
+        var ac = null;
+        function ctx() {
+            if (!ac) { try { var C = window.AudioContext || window.webkitAudioContext; if (C) ac = new C(); } catch (e) { ac = null; } }
+            if (ac && ac.state === 'suspended') ac.resume();
+            return ac;
+        }
+        function tone(f, d, type, v, when, to) {
+            var a = ctx(); if (!a) return;
+            var t = a.currentTime + (when || 0), o = a.createOscillator(), g = a.createGain();
+            o.type = type || 'sine';
+            o.frequency.setValueAtTime(f, t);
+            if (to) o.frequency.exponentialRampToValueAtTime(to, t + d);
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.exponentialRampToValueAtTime(v || 0.1, t + 0.012);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+            o.connect(g); g.connect(a.destination);
+            o.start(t); o.stop(t + d + 0.03);
+        }
+        function noise(d, v, when, freq) {
+            var a = ctx(); if (!a) return;
+            var t = a.currentTime + (when || 0), n = Math.max(1, Math.floor(a.sampleRate * d));
+            var buf = a.createBuffer(1, n, a.sampleRate), data = buf.getChannelData(0);
+            for (var i = 0; i < n; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / n);
+            var src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+            src.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq || 1800;
+            g.gain.setValueAtTime(v || 0.2, t); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+            src.connect(f); f.connect(g); g.connect(a.destination);
+            src.start(t);
+        }
+        var S = {
+            add: function () {
+                var th = state.theme;
+                if (th === 'harry-potter') { tone(880, 0.16, 'triangle', 0.08); tone(1175, 0.16, 'triangle', 0.07, 0.06); tone(1568, 0.22, 'triangle', 0.06, 0.12); }
+                else if (th === 'minecraft') { tone(1046, 0.08, 'square', 0.05); tone(1568, 0.14, 'square', 0.05, 0.07); }
+                else if (th === 'cricket') { tone(150, 0.14, 'triangle', 0.2, 0, 70); tone(900, 0.1, 'sine', 0.06, 0.05, 1300); tone(1300, 0.14, 'sine', 0.05, 0.12); }
+                else { tone(520, 0.09, 'sine', 0.09, 0, 780); tone(780, 0.1, 'sine', 0.07, 0.07); }
+            },
+            tick: function () { tone(660, 0.07, 'triangle', 0.08); tone(990, 0.07, 'triangle', 0.06, 0.05); },
+            untick: function () { tone(440, 0.07, 'triangle', 0.07); },
+            remove: function () { tone(300, 0.14, 'sine', 0.09, 0, 140); },
+            fanfare: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, 0.28, 'triangle', 0.09, i * 0.11); }); },
+            cast: function () { noise(0.25, 0.12, 0, 3200); tone(400, 0.25, 'sine', 0.06, 0, 1400); },
+            patronus: function () { [523, 659, 784, 1047, 1319].forEach(function (f, i) { tone(f, 0.6, 'sine', 0.06, i * 0.09); }); },
+            hit: function () { noise(0.12, 0.25, 0, 900); tone(140, 0.14, 'sawtooth', 0.08, 0, 60); },
+            crack: function () { noise(0.1, 0.4, 0, 2400); tone(200, 0.14, 'triangle', 0.22, 0, 80); },
+            swing: function () { noise(0.14, 0.12, 0, 1400); },
+            bathit: function () { noise(0.05, 0.6, 0, 2200); tone(1500, 0.05, 'square', 0.1, 0, 700); tone(130, 0.16, 'sine', 0.35, 0, 55); }
+        };
+        function seq(list) { list.forEach(function (n) { tone(n[0], n[1], n[2], n[3], n[4], n[5]); }); }
+        function ticks(n, gap, v, f) { for (var i = 0; i < n; i++) noise(0.04, v, i * gap, f); }
+        function trem(f, n, step, type, v, f2) { for (var i = 0; i < n; i++) tone(i % 2 ? f2 : f, step, type, v, i * step * 0.9); }
+        /* Little synthesised voices for each Minecraft creature. */
+        var MOB = {
+            villager: function () { seq([[210, 0.2, 'sawtooth', 0.05, 0, 175], [195, 0.28, 'sawtooth', 0.05, 0.22, 150]]); },
+            steve: function () { seq([[230, 0.14, 'triangle', 0.08, 0, 200], [210, 0.2, 'triangle', 0.08, 0.16, 170]]); },
+            zombie: function () { tone(120, 0.8, 'sawtooth', 0.08, 0, 65); noise(0.7, 0.07, 0, 500); },
+            skeleton: function () { ticks(7, 0.06, 0.25, 3200); },
+            creeper: function () { noise(0.9, 0.16, 0, 5200); },
+            enderman: function () { tone(1000, 0.35, 'sine', 0.07, 0, 220); tone(300, 0.3, 'sine', 0.06, 0.3, 1100); },
+            golem: function () { tone(90, 0.35, 'triangle', 0.25, 0, 40); noise(0.2, 0.25, 0, 300); },
+            snowgolem: function () { tone(650, 0.12, 'sine', 0.1, 0, 200); },
+            pig: function () { seq([[320, 0.12, 'sawtooth', 0.08, 0, 210], [260, 0.18, 'sawtooth', 0.08, 0.14, 170]]); },
+            cow: function () { tone(140, 0.9, 'sawtooth', 0.07, 0, 105); tone(70, 0.9, 'sine', 0.1, 0, 55); },
+            sheep: function () { trem(400, 12, 0.05, 'sawtooth', 0.06, 440); },
+            chicken: function () { seq([[760, 0.07, 'square', 0.05, 0, 520], [740, 0.07, 'square', 0.05, 0.1, 500], [780, 0.1, 'square', 0.05, 0.2, 540]]); },
+            wolf: function () { noise(0.12, 0.2, 0, 700); tone(260, 0.2, 'sawtooth', 0.09, 0, 140); },
+            cat: function () { tone(600, 0.5, 'sine', 0.09, 0, 950); tone(950, 0.3, 'sine', 0.07, 0.4, 480); },
+            horse: function () { tone(520, 0.3, 'sawtooth', 0.06, 0, 1050); trem(900, 8, 0.06, 'sawtooth', 0.05, 760); },
+            rabbit: function () { ticks(2, 0.12, 0.2, 900); },
+            fox: function () { seq([[900, 0.12, 'triangle', 0.08, 0, 1350], [1000, 0.14, 'triangle', 0.08, 0.17, 1400]]); },
+            panda: function () { ticks(4, 0.14, 0.2, 700); },
+            bee: function () { trem(230, 14, 0.05, 'sawtooth', 0.04, 260); },
+            parrot: function () { seq([[1250, 0.16, 'square', 0.04, 0, 700], [1150, 0.2, 'square', 0.04, 0.2, 650]]); },
+            turtle: function () { tone(90, 0.12, 'triangle', 0.2, 0, 60); tone(80, 0.12, 'triangle', 0.2, 0.3, 55); },
+            spider: function () { ticks(10, 0.04, 0.12, 4200); },
+            bat: function () { tone(4200, 0.18, 'sine', 0.05, 0, 6200); tone(4000, 0.16, 'sine', 0.05, 0.2, 6000); },
+            frog: function () { seq([[210, 0.1, 'square', 0.06, 0, 380], [220, 0.12, 'square', 0.06, 0.15, 400]]); },
+            llama: function () { noise(0.15, 0.2, 0, 3000); tone(300, 0.2, 'sawtooth', 0.05, 0.05, 180); },
+            goat: function () { trem(330, 14, 0.06, 'sawtooth', 0.06, 290); },
+            polar: function () { tone(95, 0.7, 'sawtooth', 0.09, 0, 70); noise(0.5, 0.06, 0, 400); },
+            axolotl: function () { seq([[1500, 0.08, 'sine', 0.07, 0, 2000], [1600, 0.08, 'sine', 0.07, 0.12, 2100]]); },
+            camel: function () { trem(150, 12, 0.05, 'sawtooth', 0.06, 130); },
+            blaze: function () { noise(0.7, 0.14, 0, 900); },
+            slime: function () { tone(320, 0.2, 'sine', 0.12, 0, 90); noise(0.1, 0.1, 0.05, 1200); },
+            ghast: function () { tone(420, 0.9, 'sine', 0.07, 0, 280); tone(425, 0.9, 'sine', 0.05, 0.05, 300); },
+            dragon: function () { tone(75, 1.1, 'sawtooth', 0.12, 0, 38); noise(1, 0.12, 0, 600); tone(150, 0.9, 'sawtooth', 0.05, 0.1, 80); }
+        };
+        var SAY = { 'Accio': 'Ack-ee-oh', 'Wingardium Leviosa': 'Win-gar-dee-um Levi-oh-sa', 'Expecto Patronum': 'Ex-pecto Pa-tro-num',
+            'Stupefy': 'Stew-pe-fy', 'Expelliarmus': 'Ex-pell-ee-ar-mus', 'Protego': 'Pro-tee-go' };
+        function pickVoice() {
+            var v = window.speechSynthesis.getVoices() || [];
+            return v.filter(function (x) { return /^en-GB/i.test(x.lang); })[0] || v.filter(function (x) { return /^en/i.test(x.lang); })[0] || null;
+        }
+        return {
+            play: function (name) {
+                if (!state.settings.sound) return;
+                try { if (S[name]) S[name](); } catch (e) { /* audio is optional */ }
+            },
+            mob: function (id) {
+                if (!state.settings.sound) return;
+                try { (MOB[id] || MOB.villager)(); } catch (e) { /* audio is optional */ }
+            },
+            /* Says a spell out loud, like a wizard would. */
+            say: function (spell) {
+                if (!state.settings.sound || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+                try {
+                    window.speechSynthesis.cancel();
+                    var u = new SpeechSynthesisUtterance(SAY[spell] || spell);
+                    var v = pickVoice();
+                    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
+                    u.rate = 0.78; u.pitch = 0.8; u.volume = 1;
+                    window.speechSynthesis.speak(u);
+                } catch (e) { /* speech is optional */ }
+            }
+        };
+    })();
+
+    /* ----- toast ----- */
+    var toastTimer = 0;
+    function toast(msg, undoFn) {
+        var box = $('toast');
+        $('toast-msg').textContent = msg;
+        var u = $('toast-undo');
+        u.hidden = !undoFn;
+        u.onclick = function () { clearTimeout(toastTimer); box.hidden = true; if (undoFn) undoFn(); };
+        box.hidden = false;
+        box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { box.hidden = true; }, undoFn ? 7000 : 3600);
+    }
+
+    /* ----- small dialog: text input or confirm ----- */
+    var dlgResolve = null;
+    function closeDlg(v) {
+        var r = dlgResolve; dlgResolve = null;
+        $('dlg').hidden = true;
+        if (r) r(v);
+    }
+    function ask(o) {
+        return new Promise(function (resolve) {
+            if (dlgResolve) closeDlg(null);
+            $('dlg-title').textContent = o.title || '';
+            var txt = $('dlg-text'); txt.textContent = o.text || ''; txt.hidden = !o.text;
+            var inp = $('dlg-input');
+            inp.hidden = !o.input; inp.type = o.type || 'text'; inp.value = (o.value == null ? '' : o.value);
+            inp.placeholder = o.placeholder || '';
+            if (o.type === 'number') { inp.min = '0'; inp.step = 'any'; inp.inputMode = 'decimal'; } else { inp.removeAttribute('min'); inp.removeAttribute('step'); inp.inputMode = 'text'; }
+            var ok = $('dlg-ok'); ok.textContent = o.ok || 'OK'; ok.classList.toggle('danger', !!o.danger);
+            dlgResolve = resolve;
+            $('dlg').hidden = false;
+            setTimeout(function () { if (o.input) { inp.focus(); inp.select(); } else ok.focus(); }, 30);
+        });
+    }
+
+    /* ----- generic modal helpers ----- */
+    var openerFocus = null;
+    function openModal(id, focusId) {
+        openerFocus = document.activeElement;
+        $(id).hidden = false;
+        var f = focusId ? $(focusId) : $(id).querySelector('button, input, select');
+        if (f) setTimeout(function () { f.focus(); }, 30);
+    }
+    function closeModal(id) {
+        $(id).hidden = true;
+        if (openerFocus && document.contains(openerFocus) && openerFocus.focus) openerFocus.focus();
+    }
+    function wireModal(id) {
+        var m = $(id);
+        m.addEventListener('click', function (e) { if (e.target === m) closeModal(id); });
+        m.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { e.stopPropagation(); closeModal(id); return; }
+            if (e.key === 'Tab') {
+                var f = m.querySelectorAll('button:not([disabled]), input:not([hidden]):not([disabled]), select, textarea, a[href]');
+                if (!f.length) return;
+                var first = f[0], last = f[f.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        });
+    }
+
+    /* ----- list management ----- */
+    function setActive(id) {
+        for (var i = 0; i < state.lists.length; i++) {
+            if (state.lists[i].id === id) {
+                state.activeId = id; editingItem = null; lastAllDone = allDone();
+                save(); render();
+                return true;
+            }
+        }
+        return false;
+    }
+    async function newList() {
+        var name = await ask({ title: 'New list', text: 'Give it a name, like "Weekend party" or "Hardware".', input: true, value: '', placeholder: 'List name', ok: 'Create' });
+        if (!name) return;
+        var l = { id: uid('l'), name: name.slice(0, 40), budget: 0, items: [] };
+        state.lists.push(l);
+        setActive(l.id);
+    }
+    async function renameList() {
+        var l = activeList();
+        var name = await ask({ title: 'Rename list', input: true, value: l.name, ok: 'Save' });
+        if (!name) return;
+        l.name = name.slice(0, 40);
+        save(); render();
+    }
+    async function deleteList() {
+        if (state.lists.length < 2) return;
+        var l = activeList();
+        var ok = await ask({ title: 'Delete "' + l.name + '"?', text: 'This removes the list and its ' + l.items.length + ' items.', ok: 'Delete', danger: true });
+        if (!ok) return;
+        var idx = state.lists.indexOf(l);
+        state.lists.splice(idx, 1);
+        setActive(state.lists[Math.max(0, idx - 1)].id);
+        toast('Deleted "' + l.name + '"', function () { state.lists.splice(idx, 0, l); setActive(l.id); });
+    }
+    async function setBudget() {
+        var l = activeList();
+        var v = await ask({ title: 'Budget for "' + l.name + '"', text: 'The bar turns orange at 80% and red when you go over. Leave it at 0 for no budget.', input: true, type: 'number', value: l.budget || '', placeholder: 'Amount in ' + state.settings.currency, ok: 'Save' });
+        if (v === null) return;
+        var n = parseFloat(v);
+        l.budget = (isFinite(n) && n > 0) ? n : 0;
+        save(); render();
+    }
+    function removeItem(item) {
+        withUndo('Removed ' + item.name, function () {
+            var i = state.list.indexOf(item);
+            if (i >= 0) state.list.splice(i, 1);
+        });
+    }
+    function clearDone() {
+        if (!state.list.some(function (i) { return i.done; })) { toast('Nothing is ticked yet.'); return; }
+        withUndo('Removed bought items', function () { state.list = state.list.filter(function (i) { return !i.done; }); });
+    }
+    async function clearAll() {
+        if (!state.list.length) return;
+        var ok = await ask({ title: 'Clear this list?', text: 'All ' + state.list.length + ' items will be removed. You can undo right after.', ok: 'Clear all', danger: true });
+        if (ok) withUndo('Cleared the list', function () { state.list = []; });
+    }
+
+    /* ----- list rendering ----- */
+    function renderSwitcher() {
+        var sel = $('list-switch');
+        sel.textContent = '';
+        state.lists.forEach(function (l) {
+            var o = el('option', null, l.name + ' (' + l.items.length + ')');
+            o.value = l.id;
+            sel.appendChild(o);
+        });
+        sel.value = state.activeId;
+        $('list-delete').disabled = state.lists.length < 2;
+    }
+
+    function renderSummary() {
+        var t = totals(), l = activeList();
+        $('prog-text').textContent = t.count ? t.done + ' of ' + t.count + ' bought' : 'Nothing on this list yet';
+        $('prog-fill').style.width = (t.count ? t.done / t.count * 100 : 0) + '%';
+        var parts = [], bar = $('budget-bar'), fill = $('budget-fill');
+        if (t.priced) parts.push('Estimated ' + money(t.sum));
+        if (l.budget) {
+            var pct = t.sum / l.budget * 100;
+            fill.style.width = Math.min(100, pct) + '%';
+            bar.className = 'prog-bar budget' + (pct > 100 ? ' over' : (pct > 80 ? ' warn' : ''));
+            parts.push(t.sum > l.budget ? 'over budget by ' + money(t.sum - l.budget) : money(l.budget - t.sum) + ' left of ' + money(l.budget));
+        } else {
+            fill.style.width = '0'; bar.className = 'prog-bar budget';
+            parts.push(t.priced ? 'tap to set a budget' : 'Tap to set a budget');
+        }
+        var txt = parts.join(' · ');
+        if (t.priced && t.unpriced) txt += ' (' + t.unpriced + ' without a price)';
+        $('budget-text').textContent = txt;
+        $('budget-bar').hidden = !l.budget;
+    }
+
+    function catIndex(item) {
+        var c = itemCat(item);
+        for (var i = 0; i < CATEGORIES.length; i++) if (CATEGORIES[i].id === c) return i;
+        return 99;
+    }
+
+    function buildEditor(item) {
+        var box = el('div', 'row-edit');
+        function field(label, cls) { var w = el('label', cls || null); w.appendChild(document.createTextNode(label)); return w; }
+
+        var lp = field('Price each (' + state.settings.currency + ')');
+        var price = el('input', 'field slim');
+        price.type = 'number'; price.min = '0'; price.step = 'any'; price.inputMode = 'decimal';
+        price.value = item.price != null ? String(item.price) : '';
+        var bp = baseItemPrice(item.name);
+        price.placeholder = bp != null ? bp + ' (estimate)' : 'optional';
+        price.addEventListener('change', function () {
+            var v = parseFloat(price.value);
+            item.price = (isFinite(v) && v >= 0) ? v : null;
+            save(); renderSummary();
+            var meta = box.parentNode && box.parentNode.querySelector('.row-meta');
+            renderList();
+        });
+        lp.appendChild(price);
+
+        var li = field('Icon');
+        var icon = el('input', 'field slim');
+        icon.type = 'text'; icon.maxLength = 8; icon.value = item.icon;
+        icon.addEventListener('change', function () { if (icon.value.trim()) { item.icon = icon.value.trim(); save(); renderList(); } });
+        li.appendChild(icon);
+
+        var ln = field('Note (brand, size, aisle…)', 'wide');
+        var note = el('input', 'field slim');
+        note.type = 'text'; note.maxLength = 120; note.value = item.note || '';
+        note.placeholder = 'e.g. the blue pack';
+        note.addEventListener('change', function () { item.note = note.value.trim(); save(); renderList(); });
+        ln.appendChild(note);
+
+        var done = el('button', 'btn-trigger slim wide', 'Done');
+        done.type = 'button';
+        done.addEventListener('click', function () { editingItem = null; renderList(); });
+
+        var buy = el('button', 'btn-trigger slim wide', '🛍️ Buy online');
+        buy.type = 'button';
+        buy.addEventListener('click', function () { openBuy(item.name, item.icon, null); });
+        box.appendChild(lp); box.appendChild(li); box.appendChild(ln); box.appendChild(buy); box.appendChild(done);
+        return box;
+    }
+
+    function buildRow(item) {
+        var li = el('li', 'list-row' + (item.done ? ' done' : ''));
+        var main = el('div', 'row-main');
+
+        var cb = el('input');
+        cb.type = 'checkbox';
+        cb.checked = item.done;
+        cb.setAttribute('aria-label', 'Mark ' + item.name + ' as bought');
+        cb.addEventListener('change', function () { item.done = cb.checked; Snd.play(item.done ? 'tick' : 'untick'); save(); render(); });
+
+        var label = el('button', 'list-label', item.icon + ' ' + item.name);
+        label.type = 'button';
+        label.title = 'Edit price, note or icon';
+        label.setAttribute('aria-expanded', String(editingItem === item));
+        label.addEventListener('click', function () { editingItem = (editingItem === item) ? null : item; renderList(); });
+
+        var qty = el('div', 'qty');
+        var minus = el('button', null, '−');
+        minus.type = 'button';
+        minus.setAttribute('aria-label', 'Decrease quantity of ' + item.name);
+        minus.addEventListener('click', function () { if (item.qty > 1) { item.qty -= 1; save(); render(); } });
+        var count = el('span', null, String(item.qty));
+        var plus = el('button', null, '+');
+        plus.type = 'button';
+        plus.setAttribute('aria-label', 'Increase quantity of ' + item.name);
+        plus.addEventListener('click', function () { item.qty = Math.min(99, item.qty + 1); save(); render(); });
+        qty.appendChild(minus); qty.appendChild(count); qty.appendChild(plus);
+
+        var rm = el('button', 'remove-btn', '✕');
+        rm.type = 'button';
+        rm.setAttribute('aria-label', 'Remove ' + item.name);
+        rm.addEventListener('click', function () { removeItem(item); });
+
+        main.appendChild(cb); main.appendChild(label); main.appendChild(qty); main.appendChild(rm);
+        li.appendChild(main);
+
+        var meta = [], up = unitPrice(item);
+        if (up != null) meta.push((item.qty > 1 ? item.qty + ' × ' + money(up) + ' = ' : '') + money(up * item.qty) + (item.price == null ? ' (est.)' : ''));
+        if (item.note) meta.push('📝 ' + item.note);
+        if (meta.length) li.appendChild(el('div', 'row-meta', meta.join('   ')));
+        if (editingItem === item) li.appendChild(buildEditor(item));
+        return li;
+    }
+
+    function renderList() {
+        var ul = $('list');
+        ul.textContent = '';
+        var items = state.list;
+        $('list-count').textContent = String(items.length);
+        $('bar-count').textContent = String(items.length);
+        $('list-footer').hidden = items.length === 0;
+        $('list-title-text').textContent = THEME_COPY[state.theme] ? THEME_COPY[state.theme].list : 'Your list';
+        renderSwitcher();
+        renderSummary();
+
+        if (!items.length) {
+            ul.appendChild(el('li', 'empty', 'Nothing here yet. Add something from the items, or type "milk, 2 eggs, bread" above.'));
+            return;
+        }
+        var s = state.settings;
+        var order = items.map(function (it, i) { return { it: it, i: i }; });
+        order.sort(function (a, b) {
+            if (s.group) { var g = catIndex(a.it) - catIndex(b.it); if (g) return g; }
+            if (s.sortDone && a.it.done !== b.it.done) return a.it.done ? 1 : -1;
+            return a.i - b.i;
+        });
+        var last = null;
+        order.forEach(function (o) {
+            if (s.group) {
+                var c = itemCat(o.it);
+                if (c !== last) {
+                    var info = catInfo(c);
+                    ul.appendChild(el('li', 'group-head', info.icon + ' ' + info.label));
+                    last = c;
+                }
+            }
+            ul.appendChild(buildRow(o.it));
+        });
+    }
+
+    function renderUsuals() {
+        var names = Object.keys(state.usage)
+            .filter(function (n) { return state.usage[n] >= 2 && !findOnList(n); })
+            .sort(function (a, b) { return state.usage[b] - state.usage[a]; })
+            .slice(0, 8);
+        var row = $('usuals-row');
+        row.textContent = '';
+        $('usuals').hidden = !names.length;
+        names.forEach(function (n) {
+            var c = findCatalog(n);
+            var b = el('button', 'chip', (c ? c.icon + ' ' : '') + n);
+            b.type = 'button';
+            b.setAttribute('aria-label', 'Add ' + n + ' again');
+            b.addEventListener('click', function () { addToList(n, c && c.icon, { cat: c && c.cat }); });
+            row.appendChild(b);
+        });
+    }
+
+    /* ----- share, export, backup ----- */
+    function listText() {
+        var l = activeList(), t = totals(), lines = [];
+        lines.push('🛒 ' + l.name + ' (' + t.done + '/' + t.count + ' bought)');
+        l.items.forEach(function (i) {
+            var p = unitPrice(i);
+            lines.push((i.done ? '☑ ' : '☐ ') + i.icon + ' ' + i.name + (i.qty > 1 ? ' ×' + i.qty : '') + (p != null ? ' — ' + money(p * i.qty) : '') + (i.note ? ' (' + i.note + ')' : ''));
+        });
+        if (t.priced) { lines.push(''); lines.push('Estimated total: ' + money(t.sum)); }
+        if (l.budget) lines.push('Budget: ' + money(l.budget));
+        return lines.join('\n');
+    }
+    function csvEscape(v) {
+        v = String(v == null ? '' : v);
+        return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+    }
+    function listCsv() {
+        var rows = [['Item', 'Qty', 'Unit price', 'Total', 'Bought', 'Aisle', 'Note']];
+        state.list.forEach(function (i) {
+            var p = unitPrice(i);
+            rows.push([i.name, i.qty, p != null ? p : '', p != null ? p * i.qty : '', i.done ? 'yes' : 'no', catInfo(itemCat(i)).label, i.note]);
+        });
+        return '﻿' + rows.map(function (r) { return r.map(csvEscape).join(','); }).join('\r\n');
+    }
+    function download(name, mime, text) {
+        var blob = new Blob([text], { type: mime });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 600);
+    }
+    function safeName(s) { return s.replace(/[^\w\-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'list'; }
+    function today() { return new Date().toISOString().slice(0, 10); }
+    function payload() {
+        return { app: 'home-shopping', v: 2, exportedAt: new Date().toISOString(), lists: state.lists, activeId: state.activeId, theme: state.theme, stats: state.stats, usage: state.usage, custom: state.custom, settings: state.settings };
+    }
+    function openShare() {
+        var text = listText();
+        $('share-text').value = text;
+        $('share-wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+        $('share-native').hidden = !navigator.share;
+        openModal('share-modal', 'share-copy');
+    }
+
+    /* ----- settings ----- */
+    function applySettings() {
+        var s = state.settings;
+        REDUCED = s.motion === 'reduce' || (s.motion === 'auto' && SYS_REDUCED);
+        var root = document.documentElement;
+        root.classList.toggle('reduce-motion', s.motion === 'reduce');
+        root.classList.toggle('motion-on', s.motion === 'on');
+        var b = $('sound-btn');
+        b.textContent = s.sound ? '🔊' : '🔇';
+        b.setAttribute('aria-pressed', String(s.sound));
+        b.title = s.sound ? 'Sound on' : 'Sound off';
+    }
+    function openSettings() {
+        var s = state.settings;
+        $('set-currency').value = s.currency;
+        $('set-motion').value = s.motion;
+        $('set-sound').checked = s.sound;
+        $('set-group').checked = s.group;
+        $('set-sort').checked = s.sortDone;
+        $('set-sync').value = s.syncUrl || '';
+        $('set-sync').disabled = !!SHARED_DB;
+        Sync.restart();
+        openModal('settings-modal', 'set-close');
+    }
+
+    /* ----- shopping mode: big rows, screen stays awake ----- */
+    var wakeLock = null;
+    async function lockScreen() {
+        try { if (navigator.wakeLock && document.visibilityState === 'visible') wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { wakeLock = null; }
+    }
+    function unlockScreen() {
+        try { if (wakeLock) wakeLock.release(); } catch (e) { /* ignore */ }
+        wakeLock = null;
+    }
+    function setShop(on) {
+        document.body.classList.toggle('shop-mode', on);
+        $('shop-exit').hidden = !on;
+        $('shop-btn').setAttribute('aria-pressed', String(on));
+        if (on) { lockScreen(); window.scrollTo(0, 0); toast('Shop mode on. The screen stays awake while you tick things off.'); }
+        else unlockScreen();
+    }
+
+    /* ----- celebration when everything is ticked ----- */
+    var DONE_COPY = { 'harry-potter': 'Mischief managed! ✨', minecraft: 'Achievement unlocked: Full inventory!', cricket: 'Innings complete. What a knock! 🏏' };
+    var DONE_BITS = { 'harry-potter': ['✨', '🦌', '⭐', '🪄'], minecraft: ['🟩', '💎', '⭐', '🟫'], cricket: ['🏏', '🔴', '🎉', '🏆'] };
+    function celebrate() {
+        Snd.play('fanfare');
+        toast(DONE_COPY[state.theme] || 'All done! Every item is ticked 🎉');
+        if (REDUCED) return;
+        var set = DONE_BITS[state.theme] || ['🎉', '🎊', '✨', '🛒'];
+        for (var i = 0; i < 40; i++) {
+            var n = makeFloat('fly', set[i % set.length]);
+            n.style.fontSize = rand(1.2, 2.4) + 'rem';
+            var x = rand(0, window.innerWidth);
+            var a = n.animate([
+                { transform: tf({ x: x, y: -40 }, 1, 0), opacity: 1 },
+                { transform: tf({ x: x + rand(-90, 90), y: window.innerHeight + 40 }, 1, rand(-360, 360)), opacity: 0.9 }
+            ], { duration: rand(1600, 2800), delay: rand(0, 600), easing: 'ease-in', fill: 'both' });
+            (function (node) { a.finished.then(function () { node.remove(); }, function () { node.remove(); }); })(n);
+        }
+    }
+
+    /* ----- voice: "add milk, two eggs and bread" ----- */
+    var Voice = (function () {
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, on = false;
+        function stopUi() { on = false; var m = $('mic-btn'); m.classList.remove('live'); m.setAttribute('aria-pressed', 'false'); }
+        function toggle() {
+            if (on) { try { rec.stop(); } catch (e) { /* ignore */ } return; }
+            rec = new SR();
+            rec.lang = navigator.language || 'en-IN';
+            rec.interimResults = false; rec.maxAlternatives = 1;
+            rec.onstart = function () { on = true; var m = $('mic-btn'); m.classList.add('live'); m.setAttribute('aria-pressed', 'true'); toast('Listening… try "milk, two eggs and bread"'); };
+            rec.onresult = function (e) {
+                var t = e.results[0][0].transcript;
+                addEntries(parseEntries(t, true));
+            };
+            rec.onerror = function (e) { toast(e.error === 'not-allowed' ? 'The microphone is blocked for this site.' : "Couldn't hear that. Try again."); };
+            rec.onend = stopUi;
+            try { rec.start(); } catch (e) { stopUi(); }
+        }
+        return {
+            init: function () {
+                if (!SR) return;
+                var m = $('mic-btn');
+                m.hidden = false;
+                m.addEventListener('click', toggle);
+            }
+        };
+    })();
+
+    /* ----- shared products: everyone who opens the site sees products anyone adds ----- */
+    var Sync = (function () {
+        var timer = 0, busy = false;
+        function base() {
+            var u = (SHARED_DB || state.settings.syncUrl || '').trim().replace(/\/+$/, '');
+            return /^https:\/\/[^\s]+$/.test(u) ? u : '';
+        }
+        function key(name) { return stem(name).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'item'; }
+        function status(t) { var n = $('sync-status'); if (n) n.textContent = t; }
+        function put(c) {
+            var b = base();
+            if (!b || c.shared) return;
+            try {
+                fetch(b + '/products/' + key(c.name) + '.json', { method: 'PUT', body: JSON.stringify({ name: c.name, icon: c.icon, cat: c.cat, t: Date.now() }) })
+                    .catch(function () { /* offline: retried on the next sync */ });
+            } catch (e) { /* ignore */ }
+        }
+        async function pull() {
+            var b = base();
+            if (!b) { status(SHARED_DB ? '' : 'Not connected. Products stay on this device.'); return; }
+            if (busy) return;
+            busy = true;
+            try {
+                var res = await fetch(b + '/products.json');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var data = await res.json();
+                var remote = {};
+                var list = [];
+                if (data && typeof data === 'object') {
+                    Object.keys(data).slice(0, 1000).forEach(function (k) {
+                        var c = cleanShared(data[k]);
+                        if (c) { list.push(c); remote[key(c.name)] = true; }
+                    });
+                }
+                var before = JSON.stringify(state.shared);
+                state.shared = list.slice(0, 500);
+                rebuildCustom();
+                // Offer our own new products to everyone too.
+                state.custom.forEach(function (c) { if (!remote[key(c.name)]) put(c); });
+                if (JSON.stringify(state.shared) !== before) { save(); render(); }
+                status('Connected. ' + list.length + ' shared product' + (list.length === 1 ? '' : 's') + '. Updated ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '.');
+            } catch (e) {
+                status("Couldn't reach the shared database. Showing the last saved products.");
+            }
+            busy = false;
+        }
+        return {
+            push: put,
+            pull: pull,
+            start: function () {
+                clearInterval(timer);
+                pull();
+                if (base()) timer = setInterval(function () { if (document.visibilityState === 'visible') pull(); }, 25000);
+                document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') pull(); });
+            },
+            restart: function () { clearInterval(timer); if (base()) { pull(); timer = setInterval(function () { if (document.visibilityState === 'visible') pull(); }, 25000); } else status('Not connected. Products stay on this device.'); }
+        };
+    })();
+
+    /* ----- buy online: quick-commerce search links ----- */
+    var buyCtx = null;
+    function openBuy(name, icon, onCart) {
+        buyCtx = { onCart: onCart };
+        var q = encodeURIComponent(name);
+        $('buy-title').textContent = icon + ' ' + name;
+        $('buy-blinkit').href = 'https://blinkit.com/s/?q=' + q;
+        $('buy-flipkart').href = 'https://www.flipkart.com/search?q=' + q;
+        $('buy-zepto').href = 'https://www.zepto.com/search?query=' + q;
+        $('buy-instamart').href = 'https://www.swiggy.com/instamart/search?custom_back=true&query=' + q;
+        $('buy-cart').hidden = !onCart;
+        openModal('buy-modal', onCart ? 'buy-cart' : 'buy-blinkit');
+    }
+
+    /* ----- wire up all the pro controls ----- */
+    function initPro() {
+        ['share-modal', 'settings-modal', 'buy-modal'].forEach(wireModal);
+        $('buy-close').addEventListener('click', function () { closeModal('buy-modal'); });
+        $('buy-cart').addEventListener('click', function () {
+            var cb = buyCtx && buyCtx.onCart;
+            closeModal('buy-modal');
+            if (cb) setTimeout(cb, 60);
+        });
+        ['blinkit', 'flipkart', 'zepto', 'instamart'].forEach(function (k) {
+            $('buy-' + k).addEventListener('click', function () { setTimeout(function () { closeModal('buy-modal'); }, 100); });
+        });
+        $('share-close').addEventListener('click', function () { closeModal('share-modal'); });
+        $('set-close').addEventListener('click', function () { closeModal('settings-modal'); });
+
+        // dialog
+        $('dlg-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            closeDlg($('dlg-input').hidden ? true : $('dlg-input').value.trim());
+        });
+        $('dlg-cancel').addEventListener('click', function () { closeDlg(null); });
+        $('dlg').addEventListener('click', function (e) { if (e.target === this) closeDlg(null); });
+        $('dlg').addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); closeDlg(null); } });
+
+        // lists
+        $('list-switch').addEventListener('change', function () { setActive(this.value); });
+        $('list-new').addEventListener('click', newList);
+        $('list-rename').addEventListener('click', renameList);
+        $('list-delete').addEventListener('click', deleteList);
+        $('budget-btn').addEventListener('click', setBudget);
+
+        // footer actions
+        $('share-btn').addEventListener('click', openShare);
+        $('clear-done').addEventListener('click', clearDone);
+        $('clear-all').addEventListener('click', clearAll);
+
+        // share modal
+        $('share-copy').addEventListener('click', function () {
+            var t = $('share-text').value;
+            var done = function () { toast('List copied to the clipboard.'); };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { $('share-text').select(); document.execCommand('copy'); done(); });
+            else { $('share-text').select(); try { document.execCommand('copy'); } catch (e) { /* ignore */ } done(); }
+        });
+        $('share-native').addEventListener('click', function () {
+            try { navigator.share({ title: activeList().name, text: $('share-text').value }); } catch (e) { /* cancelled */ }
+        });
+        $('share-csv').addEventListener('click', function () { download(safeName(activeList().name) + '.csv', 'text/csv;charset=utf-8', listCsv()); });
+        $('share-print').addEventListener('click', function () { closeModal('share-modal'); setTimeout(function () { window.print(); }, 150); });
+
+        // settings
+        $('settings-btn').addEventListener('click', openSettings);
+        $('set-currency').addEventListener('change', function () { state.settings.currency = this.value; save(); catalogVersion++; render(); });
+        $('set-motion').addEventListener('change', function () { state.settings.motion = this.value; save(); applySettings(); buildBannerFx(state.theme); });
+        $('set-sound').addEventListener('change', function () { state.settings.sound = this.checked; save(); applySettings(); });
+        $('set-group').addEventListener('change', function () { state.settings.group = this.checked; save(); render(); });
+        $('set-sync').addEventListener('change', function () {
+            var v = this.value.trim();
+            if (v && !/^https:\/\//.test(v)) { toast('The database address must start with https://'); this.value = state.settings.syncUrl; return; }
+            state.settings.syncUrl = v; save(); Sync.restart();
+        });
+        $('set-sort').addEventListener('change', function () { state.settings.sortDone = this.checked; save(); render(); });
+        $('sound-btn').addEventListener('click', function () { state.settings.sound = !state.settings.sound; save(); applySettings(); if (state.settings.sound) Snd.play('tick'); });
+        $('set-export').addEventListener('click', function () { download('home-shopping-backup-' + today() + '.json', 'application/json', JSON.stringify(payload(), null, 2)); toast('Backup downloaded.'); });
+        $('set-import').addEventListener('click', function () { $('set-file').click(); });
+        $('set-file').addEventListener('change', function () {
+            var f = this.files && this.files[0], input = this;
+            if (!f) return;
+            var rd = new FileReader();
+            rd.onload = async function () {
+                input.value = '';
+                var data;
+                try { data = JSON.parse(rd.result); } catch (e) { toast("That file isn't a valid backup."); return; }
+                var ok = await ask({ title: 'Import this backup?', text: 'It replaces the lists, custom items and settings in this browser.', ok: 'Import', danger: true });
+                if (!ok) return;
+                if (applyData(data)) { save(); applySettings(); setTheme(state.theme || 'light'); render(); closeModal('settings-modal'); toast('Backup imported.'); }
+                else toast("That file isn't a valid backup.");
+            };
+            rd.readAsText(f);
+        });
+        $('set-reset').addEventListener('click', async function () {
+            var ok = await ask({ title: 'Reset everything?', text: 'Deletes all lists, custom items, scores and settings from this browser.', ok: 'Reset', danger: true });
+            if (!ok) return;
+            try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(OLD_KEY); } catch (e) { /* ignore */ }
+            location.reload();
+        });
+
+        // shop mode
+        $('shop-btn').addEventListener('click', function () { setShop(!document.body.classList.contains('shop-mode')); });
+        $('shop-exit').addEventListener('click', function () { setShop(false); });
+        document.addEventListener('visibilitychange', function () { if (document.body.classList.contains('shop-mode') && document.visibilityState === 'visible') lockScreen(); });
+
+        // keyboard: "/" jumps to search, Escape leaves shop mode
+        document.addEventListener('keydown', function (e) {
+            var tag = (e.target && e.target.tagName) || '';
+            if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(tag) && !document.querySelector('.modal:not([hidden])') && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault(); $('search').focus();
+            } else if (e.key === 'Escape' && document.body.classList.contains('shop-mode') && !document.querySelector('.modal:not([hidden])')) {
+                setShop(false);
+            }
+        });
     }
 
     /* =====================================================================
@@ -1114,6 +2307,7 @@
         var box = $('categories');
         box.textContent = '';
         CATEGORIES.forEach(function (c) {
+            if (c.id === 'mine' && !CATALOG.some(function (x) { return x.custom; })) return;
             var b = el('button', 'category-element' + (state.cat === c.id ? ' active' : ''));
             b.type = 'button';
             b.setAttribute('aria-pressed', String(state.cat === c.id));
@@ -1129,9 +2323,9 @@
     function renderCatalog() {
         var q = norm(state.query);
         var items = CATALOG.filter(function (i) {
-            return (state.cat === 'all' || i.cat === state.cat) && (!q || i.name.toLowerCase().indexOf(q) !== -1);
+            return (state.cat === 'all' || (state.cat === 'mine' ? i.custom : i.cat === state.cat)) && (!q || i.name.toLowerCase().indexOf(q) !== -1);
         });
-        var sig = state.theme + '|' + state.cat + '|' + q;
+        var sig = state.theme + '|' + state.cat + '|' + q + '|' + catalogVersion + '|' + state.settings.currency;
         var grid = $('catalog');
 
         if (sig === catalogSig) {
@@ -1148,7 +2342,7 @@
 
         if (!items.length) {
             grid.appendChild(el('p', 'empty', q
-                ? 'No match for "' + state.query.trim() + '". Press "Add to list" to add it as a new item.'
+                ? 'No match for "' + state.query.trim() + '". Press "Add to list" to add it. Tip: separate several items with commas.'
                 : 'Nothing in this category.'));
             return;
         }
@@ -1160,9 +2354,16 @@
             var ico = el('span', 'item-ico', i.icon);
             ico.setAttribute('aria-hidden', 'true');
             art.appendChild(ico);
+            art.setAttribute('role', 'button');
+            art.tabIndex = 0;
+            art.setAttribute('aria-label', 'Options for ' + i.name + ': add to cart or buy online');
+            art.title = 'Add to cart or buy online';
+            art.addEventListener('click', function () { openBuy(i.name, i.icon, function () { collect(i, card, btn); }); });
+            art.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); art.click(); } });
             card.appendChild(art);
             card.appendChild(el('h3', 'item-name', i.name));
-            card.appendChild(el('div', 'item-tag', CATEGORIES.filter(function (c) { return c.id === i.cat; })[0].label));
+            var bp = baseItemPrice(i.name);
+            card.appendChild(el('div', 'item-tag', catInfo(i.cat).label + (bp != null ? ' · ~' + money(bp) : '') + (i.shared ? ' · 🌐 shared' : '')));
             var btn = el('button', 'btn-trigger', actionLabel(i));
             btn.type = 'button';
             btn.setAttribute('aria-label', 'Add ' + i.name + ' to list');
@@ -1173,54 +2374,15 @@
         });
     }
 
-    function renderList() {
-        var ul = $('list');
-        ul.textContent = '';
-        $('list-count').textContent = String(state.list.length);
-        $('bar-count').textContent = String(state.list.length);
-        $('list-footer').hidden = state.list.length === 0;
-
-        if (!state.list.length) {
-            ul.appendChild(el('li', 'empty', 'Nothing here yet. Add something from the items.'));
-            return;
-        }
-        state.list.forEach(function (item, idx) {
-            var li = el('li', 'list-row' + (item.done ? ' done' : ''));
-            var cb = el('input');
-            cb.type = 'checkbox';
-            cb.checked = item.done;
-            cb.setAttribute('aria-label', 'Mark ' + item.name + ' as bought');
-            cb.addEventListener('change', function () { item.done = cb.checked; save(); render(); });
-
-            var label = el('span', 'list-label', item.icon + ' ' + item.name);
-
-            var qty = el('div', 'qty');
-            var minus = el('button', null, '−');
-            minus.type = 'button';
-            minus.setAttribute('aria-label', 'Decrease quantity of ' + item.name);
-            minus.addEventListener('click', function () { if (item.qty > 1) { item.qty -= 1; save(); render(); } });
-            var count = el('span', null, String(item.qty));
-            var plus = el('button', null, '+');
-            plus.type = 'button';
-            plus.setAttribute('aria-label', 'Increase quantity of ' + item.name);
-            plus.addEventListener('click', function () { item.qty = Math.min(99, item.qty + 1); save(); render(); });
-            qty.appendChild(minus); qty.appendChild(count); qty.appendChild(plus);
-
-            var rm = el('button', 'remove-btn', '✕');
-            rm.type = 'button';
-            rm.setAttribute('aria-label', 'Remove ' + item.name);
-            rm.addEventListener('click', function () { state.list.splice(idx, 1); save(); render(); });
-
-            li.appendChild(cb); li.appendChild(label); li.appendChild(qty); li.appendChild(rm);
-            ul.appendChild(li);
-        });
-    }
-
     function render() {
         renderCategories();
         renderCatalog();
         renderList();
+        renderUsuals();
         $('clear-search').hidden = !state.query;
+        var d = allDone();
+        if (celebrateReady && d && !lastAllDone) celebrate();
+        lastAllDone = d;
     }
 
     /* =====================================================================
@@ -1316,6 +2478,12 @@
         finishCard(item);
     }
 
+    var BAT_SVG = '<svg width="36" height="120" viewBox="0 0 36 120" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="14" y="0" width="8" height="42" rx="3" fill="#1f2937"/>' +
+        '<path d="M14 6h8M14 12h8M14 18h8M14 24h8M14 30h8" stroke="#6b7280" stroke-width="1.5"/>' +
+        '<path d="M12 40h12l8 8v62q0 8-8 8H12q-8 0-8-8V48z" fill="#e8c27a" stroke="#8a5a2b" stroke-width="2"/>' +
+        '<path d="M18 50v62" stroke="#c99a52" stroke-width="2"/><rect x="9" y="96" width="18" height="6" rx="2" fill="#b91c1c" opacity=".8"/></svg>';
+
     function collect(item, card, btn) {
         var theme = state.theme;
         var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket';
@@ -1331,15 +2499,24 @@
 
         if (theme === 'cricket') {
             card.dataset.busy = '1'; btn.disabled = true;
-            var batPos = { x: from.x - 40, y: from.y + 6 };
-            var bat = makeFloat('fly', '🏏');
-            bat.style.transform = tf(batPos, 1, -80);
-            bat.animate([{ transform: tf(batPos, 1, -80) }, { transform: tf(batPos, 1.15, 70) }], { duration: 260, easing: 'ease-in', fill: 'forwards' });
-            wait(170).then(function () {
+            // A bat drawn in SVG: grip at the top, wooden blade below. The blade's centre (80px from the
+            // pivot) meets the product, so the wood, not the handle, makes contact.
+            var D = 80, A = 30 * Math.PI / 180;
+            var pivot = { x: from.x + D * Math.sin(A), y: from.y - D * Math.cos(A) };
+            var bat = el('div', 'fly cricket-bat');
+            bat.setAttribute('aria-hidden', 'true');
+            bat.innerHTML = BAT_SVG;
+            document.body.appendChild(bat);
+            var bt = function (deg) { return 'translate(' + pivot.x + 'px,' + pivot.y + 'px) translate(-50%,0) rotate(' + deg + 'deg)'; };
+            bat.style.transform = bt(-80);
+            var swingA = bat.animate([{ transform: bt(-80) }, { transform: bt(30), offset: 0.7 }, { transform: bt(70) }], { duration: 380, easing: 'cubic-bezier(.5,0,.9,.6)', fill: 'forwards' });
+            wait(266).then(function () {
+                Snd.play('bathit');
                 ico.style.visibility = 'hidden';
                 pop(Math.random() < 0.5 ? 'SIX!' : 'FOUR!', { x: from.x, y: from.y - 40 }, '#fde047');
+                for (var k = 0; k < 5; k++) wisp({ x: from.x + rand(-14, 14), y: from.y + rand(-14, 14) });
                 return fly(makeFloat('fly', item.icon), from, cartTarget(), { dur: 900, arc: 180, s0: 1, s1: 0.4, spin: 720, ease: 'ease-in-out' });
-            }).then(function () { bat.remove(); landed(item); });
+            }).then(function () { swingA.cancel(); bat.remove(); landed(item); });
         }
     }
 
@@ -1360,6 +2537,7 @@
     async function castHP(item, card, btn, ico) {
         card.dataset.busy = '1'; btn.disabled = true;
         wandCasts++;
+        Snd.play('cast');
         var from = center(ico);
         var tip = center($('wand-tip'));
         flickWand();
@@ -1372,6 +2550,7 @@
         var choice = null;
         if (summon) {
             pop('Expecto Patronum!', { x: from.x, y: from.y - 46 }, '#cdefff');
+            Snd.say('Expecto Patronum');
             for (var s = 0; s < 6; s++) wisp({ x: from.x + rand(-40, 40), y: from.y + rand(-30, 30) });
             await wait(450);
             choice = await choosePatronus(item.name);
@@ -1388,7 +2567,9 @@
     async function plainSpell(item, ico) {
         var from = center(ico);
         ico.style.visibility = 'hidden';
-        pop(Math.random() < 0.5 ? 'Accio!' : 'Wingardium Leviosa!', { x: from.x, y: from.y - 44 }, '#f3e5ab');
+        var spell = Math.random() < 0.5 ? 'Accio' : 'Wingardium Leviosa';
+        pop(spell + '!', { x: from.x, y: from.y - 44 }, '#f3e5ab');
+        Snd.say(spell);
         var to = cartTarget();
         for (var k = 0; k < 4; k++) {
             fly(makeFloat('fly glow small', '✨'), from, to, { dur: 760, arc: 100, s0: 1.2, s1: 0.5, spin: 360, delay: k * 70, ease: 'ease-in-out' });
@@ -1397,6 +2578,7 @@
     }
 
     async function runPatronus(p, item, ico) {
+        Snd.play('patronus');
         var from = center(ico);
         var tip = center($('wand-tip'));
         var pat = makeFloat('fly patronus', p.icon);
@@ -1564,6 +2746,7 @@
             var f = $(id);
             f.classList.remove('hurt'); void f.offsetWidth; f.classList.add('hurt');
             pop('-' + amount, center(f), '#ff8a8a');
+            Snd.play('hit');
         }
 
         async function play(pm) {
@@ -1600,6 +2783,7 @@
             if (res.toYou) hurt('f-you', res.toYou);
             if (res.toFoe) hurt('f-foe', res.toFoe);
             bars();
+            Snd.say(NAMES[pm]);
             log('You cast ' + NAMES[pm] + (fm ? '; ' + fn + ' cast ' + NAMES[fm] + '. ' : '. ') + res.text);
 
             if (hp.you <= 0 || hp.foe <= 0) {
@@ -1877,6 +3061,7 @@
             wrap.addEventListener('click', function () {
                 if (m.busy) return;
                 pop(def.snd, center(wrap), '#ffffff');
+                Snd.mob(def.id);
                 inner.animate([{ transform: 'translateY(0) scaleX(' + m.dir + ')' }, { transform: 'translateY(-16px) scaleX(' + m.dir + ')' }, { transform: 'translateY(0) scaleX(' + m.dir + ')' }], { duration: 320, easing: 'ease-out' });
             });
             place(m);
@@ -2027,6 +3212,7 @@
 
             // Grab the item.
             pop(def.snd, { x: stand.x, y: stand.y - 54 }, '#ffffff');
+            Snd.mob(def.id);
             ico.style.visibility = 'hidden';
             actor.classList.add('has');
             actor.querySelector('.carry').textContent = item.icon;
@@ -2040,6 +3226,7 @@
             // Throw it in.
             actor.classList.remove('has');
             if (def.id === 'creeper') pop('Ssssss...', { x: spot.x, y: spot.y - 54 }, '#8aff8a');
+            Snd.mob(def.id);
             await fly(makeFloat('fly', item.icon), { x: spot.x, y: spot.y - 36 }, cartTarget(), { dur: 540, arc: 100, s0: 0.9, s1: 0.4, spin: 540, ease: 'ease-in' });
             done = true;
             landed(item);
@@ -2174,6 +3361,7 @@
         function swing() {
             if (G.state !== 'flight' || G.swung) return;
             G.swung = true; G.swingT = G.t;
+            Snd.play('swing');
             var td = (G.p - 1) * G.dur;       // seconds; negative = early
             var a = Math.abs(td) / G.win;
             var from = ballAt(G.p);
@@ -2205,6 +3393,7 @@
 
         function bowled() {
             G.bowled = true; G.wk++; hud();
+            Snd.play('crack');
             G.state = 'result'; G.stateT = 0;
             popup('BOWLED!', 'You never swung', '#fca5a5');
         }
@@ -2430,11 +3619,15 @@
        ===================================================================== */
     $('add-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        var raw = state.query.trim().replace(/\s+/g, ' ');
+        var raw = state.query.trim();
         if (!raw) { $('search').focus(); return; }
-        var match = CATALOG.filter(function (i) { return norm(i.name) === norm(raw); })[0];
-        if (match) addToList(match.name, match.icon);
-        else addToList(raw.charAt(0).toUpperCase() + raw.slice(1), '🛒');
+        var entries = [];
+        parseEntries(raw, false).forEach(function (en) {
+            if (/ (and|&) /i.test(en.name) && !resolveCatalog(en.name)) {
+                parseEntries(en.name, true).forEach(function (x, i) { entries.push(i === 0 ? { name: x.name, qty: en.qty > 1 ? en.qty : x.qty } : x); });
+            } else entries.push(en);
+        });
+        addEntries(entries);
         state.query = '';
         $('search').value = '';
         render();
@@ -2450,10 +3643,6 @@
         render();
     });
 
-    $('clear-done').addEventListener('click', function () { state.list = state.list.filter(function (i) { return !i.done; }); save(); render(); });
-    $('clear-all').addEventListener('click', function () {
-        if (state.list.length && window.confirm('Remove all items from your list?')) { state.list = []; save(); render(); }
-    });
     $('cart-bar').addEventListener('click', function () {
         $('list-panel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
     });
@@ -2462,6 +3651,10 @@
        INIT
        ===================================================================== */
     load();
+    applySettings();
+    initPro();
+    Voice.init();
+    Sync.start();
     initPatronusModal();
     if (!state.theme) {
         var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -2470,7 +3663,9 @@
     var startTheme = state.theme;
     state.theme = null;
     setTheme(startTheme);
+    lastAllDone = allDone();
     render();
+    celebrateReady = true;
 })();
 </script>
 </body>
