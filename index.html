@@ -147,6 +147,32 @@
             --scale: 1.2;
         }
 
+        [data-theme="racing"] {
+            --page-bg: repeating-linear-gradient(0deg, #1b1f24 0 90px, #20252b 90px 180px);
+            --hero-bg: linear-gradient(180deg, #0b1020 0%, #1f2937 62%, #374151 100%);
+            --header-text: #ffffff;
+            --card-bg: linear-gradient(160deg, #2c333c, #1f242b);
+            --card-edge: 2px solid #facc15;
+            --text-main: #ffffff;
+            --text-sub: #fde68a;
+            --btn-add-bg: linear-gradient(135deg, #ef4444, #b91c1c);
+            --btn-add-text: #ffffff;
+            --chip-bg: #1f2937;
+            --chip-active-bg: linear-gradient(135deg, #ef4444, #b91c1c);
+            --chip-active-text: #ffffff;
+            --btn-action-bg: rgba(250, 204, 21, 0.16);
+            --btn-action-text: #facc15;
+            --art-bg: radial-gradient(circle at 30% 25%, #64748b 0%, #1f2937 80%);
+            --danger: #fecaca;
+            --font-family: 'Teko', 'Arial Narrow', sans-serif;
+            --radius-main: 14px;
+            --radius-card: 18px;
+            --border-element: 2px solid #facc15;
+            --shadow-style: 0 6px 14px rgba(0, 0, 0, 0.3);
+            --shadow-lift: 0 16px 30px -10px rgba(0, 0, 0, 0.55);
+            --scale: 1.15;
+        }
+
         /* =====================================================================
            BASE
            ===================================================================== */
@@ -623,6 +649,56 @@
         .pop { position: fixed; left: 0; top: 0; z-index: 1001; pointer-events: none; will-change: transform, opacity; font-weight: 700; font-size: 1.3rem; white-space: nowrap; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
 
         /* Minecraft mob yard: mobs roam under the Villager Market heading */
+        .night-sky { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 2.5s; background: linear-gradient(180deg, #02030f 0%, #0b1233 55%, #1a2656 100%); }
+        .night-sky i { position: absolute; width: 3px; height: 3px; background: #fff; animation: twinkle 2.2s infinite; }
+        .moon { position: absolute; right: 14%; top: 28px; width: 34px; height: 34px; background: #e9edf5; box-shadow: inset -9px -9px 0 #c4cbda, 0 0 24px rgba(200,215,255,.5); opacity: 0; transition: opacity 2.5s; pointer-events: none; }
+        .village { position: absolute; left: 0; right: 0; bottom: 54px; height: 110px; background-repeat: repeat-x; background-position: center bottom; background-size: auto 110px; pointer-events: none; transition: filter 2.5s, opacity 2.5s; }
+        .village.lit { opacity: 0; filter: drop-shadow(0 0 5px #ffb000); }
+        .top-banner.night .night-sky { opacity: .94; }
+        .top-banner.night .moon { opacity: 1; }
+        .top-banner.night .village:not(.lit) { filter: brightness(.5) saturate(.8); }
+        .top-banner.night .village.lit { opacity: 1; }
+        .top-banner.night .fx.cloud { opacity: .2; }
+        .top-banner.night .mob-in { filter: brightness(.82); }
+        [data-theme="racing"] .top-banner { padding-bottom: 96px; }
+        [data-theme="racing"] .banner-deco {
+            background:
+                repeating-linear-gradient(90deg, #fff 0 36px, transparent 36px 72px) 0 calc(100% - 22px) / 100% 5px no-repeat,
+                linear-gradient(#2b3036, #1c2025) 0 100% / 100% 44px no-repeat,
+                repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 28px 28px;
+            -webkit-mask: linear-gradient(#000 0 18px, transparent 18px) 0 0 / 100% 100% no-repeat, linear-gradient(#000, #000) 0 100% / 100% 60px no-repeat;
+            mask: linear-gradient(#000 0 18px, transparent 18px) 0 0 / 100% 100% no-repeat, linear-gradient(#000, #000) 0 100% / 100% 60px no-repeat;
+        }
+        [data-theme="racing"] .item-art { box-shadow: inset 0 0 0 3px rgba(250,204,21,.8), inset 0 -6px 12px rgba(0,0,0,.35); }
+        [data-theme="racing"] .btn-trigger { border-radius: 10px; }
+        .race-car { font-size: 3rem; }
+        .race-car .car-face { display: inline-block; filter: drop-shadow(0 4px 3px rgba(0,0,0,.45)); }
+        .race-car .car-carry { position: absolute; left: 50%; top: -0.55em; transform: translateX(-50%); font-size: 1.5rem; }
+        .rc-lights { display: flex; justify-content: center; gap: 12px; margin: 10px 0; }
+        .rc-lights i { width: 26px; height: 26px; border-radius: 50%; background: #3b1212; border: 2px solid #000; }
+        .rc-lights i.red { background: #ef4444; box-shadow: 0 0 14px 4px rgba(239,68,68,.7); }
+        .rc-lights i.green { background: #22c55e; box-shadow: 0 0 14px 4px rgba(34,197,94,.7); }
+        .rc-track { position: relative; margin: 8px 0 12px; padding-right: 4px; }
+        .rc-lane { margin-bottom: 6px; }
+        .rc-name { display: block; font-size: calc(.78rem * var(--scale)); color: var(--text-sub); margin-bottom: 2px; }
+        .rc-road { position: relative; height: 46px; border-radius: 8px; background: #20252b; border: 2px solid #475569; overflow: hidden;
+            background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 18px, transparent 18px 36px); background-size: 100% 3px; background-repeat: no-repeat; background-position: 0 50%; }
+        .rc-road::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 12px; background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 12px 12px; }
+        .rc-car { position: absolute; left: 2px; top: 4px; font-size: 2rem; line-height: 1; will-change: transform; }
+        .rc-car span { display: inline-block; transform: scaleX(-1); }
+        .rc-go { width: 100%; min-height: 64px; font-size: calc(1.4rem * var(--scale)); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+        .ctrl-pad { margin: 0 0 10px; padding: 10px; border: var(--border-element); background: color-mix(in srgb, var(--text-main) 6%, transparent); }
+        .ctrl-name { font-weight: 700; margin-bottom: 8px; font-size: calc(.9rem * var(--scale)); }
+        .ctrl-btns { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 6px; }
+        .ctrl-btns #ctrl-off { grid-column: 1 / -1; }
+        .ctrl-btns .btn-trigger { touch-action: none; user-select: none; -webkit-user-select: none; }
+        .mob.controlled::after { content: '▼'; position: absolute; left: 50%; top: -22px; transform: translateX(-50%); color: #ffff55; font-size: 14px; text-shadow: 0 0 6px #000; animation: float 1s ease-in-out infinite; }
+        .spawner { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 0 0 8px; }
+        .spawner .field { grid-column: 1 / -1; }
+        .spawner .btn-primary { min-height: 44px; padding: 8px 18px; }
+        .spawner .btn-trigger { width: auto; }
+        .mob-hp { position: absolute; left: 6px; right: 6px; top: -7px; height: 6px; background: #3b0a0a; border: 1px solid #000; z-index: 2; }
+        .mob-hp i { display: block; height: 100%; width: 100%; background: #55ff55; transition: width .2s; }
         .mob-yard { position: absolute; left: 0; right: 0; bottom: 54px; height: 62px; z-index: 3; pointer-events: none; }
         .mob { position: absolute; left: 0; bottom: 0; width: 44px; height: 58px; pointer-events: auto; cursor: pointer; will-change: transform; }
         .mob-in { position: absolute; inset: 0; display: grid; place-items: end center; transform-origin: 50% 100%; }
@@ -799,6 +875,10 @@
     <header class="top-banner">
         <div class="banner-deco" aria-hidden="true"></div>
         <div class="banner-fx" id="banner-fx" aria-hidden="true"></div>
+        <div class="night-sky" id="night-sky" aria-hidden="true"></div>
+        <div class="moon" id="moon" aria-hidden="true"></div>
+        <div class="village" id="village" aria-hidden="true" hidden></div>
+        <div class="village lit" id="village-lit" aria-hidden="true" hidden></div>
         <div class="mob-yard" id="mob-yard" aria-hidden="true" hidden></div>
         <div class="config-menu">
             <label for="theme-select" class="sr-only">Theme</label>
@@ -808,6 +888,7 @@
                 <option value="harry-potter">⚡ Harry Potter</option>
                 <option value="minecraft">⛏️ Minecraft</option>
                 <option value="cricket">🏏 Cricket</option>
+                <option value="racing">🏎️ Racing</option>
             </select>
             <button type="button" class="icon-btn" id="sound-btn" aria-pressed="true" aria-label="Toggle sound" title="Sound">🔊</button>
             <button type="button" class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings">⚙️</button>
@@ -904,6 +985,23 @@
                 <section class="panel" id="panel-mc" data-theme-panel="minecraft" hidden aria-labelledby="mc-title">
                     <h2 class="panel-title" id="mc-title">📜 Update Log</h2>
                     <p class="panel-sub">What's new in Minecraft, checked against Mojang's version feed whenever you open this theme.</p>
+                    <div class="spawner">
+                        <label for="spawn-mob" class="sr-only">Mob to spawn</label>
+                        <select id="spawn-mob" class="field"></select>
+                        <button type="button" class="btn-primary" id="spawn-btn">Spawn</button>
+                        <button type="button" class="btn-trigger" id="spawn-clear">Clear spawned</button>
+                    </div>
+                    <div class="ctrl-pad">
+                        <div class="ctrl-name" id="ctrl-name" aria-live="polite">Click a mob to control it</div>
+                        <div class="ctrl-btns">
+                            <button type="button" class="btn-trigger" id="ctrl-l" aria-label="Walk left" disabled>◀</button>
+                            <button type="button" class="btn-trigger" id="ctrl-j" aria-label="Jump" disabled>⤒ Jump</button>
+                            <button type="button" class="btn-trigger" id="ctrl-r" aria-label="Walk right" disabled>▶</button>
+                            <button type="button" class="btn-trigger" id="ctrl-off" disabled>Release</button>
+                        </div>
+                        <p class="panel-sub" style="margin:6px 0 0">Keys: ← → or A D to walk, Space to jump. Run into another mob to start trouble.</p>
+                    </div>
+                    <p class="panel-sub" id="spawn-hint">Spawn any mob into the Villager Market (only village animals roam by default). Only mobs that fight in vanilla Minecraft will (like zombies and villagers, wolves and sheep, or foxes and chickens), and only after crashing into each other three times. One fight at a time.</p>
                     <div class="mc-status" id="mc-status"><span class="dot"></span><span id="mc-status-text">Checking…</span><button type="button" class="btn-trigger" id="mc-refresh">⟳ Sync</button></div>
                     <div class="chips" id="mc-filters" role="group" aria-label="Filter updates">
                         <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
@@ -915,6 +1013,26 @@
                 </section>
 
                 <!-- Cricket: mock match -->
+                <!-- Racing: drag strip -->
+                <section class="panel" id="panel-rc" data-theme-panel="racing" hidden aria-labelledby="rc-title">
+                    <h2 class="panel-title" id="rc-title">🏁 Drag Strip</h2>
+                    <p class="panel-sub">Wait for green, then tap GO! (or press Space) as fast as you can. Keep tapping to boost. Jump the lights and you are out.</p>
+                    <div class="duel-setup">
+                        <label for="rc-opp" class="sr-only">Rival</label>
+                        <select id="rc-opp" class="field"></select>
+                        <button type="button" class="btn-primary" id="rc-start">Start race</button>
+                    </div>
+                    <div class="opp-blurb" id="rc-blurb"></div>
+                    <div class="rc-lights" id="rc-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+                    <div class="rc-track">
+                        <div class="rc-lane"><span class="rc-name">You</span><div class="rc-road" id="rc-road-you"><span class="rc-car" id="rc-you"><span>🏎️</span></span></div></div>
+                        <div class="rc-lane"><span class="rc-name" id="rc-foe-name">Rival</span><div class="rc-road"><span class="rc-car" id="rc-foe"><span>🚗</span></span></div></div>
+                    </div>
+                    <button type="button" class="btn-primary rc-go" id="rc-go" disabled>🏁 GO!</button>
+                    <div class="duel-log" id="rc-log" aria-live="polite">Pick a rival and press Start race.</div>
+                    <div class="duel-record" id="rc-record"></div>
+                </section>
+
                 <section class="panel" id="panel-ck" data-theme-panel="cricket" hidden aria-labelledby="ck-title">
                     <h2 class="panel-title" id="ck-title">🏏 Nets: Mock Match</h2>
                     <p class="panel-sub">One over, two wickets. Tap the pitch or press Swing just as the ball reaches you. Perfect timing is a six.</p>
@@ -1097,13 +1215,14 @@
         ['Light bulbs','💡','household',130], ['Hand wash','🧴','household',99], ['Floor cleaner','🧹','household',150], ['Aluminium foil','🥫','household',110]
     ].map(function (r, i) { return { id: 'c' + i, name: r[0], icon: r[1], cat: r[2], price: r[3] }; });
 
-    var THEMES = ['light', 'dark', 'harry-potter', 'minecraft', 'cricket'];
+    var THEMES = ['light', 'dark', 'harry-potter', 'minecraft', 'cricket', 'racing'];
 
     var THEME_COPY = {
         'light':        { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
         'dark':         { icon: '🛒', title: 'Home Shopping',        sub: "Pick what you need. Tick it off when it's in the basket.", list: 'Your list',  bar: 'in your list' },
         'harry-potter': { icon: '🪄', title: 'Diagon Alley Shopping', sub: 'Tap an item and let your wand do the rest.',                list: 'Your trunk', bar: 'in your trunk' },
         'minecraft':    { icon: '⛏️', title: 'Villager Market',      sub: 'Click an item and a villager fetches it for you. One time in ten, a player drops in.', list: 'Inventory',  bar: 'in inventory' },
+        'racing':       { icon: '🏎️', title: 'Pit Stop Market',      sub: 'Click an item and a race car zooms over to fetch it.',      list: 'Boot',       bar: 'in the boot' },
         'cricket':      { icon: '🏏', title: 'Match Day Mart',       sub: 'Smash every item straight into the kit bag.',               list: 'Kit bag',    bar: 'in the kit bag' }
     };
 
@@ -1196,7 +1315,7 @@
         lists: [{ id: 'l1', name: 'Shopping list', budget: 0, items: [] }],
         activeId: 'l1',
         theme: null, cat: 'all', query: '',
-        stats: { w: 0, l: 0, d: 0, ckBests: {} },
+        stats: { w: 0, l: 0, d: 0, ckBests: {}, rW: 0, rL: 0, rBest: 0 },
         usage: {}, custom: [], shared: [],
         settings: { currency: defaultCurrency(), sound: true, motion: 'auto', group: true, sortDone: true, syncUrl: '' }
     };
@@ -1255,7 +1374,7 @@
         state.activeId = lists.some(function (l) { return l.id === data.activeId; }) ? data.activeId : lists[0].id;
         if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
         if (data.stats && typeof data.stats === 'object') {
-            ['w', 'l', 'd'].forEach(function (k) { if (typeof data.stats[k] === 'number') state.stats[k] = data.stats[k]; });
+            ['w', 'l', 'd', 'rW', 'rL', 'rBest'].forEach(function (k) { if (typeof data.stats[k] === 'number' && isFinite(data.stats[k])) state.stats[k] = data.stats[k]; });
             var cb = data.stats.ckBests;
             if (cb && typeof cb === 'object') Object.keys(cb).forEach(function (k) { if (typeof cb[k] === 'number') state.stats.ckBests[k] = cb[k]; });
         }
@@ -1589,6 +1708,7 @@
                 var th = state.theme;
                 if (th === 'harry-potter') { tone(880, 0.16, 'triangle', 0.08); tone(1175, 0.16, 'triangle', 0.07, 0.06); tone(1568, 0.22, 'triangle', 0.06, 0.12); }
                 else if (th === 'minecraft') { tone(1046, 0.08, 'square', 0.05); tone(1568, 0.14, 'square', 0.05, 0.07); }
+                else if (th === 'racing') { tone(220, 0.16, 'sawtooth', 0.05, 0, 460); tone(880, 0.08, 'square', 0.04, 0.14); }
                 else if (th === 'cricket') { tone(150, 0.14, 'triangle', 0.2, 0, 70); tone(900, 0.1, 'sine', 0.06, 0.05, 1300); tone(1300, 0.14, 'sine', 0.05, 0.12); }
                 else { tone(520, 0.09, 'sine', 0.09, 0, 780); tone(780, 0.1, 'sine', 0.07, 0.07); }
             },
@@ -1601,6 +1721,10 @@
             hit: function () { noise(0.12, 0.25, 0, 900); tone(140, 0.14, 'sawtooth', 0.08, 0, 60); },
             crack: function () { noise(0.1, 0.4, 0, 2400); tone(200, 0.14, 'triangle', 0.22, 0, 80); },
             swing: function () { noise(0.14, 0.12, 0, 1400); },
+            engine: function () { tone(80, 0.7, 'sawtooth', 0.07, 0, 420); noise(0.5, 0.06, 0, 700); },
+            honk: function () { tone(420, 0.18, 'square', 0.05); tone(530, 0.18, 'square', 0.05); },
+            night: function () { tone(110, 1.6, 'sine', 0.09, 0, 62); tone(165, 1.4, 'sine', 0.04, 0.1, 90); },
+            dawn: function () { [392, 523, 659].forEach(function (f, i) { tone(f, 0.5, 'triangle', 0.06, i * 0.18); }); },
             bathit: function () { noise(0.05, 0.6, 0, 2200); tone(1500, 0.05, 'square', 0.1, 0, 700); tone(130, 0.16, 'sine', 0.35, 0, 55); }
         };
         function seq(list) { list.forEach(function (n) { tone(n[0], n[1], n[2], n[3], n[4], n[5]); }); }
@@ -1642,8 +1766,9 @@
             ghast: function () { tone(420, 0.9, 'sine', 0.07, 0, 280); tone(425, 0.9, 'sine', 0.05, 0.05, 300); },
             dragon: function () { tone(75, 1.1, 'sawtooth', 0.12, 0, 38); noise(1, 0.12, 0, 600); tone(150, 0.9, 'sawtooth', 0.05, 0.1, 80); }
         };
-        var SAY = { 'Accio': 'Ack-ee-oh', 'Wingardium Leviosa': 'Win-gar-dee-um Levi-oh-sa', 'Expecto Patronum': 'Ex-pecto Pa-tro-num',
-            'Stupefy': 'Stew-pe-fy', 'Expelliarmus': 'Ex-pell-ee-ar-mus', 'Protego': 'Pro-tee-go' };
+        /* Respelled as whole words (no hyphens) so the voice says each spell in one smooth flow. */
+        var SAY = { 'Accio': 'Akkeeoh', 'Wingardium Leviosa': 'Wingardeeum Leviohsa', 'Expecto Patronum': 'Expecto Patroanum',
+            'Stupefy': 'Stoopifie', 'Expelliarmus': 'Expelliarmus', 'Protego': 'Proteego' };
         function pickVoice() {
             var v = window.speechSynthesis.getVoices() || [];
             return v.filter(function (x) { return /^en-GB/i.test(x.lang); })[0] || v.filter(function (x) { return /^en/i.test(x.lang); })[0] || null;
@@ -1665,7 +1790,7 @@
                     var u = new SpeechSynthesisUtterance(SAY[spell] || spell);
                     var v = pickVoice();
                     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
-                    u.rate = 0.78; u.pitch = 0.8; u.volume = 1;
+                    u.rate = 0.92; u.pitch = 0.85; u.volume = 1;
                     window.speechSynthesis.speak(u);
                 } catch (e) { /* speech is optional */ }
             }
@@ -2065,8 +2190,8 @@
     }
 
     /* ----- celebration when everything is ticked ----- */
-    var DONE_COPY = { 'harry-potter': 'Mischief managed! ✨', minecraft: 'Achievement unlocked: Full inventory!', cricket: 'Innings complete. What a knock! 🏏' };
-    var DONE_BITS = { 'harry-potter': ['✨', '🦌', '⭐', '🪄'], minecraft: ['🟩', '💎', '⭐', '🟫'], cricket: ['🏏', '🔴', '🎉', '🏆'] };
+    var DONE_COPY = { 'harry-potter': 'Mischief managed! ✨', minecraft: 'Achievement unlocked: Full inventory!', cricket: 'Innings complete. What a knock! 🏏', racing: 'Chequered flag! Shopping done 🏁' };
+    var DONE_BITS = { 'harry-potter': ['✨', '🦌', '⭐', '🪄'], minecraft: ['🟩', '💎', '⭐', '🟫'], cricket: ['🏏', '🔴', '🎉', '🏆'], racing: ['🏁', '🏎️', '🏆', '🎉'] };
     function celebrate() {
         Snd.play('fanfare');
         toast(DONE_COPY[state.theme] || 'All done! Every item is ticked 🎉');
@@ -2299,6 +2424,7 @@
             case 'harry-potter': return prefix + '🪄 Cast spell';
             case 'minecraft':    return prefix + '🧑‍🌾 Send villager';
             case 'cricket':      return prefix + '🏏 Hit it';
+            case 'racing':       return prefix + '🏎️ Send car';
             default:             return onList ? '✓ On list (' + onList.qty + ') · add more' : '+ Add';
         }
     }
@@ -2418,6 +2544,13 @@
             n.style.animationDelay = '-3s';
             n.style.bottom = '30px';
             fx.appendChild(n);
+        } else if (theme === 'racing') {
+            n = el('span', 'fx ball', '🏎️');
+            n.style.animationName = 'drift'; n.style.animationDuration = '7s'; n.style.fontSize = '2rem';
+            fx.appendChild(n);
+            n = el('span', 'fx ball', '🚓');
+            n.style.animationName = 'drift'; n.style.animationDuration = '11s'; n.style.animationDelay = '-4s'; n.style.fontSize = '1.8rem'; n.style.bottom = '16px';
+            fx.appendChild(n);
         } else if (theme === 'dark') {
             for (i = 0; i < 14; i++) {
                 n = el('span', 'fx spark');
@@ -2447,10 +2580,11 @@
             p.hidden = p.getAttribute('data-theme-panel') !== t;
         });
         $('wand-wrap').hidden = t !== 'harry-potter';
+        Village.show(t === 'minecraft');
 
         var meta = document.querySelector('meta[name="theme-color"]');
         if (!meta) { meta = document.createElement('meta'); meta.name = 'theme-color'; document.head.appendChild(meta); }
-        meta.content = { light: '#7c3aed', dark: '#131a3a', 'harry-potter': '#170d38', minecraft: '#5d9bff', cricket: '#0f4a25' }[t];
+        meta.content = { light: '#7c3aed', dark: '#131a3a', 'harry-potter': '#170d38', minecraft: '#5d9bff', cricket: '#0f4a25', racing: '#111827' }[t];
 
         buildBannerFx(t);
         if (prev === 'cricket' && t !== 'cricket') Cricket.leave();
@@ -2458,6 +2592,8 @@
         if (prev === 'minecraft' && t !== 'minecraft') Yard.stop();
         if (t === 'minecraft') { MC.open(); Yard.start(); }
         if (t === 'cricket') Cricket.enter();
+        if (prev === 'racing' && t !== 'racing') Race.leave();
+        if (t === 'racing') Race.enter();
         if (t === 'harry-potter') Duel.enter();
     }
 
@@ -2484,9 +2620,180 @@
         '<path d="M12 40h12l8 8v62q0 8-8 8H12q-8 0-8-8V48z" fill="#e8c27a" stroke="#8a5a2b" stroke-width="2"/>' +
         '<path d="M18 50v62" stroke="#c99a52" stroke-width="2"/><rect x="9" y="96" width="18" height="6" rx="2" fill="#b91c1c" opacity=".8"/></svg>';
 
+    /* =====================================================================
+       RACING THEME: original race cars fetch items, plus a little drag strip
+       ===================================================================== */
+    var RACERS = [
+        { id: 'rocket', name: 'Red Rocket', icon: '🏎️', tier: 'Hard', time: 6.4, react: 0.22, blurb: 'A low red racer built for one thing: the first 100 metres.' },
+        { id: 'comet', name: 'Blue Comet', icon: '🚗', tier: 'Medium', time: 7.6, react: 0.3, blurb: 'Smooth and steady, rarely makes a mistake.' },
+        { id: 'taxi', name: 'Taxi Turbo', icon: '🚕', tier: 'Easy', time: 9.2, react: 0.45, blurb: 'Knows every shortcut, but stops for fares.' },
+        { id: 'rover', name: 'Dusty Rover', icon: '🚙', tier: 'Easy', time: 9.6, react: 0.5, blurb: 'Great off-road, slow on tarmac.' },
+        { id: 'pickup', name: 'Pickup Pete', icon: '🛻', tier: 'Medium', time: 8.0, react: 0.35, blurb: 'Hauls a heavy load and still keeps up.' },
+        { id: 'bus', name: 'Big Bertha', icon: '🚌', tier: 'Easy', time: 10.5, react: 0.6, blurb: 'Huge, loud and slow off the line.' },
+        { id: 'sparky', name: 'Sparky', icon: '🚒', tier: 'Medium', time: 7.8, react: 0.28, blurb: 'Fast to react. Sirens always on.' },
+        { id: 'zippy', name: 'Zippy', icon: '🏍️', tier: 'Hard', time: 6.6, react: 0.24, blurb: 'Tiny, twitchy and quick.' }
+    ];
+
+    /* A random race car drives in, picks the item up, drives to the cart and tosses it in. */
+    async function raceFetch(item, card, btn, ico) {
+        card.dataset.busy = '1'; btn.disabled = true;
+        var car = RACERS[Math.floor(Math.random() * RACERS.length)];
+        var from = center(ico);
+        var node = makeFloat('fly race-car', '');
+        var face = el('span', 'car-face', car.icon);
+        var carry = el('span', 'car-carry');
+        node.appendChild(face); node.appendChild(carry);
+        var done = false;
+        try {
+            var fromLeft = Math.random() < 0.5 && from.x > 140 || from.x > window.innerWidth - 140;
+            var y = clamp(from.y + 26, 40, window.innerHeight - 60);
+            var start = { x: fromLeft ? -70 : window.innerWidth + 70, y: y };
+            var stop = { x: from.x + (fromLeft ? -46 : 46), y: y };
+            face.style.transform = fromLeft ? 'scaleX(-1)' : 'none';
+            Snd.play('engine');
+            await move(node, start, stop, { dur: 650, s0: 1, s1: 1, ease: 'ease-out' });
+            pop(car.name + ': Vroom!', { x: stop.x, y: stop.y - 52 }, '#facc15');
+            Snd.play('honk');
+            ico.style.visibility = 'hidden';
+            carry.textContent = item.icon;
+            await wait(160);
+            var cart = cartTarget();
+            var spot = { x: clamp(cart.x - 72, 40, window.innerWidth - 40), y: Math.min(cart.y + 34, window.innerHeight - 90) };
+            face.style.transform = spot.x > stop.x ? 'scaleX(-1)' : 'none';
+            Snd.play('engine');
+            await move(node, stop, spot, { dur: clamp(480 + Math.hypot(spot.x - stop.x, spot.y - stop.y) * 0.9, 600, 1500), s0: 1, s1: 1, ease: 'ease-in-out' });
+            carry.textContent = '';
+            await fly(makeFloat('fly', item.icon), { x: spot.x, y: spot.y - 34 }, cartTarget(), { dur: 520, arc: 90, s0: 0.9, s1: 0.4, spin: 540, ease: 'ease-in' });
+            done = true;
+            landed(item);
+            face.style.transform = spot.x < window.innerWidth / 2 ? 'none' : 'scaleX(-1)';
+            await move(node, spot, { x: spot.x < window.innerWidth / 2 ? -90 : window.innerWidth + 90, y: spot.y }, { dur: 700, s0: 1, s1: 1, ease: 'ease-in' });
+        } finally {
+            if (!done) landed(item);
+            node.remove();
+        }
+    }
+
+    /* Drag strip: wait for green, then tap GO! to launch and keep tapping to boost. First to the line wins. */
+    var Race = (function () {
+        var opp = RACERS[1], phase = 'idle', timers = [], raf = 0, t0 = 0, last = 0;
+        var you = { pos: 0, speed: 0, done: 0 }, foe = { pos: 0, done: 0, start: 0 };
+        var inited = false, roadW = 300;
+
+        function clear() { timers.forEach(clearTimeout); timers = []; if (raf) cancelAnimationFrame(raf); raf = 0; }
+        function say(t) { $('rc-log').textContent = t; }
+        function lights(n, green) {
+            var ls = $('rc-lights').children;
+            for (var i = 0; i < ls.length; i++) { ls[i].className = green ? 'green' : (i < n ? 'red' : ''); }
+        }
+        function put() {
+            var max = Math.max(0, $('rc-road-you').clientWidth - 46);
+            $('rc-you').style.transform = 'translateX(' + (you.pos / 100 * max) + 'px)';
+            $('rc-foe').style.transform = 'translateX(' + (foe.pos / 100 * max) + 'px)';
+        }
+        function record() {
+            var s = state.stats;
+            $('rc-record').textContent = 'Record: ' + (s.rW || 0) + ' won · ' + (s.rL || 0) + ' lost' + (s.rBest ? ' · best ' + s.rBest.toFixed(2) + ' s' : '');
+        }
+        function pickOpp() {
+            opp = RACERS.filter(function (r) { return r.id === $('rc-opp').value; })[0] || RACERS[1];
+            $('rc-foe').firstChild.textContent = opp.icon;
+            $('rc-foe-name').textContent = opp.name;
+            $('rc-blurb').textContent = opp.tier + ' · ' + opp.blurb;
+        }
+        function reset() {
+            clear(); phase = 'idle';
+            you.pos = foe.pos = 0; you.speed = 0; you.done = foe.done = 0;
+            lights(0, false); put();
+            $('rc-go').disabled = true; $('rc-go').textContent = '🏁 GO!';
+            $('rc-start').disabled = false; $('rc-opp').disabled = false;
+        }
+        function finish(won, ms, why) {
+            clear(); phase = 'over';
+            var s = state.stats;
+            if (won) { s.rW = (s.rW || 0) + 1; if (ms && (!s.rBest || ms < s.rBest)) s.rBest = ms; Snd.play('fanfare'); }
+            else { s.rL = (s.rL || 0) + 1; Snd.play('hit'); }
+            save(); record();
+            say(why);
+            $('rc-go').disabled = true; $('rc-start').disabled = false; $('rc-opp').disabled = false;
+            $('rc-start').textContent = 'Rematch';
+        }
+        function loop(ts) {
+            raf = 0;
+            if (phase !== 'racing') return;
+            var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
+            last = ts;
+            var t = (ts - t0) / 1000;
+            // you: speed decays, taps add to it
+            you.speed = Math.max(0, you.speed - you.speed * 0.9 * dt);
+            you.pos = Math.min(100, you.pos + you.speed * dt);
+            // rival follows its own pace after its reaction time
+            var p = (t - opp.react) / opp.time;
+            foe.pos = clamp(100 * Math.pow(clamp(p, 0, 1), 0.92), 0, 100);
+            put();
+            if (you.pos >= 100 || foe.pos >= 100) {
+                var yourMs = t;
+                if (you.pos >= 100 && foe.pos < 100) finish(true, yourMs, 'You win in ' + yourMs.toFixed(2) + ' s! ' + opp.name + ' was still racing.');
+                else if (foe.pos >= 100 && you.pos < 100) finish(false, 0, opp.name + ' crosses the line first in ' + (opp.react + opp.time).toFixed(2) + ' s.');
+                else finish(you.pos >= foe.pos, yourMs, 'Photo finish! ' + yourMs.toFixed(2) + ' s.');
+                return;
+            }
+            raf = requestAnimationFrame(loop);
+        }
+        function go() {
+            if (phase === 'countdown') {
+                finish(false, 0, 'False start! You hit GO before the green light.');
+                return;
+            }
+            if (phase !== 'racing') return;
+            you.speed = Math.min(26, you.speed + 3.2);
+            Snd.play('swing');
+        }
+        function start() {
+            reset(); pickOpp();
+            phase = 'countdown';
+            $('rc-start').disabled = true; $('rc-opp').disabled = true;
+            $('rc-go').disabled = false; $('rc-go').textContent = 'Wait for green…';
+            say('Get ready. Do not press GO until the lights go green.');
+            [0, 1, 2].forEach(function (i) {
+                timers.push(setTimeout(function () { lights(i + 1, false); Snd.play('tick'); }, 700 * (i + 1)));
+            });
+            timers.push(setTimeout(function () {
+                lights(3, true);
+                phase = 'racing';
+                Snd.play('engine');
+                $('rc-go').textContent = '🏁 GO! GO! GO!';
+                say('Green! Tap GO! (or press Space) as fast as you can.');
+                t0 = performance.now(); last = 0;
+                raf = requestAnimationFrame(loop);
+            }, 700 * 3 + 500 + Math.random() * 900));
+        }
+        return {
+            init: function () {
+                if (inited) return;
+                inited = true;
+                var sel = $('rc-opp');
+                RACERS.forEach(function (r) { var o = el('option', null, r.icon + ' ' + r.name + ' (' + r.tier + ')'); o.value = r.id; sel.appendChild(o); });
+                sel.value = 'comet';
+                sel.addEventListener('change', pickOpp);
+                $('rc-start').addEventListener('click', start);
+                var g = $('rc-go');
+                g.addEventListener('pointerdown', function (e) { e.preventDefault(); go(); });
+                g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); } });
+                document.addEventListener('keydown', function (e) {
+                    if (state.theme !== 'racing' || e.repeat) return;
+                    if (e.key === ' ' && (phase === 'countdown' || phase === 'racing') && !document.querySelector('.modal:not([hidden])') && !/^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '')) { e.preventDefault(); go(); }
+                });
+                window.addEventListener('resize', put);
+            },
+            enter: function () { this.init(); pickOpp(); reset(); record(); say('Pick a rival and press Start race.'); },
+            leave: function () { clear(); phase = 'idle'; }
+        };
+    })();
+
     function collect(item, card, btn) {
         var theme = state.theme;
-        var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket';
+        var themed = theme === 'harry-potter' || theme === 'minecraft' || theme === 'cricket' || theme === 'racing';
         if (!themed || REDUCED || !card.animate) { addToList(item.name, item.icon); return; }
         if (card.dataset.busy) return;
         var ref = cardRefs[item.id];
@@ -2496,6 +2803,8 @@
         if (theme === 'harry-potter') { castHP(item, card, btn, ico); return; }
 
         if (theme === 'minecraft') { mcFetch(item, card, btn, ico); return; }
+
+        if (theme === 'racing') { raceFetch(item, card, btn, ico); return; }
 
         if (theme === 'cricket') {
             card.dataset.busy = '1'; btn.disabled = true;
@@ -3039,10 +3348,108 @@
         return n;
     }
 
+    /* =====================================================================
+       VILLAGE BANNER + NIGHT (Minecraft theme)
+       A pixel-art village sits behind the mobs. About one errand in ten, night falls for half a minute:
+       the sky darkens, stars and a moon come out and the windows and torches glow.
+       ===================================================================== */
+    var Village = (function () {
+        var W = 520, H = 110, nightTimer = 0, isNight = false, built = false;
+        function R(x, y, w, h, c) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + c + '"/>'; }
+        var WINDOWS = [[32, 68, 14, 14], [88, 68, 14, 14], [194, 46, 14, 18], [194, 74, 14, 14], [300, 74, 14, 14], [352, 74, 14, 14]];
+        var TORCHES = [[52, 80], [186, 84], [214, 84], [346, 86], [418, 70]];
+
+        function day() {
+            var s = '';
+            // trees
+            s += R(144, 84, 8, 26, '#6b4a2b') + R(132, 62, 32, 26, '#3f8f2f') + R(138, 54, 20, 10, '#4aa337') + R(136, 66, 6, 6, '#357a27');
+            s += R(486, 76, 10, 34, '#6b4a2b') + R(470, 48, 42, 34, '#3f8f2f') + R(478, 38, 26, 12, '#4aa337') + R(474, 56, 6, 6, '#357a27');
+            // house A
+            s += R(24, 56, 84, 54, '#b8864b') + R(24, 70, 84, 2, '#8f6535') + R(24, 84, 84, 2, '#8f6535') + R(24, 98, 84, 2, '#8f6535');
+            s += R(14, 46, 104, 10, '#8b3a24') + R(24, 38, 84, 8, '#7a2e1e') + R(34, 30, 64, 8, '#8b3a24') + R(44, 22, 44, 8, '#7a2e1e');
+            s += R(58, 78, 18, 32, '#5b3a1e') + R(72, 94, 2, 2, '#d9a928');
+            // church tower
+            s += R(172, 32, 62, 78, '#8c8c8c') + R(178, 40, 8, 8, '#777') + R(214, 58, 8, 8, '#777') + R(184, 96, 10, 8, '#777') + R(220, 36, 8, 8, '#9a9a9a');
+            s += R(164, 22, 78, 10, '#5a4a3a') + R(176, 12, 54, 10, '#4b3d2f') + R(188, 2, 30, 10, '#5a4a3a');
+            s += R(192, 84, 22, 26, '#4a2f19');
+            // house B
+            s += R(292, 62, 84, 48, '#a77a45') + R(292, 76, 84, 2, '#815c30') + R(292, 90, 84, 2, '#815c30') + R(292, 104, 84, 2, '#815c30');
+            s += R(284, 52, 100, 10, '#6d3b22') + R(292, 44, 84, 8, '#5a2f1a') + R(302, 36, 64, 8, '#6d3b22') + R(312, 28, 44, 8, '#5a2f1a');
+            s += R(322, 84, 18, 26, '#5b3a1e');
+            // well
+            s += R(420, 86, 34, 24, '#8b8b8b') + R(426, 90, 22, 6, '#3b6fd8') + R(420, 66, 4, 22, '#5b3a1e') + R(450, 66, 4, 22, '#5b3a1e');
+            s += R(414, 58, 46, 8, '#7a2e1e') + R(422, 50, 30, 8, '#8b3a24');
+            // window frames and glass
+            WINDOWS.forEach(function (w) { s += R(w[0] - 2, w[1] - 2, w[2] + 4, w[3] + 4, '#3a2410') + R(w[0], w[1], w[2], w[3], '#9ad1ff'); });
+            // torch sticks
+            TORCHES.forEach(function (t) { s += R(t[0], t[1] + 4, 4, 8, '#6b4a2b'); });
+            return s;
+        }
+        function lit() {
+            var s = '';
+            WINDOWS.forEach(function (w) { s += R(w[0], w[1], w[2], w[3], '#ffd45e') + R(w[0] + 2, w[1] + 2, w[2] - 4, w[3] - 4, '#fff0a8'); });
+            TORCHES.forEach(function (t) { s += R(t[0], t[1], 4, 4, '#ffb000') + R(t[0] + 1, t[1] - 3, 2, 3, '#ffe27a'); });
+            return s;
+        }
+        function uri(inner) {
+            var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" shape-rendering="crispEdges">' + inner + '</svg>';
+            return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+        }
+        function build() {
+            if (built) return;
+            built = true;
+            $('village').style.backgroundImage = uri(day());
+            $('village-lit').style.backgroundImage = uri(lit());
+            var sky = $('night-sky');
+            for (var i = 0; i < 26; i++) {
+                var st = el('i');
+                st.style.left = rand(1, 99) + '%';
+                st.style.top = rand(4, 62) + '%';
+                st.style.animationDelay = (-rand(0, 2)) + 's';
+                sky.appendChild(st);
+            }
+        }
+        function banner() { return document.querySelector('.top-banner'); }
+        function day2() {
+            clearTimeout(nightTimer);
+            if (!isNight) return;
+            isNight = false;
+            banner().classList.remove('night');
+        }
+        return {
+            show: function (on) {
+                if (on) build();
+                $('village').hidden = !on;
+                $('village-lit').hidden = !on;
+                if (!on) day2();
+            },
+            isNight: function () { return isNight; },
+            /* Called whenever a mob is sent on an errand: a one in ten chance that night falls. */
+            maybeNight: function () {
+                if (isNight || Math.random() >= 0.1) return;
+                isNight = true;
+                banner().classList.add('night');
+                pop('🌙 Night falls on the village…', { x: window.innerWidth / 2, y: 110 }, '#9ec5ff', 'chat');
+                Snd.play('night');
+                nightTimer = setTimeout(function () {
+                    day2();
+                    pop('☀️ The sun rises', { x: window.innerWidth / 2, y: 110 }, '#ffff55', 'chat');
+                    Snd.play('dawn');
+                }, 30000);
+            },
+            forceNight: function () { if (!isNight) { var r = Math.random; Math.random = function () { return 0; }; this.maybeNight(); Math.random = r; } }
+        };
+    })();
+
     var Yard = (function () {
         var yard, mobs = [], raf = 0, last = 0, running = false, rotateTimer = 0, inited = false;
         var byId = {};
         MOBS.forEach(function (m) { byId[m.id] = m; });
+        byId.steve = STEVE;
+        var uidn = 0, gen = 0, MAXMOBS = 24;
+        /* The banner stays calm: only creatures you find in a village roam by default. Spawn the rest yourself. */
+        var VILLAGE = ['villager', 'golem', 'cat', 'chicken', 'pig', 'cow', 'sheep', 'horse'];
+        var ctrl = null, keys = { l: 0, r: 0 };
 
         function place(m) {
             m.el.style.transform = 'translate3d(' + m.x + 'px,0,0)';
@@ -3057,9 +3464,14 @@
             wrap.appendChild(el('span', 'mob-shadow'));
             wrap.appendChild(inner);
             yard.appendChild(wrap);
-            var m = { def: def, el: wrap, inner: inner, x: x, dir: Math.random() < 0.5 ? -1 : 1, speed: rand(14, 38), idleUntil: 0, busy: false };
+            var hpEl = el('span', 'mob-hp');
+            hpEl.appendChild(el('i'));
+            hpEl.hidden = true;
+            wrap.appendChild(hpEl);
+            var m = { id: ++uidn, def: def, el: wrap, inner: inner, x: x, dir: Math.random() < 0.5 ? -1 : 1, speed: rand(14, 38), idleUntil: 0, busy: false, moving: false, crashes: 0, hp: 20, hpEl: hpEl, spawned: false };
             wrap.addEventListener('click', function () {
                 if (m.busy) return;
+                control(m === ctrl ? null : m);
                 pop(def.snd, center(wrap), '#ffffff');
                 Snd.mob(def.id);
                 inner.animate([{ transform: 'translateY(0) scaleX(' + m.dir + ')' }, { transform: 'translateY(-16px) scaleX(' + m.dir + ')' }, { transform: 'translateY(0) scaleX(' + m.dir + ')' }], { duration: 320, easing: 'ease-out' });
@@ -3073,27 +3485,136 @@
         function populate() {
             yard.textContent = '';
             mobs = [];
+            gen++;
             var w = width();
-            var n = clamp(Math.floor(w / 105), 4, 10);
-            var villagers = n >= 6 ? 3 : 2;
-            var pool = MOBS.filter(function (d) { return d.id !== 'villager'; }).sort(function () { return Math.random() - 0.5; });
+            var n = clamp(Math.floor(w / 190), 3, 6);
+            var villagers = n >= 5 ? 3 : 2;
+            var pool = MOBS.filter(function (d) { return VILLAGE.indexOf(d.id) >= 0 && d.id !== 'villager'; }).sort(function () { return Math.random() - 0.5; });
+            ctrl = null; updatePad();
             var i;
             for (i = 0; i < villagers; i++) mobs.push(build(byId.villager, rand(10, Math.max(20, w - 60))));
             for (i = 0; i < n - villagers; i++) mobs.push(build(pool[i], rand(10, Math.max(20, w - 60))));
         }
 
         function rotate() {
-            var cand = mobs.filter(function (m) { return !m.busy && m.def.id !== 'villager'; });
+            var cand = mobs.filter(function (m) { return !m.busy && m !== ctrl && !m.spawned && m.def.id !== 'villager'; });
             if (!cand.length) return;
             var out = cand[Math.floor(Math.random() * cand.length)];
             var shown = mobs.map(function (m) { return m.def.id; });
-            var pool = MOBS.filter(function (d) { return d.id !== 'villager' && shown.indexOf(d.id) < 0; });
+            var pool = MOBS.filter(function (d) { return VILLAGE.indexOf(d.id) >= 0 && d.id !== 'villager' && shown.indexOf(d.id) < 0; });
             if (!pool.length) return;
             var def = pool[Math.floor(Math.random() * pool.length)];
             var idx = mobs.indexOf(out);
             var x = out.x;
             out.el.remove();
             mobs[idx] = build(def, x);
+        }
+
+        function updatePad() {
+            var n = $('ctrl-name');
+            if (!n) return;
+            n.textContent = ctrl ? 'Controlling ' + ctrl.def.name : 'Click a mob to control it';
+            ['ctrl-l', 'ctrl-j', 'ctrl-r', 'ctrl-off'].forEach(function (id) { $(id).disabled = !ctrl; });
+            mobs.forEach(function (m) { m.el.classList.toggle('controlled', m === ctrl); });
+        }
+        function control(m) { ctrl = m; keys.l = keys.r = 0; updatePad(); }
+        function jump() { if (ctrl && !ctrl.busy && !ctrl.jumpAt) { ctrl.jumpAt = performance.now(); Snd.mob(ctrl.def.id); } }
+
+        function bar(m) {
+            var f = m.hpEl.firstChild;
+            f.style.width = Math.max(0, m.hp / 20 * 100) + '%';
+            f.style.background = m.hp <= 6 ? '#ff5555' : '#55ff55';
+        }
+
+        /* Two roaming mobs that bump into each other. Crash into others more than twice and it turns into a fight. */
+        /* Only mobs that really fight each other in vanilla Minecraft: hostile mobs go after players, villagers and
+           golems; golems defend; wolves hunt skeletons, sheep, rabbits, foxes and llamas; foxes hunt chickens and
+           rabbits; cats hunt rabbits; frogs eat slimes. Everyone else just bumps and walks on. */
+        var HOSTILE = { zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1 };
+        var PREY = { villager: 1, steve: 1, golem: 1, snowgolem: 1, wolf: 1 };
+        var HUNTS = {
+            wolf: { skeleton: 1, sheep: 1, rabbit: 1, fox: 1, llama: 1 },
+            fox: { chicken: 1, rabbit: 1 },
+            cat: { rabbit: 1 },
+            frog: { slime: 1 },
+            golem: HOSTILE,
+            snowgolem: HOSTILE
+        };
+        function aggro(x, y) { return !!((HOSTILE[x] && PREY[y]) || (HUNTS[x] && HUNTS[x][y])); }
+        function canFight(a, b) { return aggro(a, b) || aggro(b, a); }
+        var cool = {}, fightsOn = 0, nextFightAt = 0;
+        function collide(ts) {
+            // Grudges fade: a mob that has stayed out of trouble for 15 seconds starts again at zero.
+            mobs.forEach(function (m) { if (m.crashes && ts - (m.lastCrash || 0) > 15000) m.crashes = 0; });
+            for (var i = 0; i < mobs.length; i++) {
+                for (var j = i + 1; j < mobs.length; j++) {
+                    var a = mobs[i], b = mobs[j];
+                    if (a.busy || b.busy || !(a.moving || b.moving) || Math.abs(a.x - b.x) > 30) continue;
+                    var k = a.id + '-' + b.id;
+                    if (ts < (cool[k] || 0)) continue;
+                    cool[k] = ts + 3000;
+                    var rivals = canFight(a.def.id, b.def.id);
+                    if (rivals) { a.crashes = Math.min(3, a.crashes + 1); b.crashes = Math.min(3, b.crashes + 1); a.lastCrash = b.lastCrash = ts; }
+                    // At most one fight at a time, and a breather of about 20 seconds between fights.
+                    if (rivals && (a.crashes > 2 || b.crashes > 2) && !fightsOn && ts >= nextFightAt) { fightsOn++; fight(a, b); return; }
+                }
+            }
+        }
+
+        async function fight(a, b) {
+            try { await fightInner(a, b); }
+            finally { fightsOn = Math.max(0, fightsOn - 1); nextFightAt = performance.now() + 20000; }
+        }
+        async function fightInner(a, b) {
+            var g = gen;
+            a.busy = b.busy = true;
+            a.crashes = b.crashes = 0;
+            a.hp = b.hp = 20;
+            a.hpEl.hidden = b.hpEl.hidden = false;
+            bar(a); bar(b);
+            a.dir = a.x <= b.x ? 1 : -1; b.dir = -a.dir;
+            pop('⚔️ Fight! ' + a.def.name + ' vs ' + b.def.name, { x: clamp((a.x + b.x) / 2 + 22, 90, window.innerWidth - 90), y: center(a.el).y - 40 }, '#ffff55', 'chat');
+            Snd.mob(a.def.id); Snd.mob(b.def.id);
+            await wait(500);
+            var turn = 0;
+            while (a.hp > 0 && b.hp > 0 && g === gen && running) {
+                var at = turn % 2 ? b : a, df = turn % 2 ? a : b;
+                turn++;
+                var d = at.x <= df.x ? 1 : -1;
+                await at.inner.animate([
+                    { transform: 'translateX(0) scaleX(' + d + ')' },
+                    { transform: 'translateX(' + (d * 20) + 'px) scaleX(' + d + ')' },
+                    { transform: 'translateX(0) scaleX(' + d + ')' }
+                ], { duration: 260, easing: 'ease-out' }).finished.catch(function () {});
+                if (g !== gen) return;
+                var dmg = Math.round(rand(2, 6));
+                df.hp -= dmg;
+                Snd.play('hit');
+                if (turn % 2 === 0) Snd.mob(at.def.id);
+                pop('-' + dmg, center(df.el), '#ff8a8a');
+                bar(df);
+                shake(df.el);
+                await wait(300);
+            }
+            a.hpEl.hidden = b.hpEl.hidden = true;
+            if (g !== gen) return;
+            if (!running) { a.busy = b.busy = false; return; }
+            var loser = a.hp <= 0 ? a : b, winner = loser === a ? b : a;
+            pop('💨 K.O.', center(loser.el), '#ffffff');
+            await loser.inner.animate([{ transform: 'rotate(0) scaleX(' + loser.dir + ')', opacity: 1 }, { transform: 'rotate(' + (-loser.dir * 90) + 'deg) scaleX(' + loser.dir + ')', opacity: 0 }], { duration: 520, fill: 'forwards' }).finished.catch(function () {});
+            if (g !== gen) return;
+            loser.el.remove();
+            var idx = mobs.indexOf(loser);
+            if (idx >= 0) mobs.splice(idx, 1);
+            if (loser === ctrl) control(null);
+            winner.busy = false; winner.idleUntil = 0;
+            pop('🏆 ' + winner.def.name + ' wins!', { x: clamp(winner.x + 22, 80, window.innerWidth - 80), y: center(winner.el).y - 40 }, '#ffff55', 'chat');
+            Snd.play('fanfare');
+            if (!loser.spawned) {
+                setTimeout(function () {
+                    if (g === gen && running && mobs.length < MAXMOBS) mobs.push(build(loser.def, rand(10, Math.max(20, width() - 60))));
+                }, 6000);
+            }
         }
 
         function frame(ts) {
@@ -3103,17 +3624,23 @@
             var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
             last = ts;
             mobs.forEach(function (m) {
-                var moving = !m.busy && ts >= m.idleUntil;
-                if (moving) {
+                var mine = m === ctrl && !m.busy;
+                var moving = !m.busy && (mine ? (keys.r !== keys.l) : ts >= m.idleUntil);
+                m.moving = moving;
+                if (mine) {
+                    if (moving) { m.dir = keys.r - keys.l; m.x = clamp(m.x + m.dir * 120 * dt, 4, w - 48); }
+                } else if (moving) {
                     m.x += m.dir * m.speed * dt;
                     if (m.x < 4) { m.x = 4; m.dir = 1; } else if (m.x > w - 48) { m.x = w - 48; m.dir = -1; }
                     if (Math.random() < 0.005) m.idleUntil = ts + rand(600, 2400);
                     if (Math.random() < 0.0012) m.dir *= -1;
                 }
                 var bob = moving ? Math.abs(Math.sin(ts / 130 + m.x * 0.05)) * 3 : 0;
+                if (m.jumpAt && ts - m.jumpAt < 520) bob += Math.sin(Math.PI * (ts - m.jumpAt) / 520) * 32; else m.jumpAt = 0;
                 m.el.style.transform = 'translate3d(' + m.x + 'px,' + (-bob) + 'px,0)';
                 m.inner.style.transform = 'scaleX(' + m.dir + ')';
             });
+            collide(ts);
             raf = requestAnimationFrame(frame);
         }
 
@@ -3134,9 +3661,36 @@
                 clearInterval(rotateTimer);
                 if (yard) yard.hidden = true;
             },
+            /* Drops any mob into the yard. Returns false when the yard is full or not showing. */
+            spawn: function (id) {
+                var def = byId[id];
+                if (!def || !yard || yard.hidden) return false;
+                if (mobs.length >= MAXMOBS) return false;
+                var m = build(def, rand(10, Math.max(20, width() - 60)));
+                m.spawned = true;
+                m.speed = rand(22, 42);
+                mobs.push(m);
+                pop('✨ ' + def.name + ' spawned', center(m.el), '#ffffff');
+                Snd.mob(def.id);
+                return true;
+            },
+            clearSpawned: function () {
+                var n = 0;
+                mobs = mobs.filter(function (m) { if (m.spawned && !m.busy) { m.el.remove(); n++; return false; } return true; });
+                if (ctrl && mobs.indexOf(ctrl) < 0) control(null);
+                return n;
+            },
+            count: function () { return mobs.length; },
+            control: control,
+            release: function () { control(null); },
+            press: function (dir, down) { if (dir === 'l') keys.l = down ? 1 : 0; else keys.r = down ? 1 : 0; },
+            jump: jump,
+            /* Called when a controlled mob goes on an errand etc. */
+            controlled: function () { return ctrl; },
             /* A free mob to run an errand. Villagers are four times as likely as any other mob. */
             pick: function () {
-                var free = mobs.filter(function (m) { return !m.busy; });
+                var free = mobs.filter(function (m) { return !m.busy && m !== ctrl; });
+                if (!free.length) free = mobs.filter(function (m) { return !m.busy; });
                 if (!free.length) return null;
                 var total = 0;
                 var ws = free.map(function (m) { var w = m.def.id === 'villager' ? 4 : 1; total += w; return w; });
@@ -3187,6 +3741,7 @@
        One time in ten, a player drops in and does it instead. */
     async function mcFetch(item, card, btn, ico) {
         card.dataset.busy = '1'; btn.disabled = true;
+        Village.maybeNight();
         var player = Math.random() < 0.1;
         var m = player ? null : Yard.pick();
         if (!m) player = true;          // everyone is busy: a player drops in
@@ -3633,6 +4188,42 @@
         render();
         $('search').focus();
     });
+
+    (function () {
+        var sel = $('spawn-mob');
+        [STEVE].concat(MOBS).forEach(function (d) {
+            var o = el('option', null, d.name);
+            o.value = d.id;
+            sel.appendChild(o);
+        });
+        sel.value = 'zombie';
+        $('spawn-btn').addEventListener('click', function () {
+            if (!Yard.spawn(sel.value)) toast(Yard.count() >= 24 ? 'The yard is full. Clear some mobs first.' : 'Switch to the Minecraft theme to spawn mobs.');
+        });
+        $('spawn-clear').addEventListener('click', function () {
+            var n = Yard.clearSpawned();
+            toast(n ? 'Cleared ' + n + ' spawned mob' + (n === 1 ? '' : 's') + '.' : 'No spawned mobs to clear.');
+        });
+    })();
+
+    (function () {
+        function hold(id, dir) {
+            var b = $(id);
+            b.addEventListener('pointerdown', function (e) { e.preventDefault(); Yard.press(dir, true); });
+            ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { b.addEventListener(ev, function () { Yard.press(dir, false); }); });
+        }
+        hold('ctrl-l', 'l'); hold('ctrl-r', 'r');
+        $('ctrl-j').addEventListener('click', function () { Yard.jump(); });
+        $('ctrl-off').addEventListener('click', function () { Yard.release(); });
+        function typing(e) { return /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '') || document.querySelector('.modal:not([hidden])'); }
+        var map = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
+        document.addEventListener('keydown', function (e) {
+            if (state.theme !== 'minecraft' || !Yard.controlled() || typing(e) || e.ctrlKey || e.metaKey) return;
+            if (map[e.key]) { e.preventDefault(); Yard.press(map[e.key], true); }
+            else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { e.preventDefault(); Yard.jump(); }
+        });
+        document.addEventListener('keyup', function (e) { if (map[e.key]) Yard.press(map[e.key], false); });
+    })();
 
     $('search').addEventListener('input', function (e) { state.query = e.target.value; render(); });
     $('clear-search').addEventListener('click', function () { state.query = ''; $('search').value = ''; render(); $('search').focus(); });
