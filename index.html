@@ -687,11 +687,43 @@
         .rc-car { position: absolute; left: 2px; top: 4px; font-size: 2rem; line-height: 1; will-change: transform; }
         .rc-car span { display: inline-block; transform: scaleX(-1); }
         .rc-go { width: 100%; min-height: 64px; font-size: calc(1.4rem * var(--scale)); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+        .mine-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin: 4px 0 6px; font-size: calc(.85rem * var(--scale)); }
+        .mine-tool { padding: 3px 10px; border: 2px solid #b8864b; border-radius: 8px; font-weight: 700; background: rgba(0,0,0,.25); }
+        .mine-ore { color: var(--text-sub); }
+        .mine-box { position: relative; margin-top: 10px; padding: 6px; background: #1d120a; border: 3px solid #000; overflow: hidden; }
+        .mine-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
+        .mblock {
+            --base: #8a8a8a; --ore: #707070;
+            position: relative; aspect-ratio: 1; min-height: 28px; padding: 0; border: 2px solid rgba(0,0,0,.45); border-radius: 0;
+            background:
+                radial-gradient(circle at 24% 30%, var(--ore) 0 3px, transparent 4px),
+                radial-gradient(circle at 70% 62%, var(--ore) 0 3px, transparent 4px),
+                radial-gradient(circle at 62% 22%, var(--ore) 0 2px, transparent 3px),
+                radial-gradient(circle at 30% 76%, var(--ore) 0 2px, transparent 3px),
+                var(--base);
+            box-shadow: inset 2px 2px 0 rgba(255,255,255,.18), inset -2px -2px 0 rgba(0,0,0,.25);
+        }
+        .mblock.dirt, .mblock.stone { background: linear-gradient(45deg, rgba(0,0,0,.08) 25%, transparent 25% 75%, rgba(0,0,0,.08) 75%) 0 0 / 8px 8px, var(--base); }
+        .mblock::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(0,0,0,.65) 5px 6px), repeating-linear-gradient(45deg, transparent 0 9px, rgba(0,0,0,.5) 9px 10px); }
+        .mblock[data-crack="1"]::after { opacity: .2; } .mblock[data-crack="2"]::after { opacity: .4; }
+        .mblock[data-crack="3"]::after { opacity: .6; } .mblock[data-crack="4"]::after { opacity: .8; } .mblock[data-crack="5"]::after { opacity: 1; }
+        .mblock.gone { visibility: hidden; }
+        .ore-float { position: absolute; width: 46px; height: 46px; z-index: 4; animation: float 3s ease-in-out infinite; box-shadow: 0 0 14px 3px rgba(255,255,160,.55), inset 2px 2px 0 rgba(255,255,255,.18), inset -2px -2px 0 rgba(0,0,0,.25); }
+        .mine-creeper { position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; transform: translate(-50%, -50%); z-index: 3; image-rendering: pixelated; }
+        .mine-creeper svg { display: block; width: 100%; height: 100%; }
+        .mine-creeper.flash { filter: brightness(3) saturate(0); }
+        .boom-flash { position: absolute; inset: 0; z-index: 4; background: #fff; pointer-events: none; }
         .ctrl-pad { margin: 0 0 10px; padding: 10px; border: var(--border-element); background: color-mix(in srgb, var(--text-main) 6%, transparent); }
         .ctrl-name { font-weight: 700; margin-bottom: 8px; font-size: calc(.9rem * var(--scale)); }
         .ctrl-btns { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 6px; }
-        .ctrl-btns #ctrl-off { grid-column: 1 / -1; }
+        .ctrl-btns #ctrl-off, .ctrl-btns #ctrl-atk { grid-column: 1 / -1; }
         .ctrl-btns .btn-trigger { touch-action: none; user-select: none; -webkit-user-select: none; }
+        .mob-stats { margin: 0 0 8px; padding: 8px 10px; font-size: calc(.8rem * var(--scale)); border-left: 4px solid #55ff55; background: rgba(0,0,0,.25); }
+        .fight-btns { grid-template-columns: 1fr 1fr; margin-top: 8px; }
+        .fight-btns .btn-trigger { font-size: .8rem; }
+        .mob.pickable { cursor: crosshair; }
+        .mob.pickable .mob-in { outline: 2px dashed #ffff55; outline-offset: 2px; }
+        .mob.picked .mob-in { outline: 3px solid #ff5555; outline-offset: 2px; }
         .mob.controlled::after { content: '▼'; position: absolute; left: 50%; top: -22px; transform: translateX(-50%); color: #ffff55; font-size: 14px; text-shadow: 0 0 6px #000; animation: float 1s ease-in-out infinite; }
         .spawner { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 0 0 8px; }
         .spawner .field { grid-column: 1 / -1; }
@@ -982,6 +1014,14 @@
                 </section>
 
                 <!-- Minecraft: update log -->
+                <section class="panel" id="panel-mine" data-theme-panel="minecraft" hidden aria-labelledby="mine-title">
+                    <h2 class="panel-title" id="mine-title">⛏️ The Mine</h2>
+                    <p class="panel-sub">Click blocks to break them. Ore upgrades your pickaxe so you mine faster. Watch the banner for floating ore, and beware of creepers when the mine runs dry.</p>
+                    <div class="mine-head"><span class="mine-tool" id="mine-tool">⛏️ Wooden pickaxe</span><span class="mine-ore" id="mine-ore">0 ore</span></div>
+                    <div class="prog-bar" aria-hidden="true"><i id="mine-fill"></i></div>
+                    <div class="mine-box" id="mine-box"><div class="mine-grid" id="mine-grid"></div></div>
+                </section>
+
                 <section class="panel" id="panel-mc" data-theme-panel="minecraft" hidden aria-labelledby="mc-title">
                     <h2 class="panel-title" id="mc-title">📜 Update Log</h2>
                     <p class="panel-sub">What's new in Minecraft, checked against Mojang's version feed whenever you open this theme.</p>
@@ -997,11 +1037,17 @@
                             <button type="button" class="btn-trigger" id="ctrl-l" aria-label="Walk left" disabled>◀</button>
                             <button type="button" class="btn-trigger" id="ctrl-j" aria-label="Jump" disabled>⤒ Jump</button>
                             <button type="button" class="btn-trigger" id="ctrl-r" aria-label="Walk right" disabled>▶</button>
+                            <button type="button" class="btn-trigger" id="ctrl-atk" aria-label="Attack" disabled>⚔️ Attack (F)</button>
                             <button type="button" class="btn-trigger" id="ctrl-off" disabled>Release</button>
                         </div>
-                        <p class="panel-sub" style="margin:6px 0 0">Keys: ← → or A D to walk, Space to jump. Run into another mob to start trouble.</p>
+                        <div class="ctrl-btns fight-btns">
+                            <button type="button" class="btn-trigger" id="fight-pick" aria-pressed="false">⚔️ Pick two mobs to fight</button>
+                            <button type="button" class="btn-trigger" id="fight-random">🎲 Random fight</button>
+                        </div>
+                        <p class="panel-sub" style="margin:6px 0 0">Keys: ← → or A D to walk, Space to jump, F to attack. Run into another mob to start trouble.</p>
                     </div>
-                    <p class="panel-sub" id="spawn-hint">Spawn any mob into the Villager Market (only village animals roam by default). Only mobs that fight in vanilla Minecraft will (like zombies and villagers, wolves and sheep, or foxes and chickens), and only after crashing into each other three times. One fight at a time.</p>
+                    <div class="mob-stats" id="mob-stats" aria-live="polite"></div>
+                    <p class="panel-sub" id="spawn-hint">Spawn any mob into the Villager Market (only village animals roam by default). Like in vanilla Minecraft, rivals that spot each other nearby walk up and fight (zombies and villagers, wolves and sheep, foxes and chickens). Skeletons shoot arrows, iron golems launch enemies into the air, creepers explode, and passive animals just panic. One fight at a time.</p>
                     <div class="mc-status" id="mc-status"><span class="dot"></span><span id="mc-status-text">Checking…</span><button type="button" class="btn-trigger" id="mc-refresh">⟳ Sync</button></div>
                     <div class="chips" id="mc-filters" role="group" aria-label="Filter updates">
                         <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
@@ -1315,7 +1361,7 @@
         lists: [{ id: 'l1', name: 'Shopping list', budget: 0, items: [] }],
         activeId: 'l1',
         theme: null, cat: 'all', query: '',
-        stats: { w: 0, l: 0, d: 0, ckBests: {}, rW: 0, rL: 0, rBest: 0 },
+        stats: { w: 0, l: 0, d: 0, ckBests: {}, rW: 0, rL: 0, rBest: 0, ore: 0 },
         usage: {}, custom: [], shared: [],
         settings: { currency: defaultCurrency(), sound: true, motion: 'auto', group: true, sortDone: true, syncUrl: '' }
     };
@@ -1374,7 +1420,7 @@
         state.activeId = lists.some(function (l) { return l.id === data.activeId; }) ? data.activeId : lists[0].id;
         if (THEMES.indexOf(data.theme) !== -1) state.theme = data.theme;
         if (data.stats && typeof data.stats === 'object') {
-            ['w', 'l', 'd', 'rW', 'rL', 'rBest'].forEach(function (k) { if (typeof data.stats[k] === 'number' && isFinite(data.stats[k])) state.stats[k] = data.stats[k]; });
+            ['w', 'l', 'd', 'rW', 'rL', 'rBest', 'ore'].forEach(function (k) { if (typeof data.stats[k] === 'number' && isFinite(data.stats[k])) state.stats[k] = data.stats[k]; });
             var cb = data.stats.ckBests;
             if (cb && typeof cb === 'object') Object.keys(cb).forEach(function (k) { if (typeof cb[k] === 'number') state.stats.ckBests[k] = cb[k]; });
         }
@@ -1721,6 +1767,7 @@
             hit: function () { noise(0.12, 0.25, 0, 900); tone(140, 0.14, 'sawtooth', 0.08, 0, 60); },
             crack: function () { noise(0.1, 0.4, 0, 2400); tone(200, 0.14, 'triangle', 0.22, 0, 80); },
             swing: function () { noise(0.14, 0.12, 0, 1400); },
+            boom: function () { noise(0.9, 0.5, 0, 500); tone(70, 0.8, 'sawtooth', 0.25, 0, 28); },
             engine: function () { tone(80, 0.7, 'sawtooth', 0.07, 0, 420); noise(0.5, 0.06, 0, 700); },
             honk: function () { tone(420, 0.18, 'square', 0.05); tone(530, 0.18, 'square', 0.05); },
             night: function () { tone(110, 1.6, 'sine', 0.09, 0, 62); tone(165, 1.4, 'sine', 0.04, 0.1, 90); },
@@ -2589,8 +2636,8 @@
         buildBannerFx(t);
         if (prev === 'cricket' && t !== 'cricket') Cricket.leave();
         if (prev === 'harry-potter' && t !== 'harry-potter') Duel.leave();
-        if (prev === 'minecraft' && t !== 'minecraft') Yard.stop();
-        if (t === 'minecraft') { MC.open(); Yard.start(); }
+        if (prev === 'minecraft' && t !== 'minecraft') { Yard.stop(); Mine.leave(); }
+        if (t === 'minecraft') { MC.open(); Yard.start(); Mine.enter(); }
         if (t === 'cricket') Cricket.enter();
         if (prev === 'racing' && t !== 'racing') Race.leave();
         if (t === 'racing') Race.enter();
@@ -3441,6 +3488,224 @@
         };
     })();
 
+    /* =====================================================================
+       MINECRAFT MINING: break blocks, earn ore, upgrade your pickaxe.
+       Ore blocks also float up in the empty parts of the banner now and then.
+       Clear the whole mine and a creeper shows up and blows it all up.
+       ===================================================================== */
+    var Mine = (function () {
+        var COLS = 8, ROWS = 4;
+        var TIERS = [
+            { name: 'Wooden pickaxe', at: 0, power: 1, color: '#b8864b' },
+            { name: 'Stone pickaxe', at: 8, power: 1.7, color: '#9a9a9a' },
+            { name: 'Iron pickaxe', at: 25, power: 2.6, color: '#e5e7eb' },
+            { name: 'Diamond pickaxe', at: 60, power: 4, color: '#4ee3e0' },
+            { name: 'Netherite pickaxe', at: 120, power: 6, color: '#5b4b57' }
+        ];
+        var BLOCKS = {
+            dirt:    { name: 'Dirt', base: '#8b5a2b', ore: '#6b4220', hard: 2, pts: 0, tier: 0, w: 28 },
+            stone:   { name: 'Stone', base: '#8a8a8a', ore: '#707070', hard: 4, pts: 1, tier: 0, w: 38 },
+            coal:    { name: 'Coal ore', base: '#8a8a8a', ore: '#1f1f1f', hard: 5, pts: 2, tier: 0, w: 13 },
+            iron:    { name: 'Iron ore', base: '#8a8a8a', ore: '#d9a67a', hard: 7, pts: 4, tier: 1, w: 9 },
+            gold:    { name: 'Gold ore', base: '#8a8a8a', ore: '#fcdc3b', hard: 8, pts: 6, tier: 2, w: 6 },
+            diamond: { name: 'Diamond ore', base: '#8a8a8a', ore: '#4ee3e0', hard: 12, pts: 12, tier: 2, w: 6 }
+        };
+        var grid, left = 0, timer = 0, active = false, exploding = false, floatEls = [];
+
+        function tierIndex() {
+            var p = state.stats.ore || 0, t = 0;
+            TIERS.forEach(function (x, i) { if (p >= x.at) t = i; });
+            return t;
+        }
+        function pick() {
+            var total = 0, k;
+            for (k in BLOCKS) total += BLOCKS[k].w;
+            var r = Math.random() * total;
+            for (k in BLOCKS) { r -= BLOCKS[k].w; if (r <= 0) return k; }
+            return 'stone';
+        }
+        function need(kind, mult) { return Math.max(1, Math.ceil(BLOCKS[kind].hard * (mult || 1) / TIERS[tierIndex()].power)); }
+
+        function pickaxeCursor() {
+            var c = TIERS[tierIndex()].color;
+            var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" shape-rendering="crispEdges">' +
+                '<path d="M3 13 L11 5" stroke="#6b4a2b" stroke-width="2"/><path d="M4 4h6v2h2v6h-2V6H4z" fill="' + c + '" stroke="#222" stroke-width=".6"/></svg>';
+            return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") 4 4, pointer';
+        }
+        function ui() {
+            var i = tierIndex(), t = TIERS[i], nx = TIERS[i + 1], p = state.stats.ore || 0;
+            $('mine-tool').textContent = '⛏️ ' + t.name;
+            $('mine-tool').style.borderColor = t.color;
+            $('mine-ore').textContent = p + ' ore' + (nx ? ' · next at ' + nx.at : ' · max level');
+            $('mine-fill').style.width = (nx ? clamp((p - t.at) / (nx.at - t.at) * 100, 0, 100) : 100) + '%';
+            var cur = pickaxeCursor();
+            if (grid) grid.style.cursor = cur;
+            floatEls.forEach(function (f) { f.style.cursor = cur; });
+        }
+
+        function paint(b, kind) {
+            var d = BLOCKS[kind];
+            b.style.setProperty('--base', d.base);
+            b.style.setProperty('--ore', d.ore);
+            b.className = 'mblock ' + (d.pts > 1 ? 'ore' : kind);
+        }
+        function particles(at, color, n) {
+            if (REDUCED) return;
+            for (var i = 0; i < n; i++) {
+                var p = makeFloat('fly', '');
+                p.style.width = p.style.height = rand(5, 9) + 'px';
+                p.style.background = color; p.style.fontSize = '0';
+                var a = p.animate([
+                    { transform: tf(at, 1, 0), opacity: 1 },
+                    { transform: tf({ x: at.x + rand(-60, 60), y: at.y + rand(-70, 40) + 60 }, 1, rand(-180, 180)), opacity: 0 }
+                ], { duration: rand(500, 900), easing: 'ease-out', fill: 'forwards' });
+                (function (node) { a.finished.then(function () { node.remove(); }, function () { node.remove(); }); })(p);
+            }
+        }
+        function award(kind, mult) {
+            var before = tierIndex();
+            state.stats.ore = (state.stats.ore || 0) + Math.round(BLOCKS[kind].pts * (mult || 1));
+            save();
+            var after = tierIndex();
+            ui();
+            if (after > before) {
+                Snd.play('fanfare');
+                toast('⛏️ Pickaxe upgraded: ' + TIERS[after].name + '! You mine faster now.');
+            }
+        }
+
+        /* One hit on a block (grid block or floating one). Returns true when it broke. */
+        function hit(b, kind, mult, onBreak) {
+            var d = BLOCKS[kind];
+            if (d.tier > tierIndex()) {
+                shake(b); Snd.play('hit');
+                toast(d.name + ' needs a ' + TIERS[d.tier].name.replace(' pickaxe', '') + ' pickaxe or better.');
+                return;
+            }
+            var n = +b.dataset.n || need(kind, mult);
+            var h = (+b.dataset.h || 0) + 1;
+            b.dataset.n = n; b.dataset.h = h;
+            Snd.play('crack');
+            if (h < n) {
+                b.dataset.crack = String(Math.max(1, Math.ceil(h / n * 5)));
+                shake(b);
+                return;
+            }
+            var at = center(b);
+            particles(at, d.ore === d.base ? d.base : d.ore, 7);
+            particles(at, d.base, 5);
+            pop('+' + Math.round(d.pts * (mult || 1)) + ' ⛏️', at, '#ffffff');
+            award(kind, mult);
+            onBreak();
+        }
+
+        function fill() {
+            grid.textContent = '';
+            left = COLS * ROWS;
+            for (var i = 0; i < left; i++) {
+                (function (i) {
+                    var kind = pick();
+                    var b = el('button', 'mblock');
+                    b.type = 'button';
+                    paint(b, kind);
+                    b.setAttribute('aria-label', 'Mine ' + BLOCKS[kind].name);
+                    b.addEventListener('click', function () {
+                        if (exploding || b.disabled) return;
+                        hit(b, kind, 1, function () {
+                            b.disabled = true; b.className = 'mblock gone'; b.textContent = '';
+                            left--;
+                            if (left <= 0) creeper();
+                        });
+                    });
+                    if (!REDUCED && b.animate) b.animate([{ transform: 'translateY(-30px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 350, delay: (i % COLS) * 30 + Math.floor(i / COLS) * 40, fill: 'backwards', easing: 'ease-out' });
+                    grid.appendChild(b);
+                })(i);
+            }
+        }
+
+        var CREEPER = '<svg viewBox="0 0 8 8" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect width="8" height="8" fill="#4caf50"/>' +
+            '<rect x="0" y="0" width="2" height="1" fill="#3f9743"/><rect x="5" y="6" width="2" height="1" fill="#3f9743"/>' +
+            '<rect x="1" y="1" width="2" height="2" fill="#111"/><rect x="5" y="1" width="2" height="2" fill="#111"/>' +
+            '<rect x="3" y="3" width="2" height="2" fill="#111"/><rect x="2" y="4" width="4" height="3" fill="#111"/><rect x="3" y="5" width="2" height="2" fill="#4caf50"/></svg>';
+
+        /* The mine is empty: a creeper walks in, hisses, flashes and explodes. Then the blocks fall back in. */
+        async function creeper() {
+            exploding = true;
+            var box = $('mine-box');
+            var c = el('div', 'mine-creeper');
+            c.innerHTML = CREEPER;
+            box.appendChild(c);
+            Snd.mob('creeper');
+            pop('Ssssss...', center(c), '#8aff8a');
+            if (!REDUCED && c.animate) {
+                await c.animate([{ transform: 'translate(-50%,-50%) scale(.2)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 }], { duration: 300, easing: 'ease-out', fill: 'forwards' }).finished.catch(function () {});
+            }
+            for (var i = 0; i < 4; i++) { c.classList.add('flash'); await wait(170); c.classList.remove('flash'); await wait(170); }
+            if (!REDUCED && c.animate) {
+                await c.animate([{ transform: 'translate(-50%,-50%) scale(1)' }, { transform: 'translate(-50%,-50%) scale(1.7)' }], { duration: 380, fill: 'forwards' }).finished.catch(function () {});
+            }
+            var at = center(c);
+            c.remove();
+            Snd.play('boom');
+            var fl = el('div', 'boom-flash');
+            box.appendChild(fl);
+            if (fl.animate) fl.animate([{ opacity: 0.95 }, { opacity: 0 }], { duration: 600 }).finished.then(function () { fl.remove(); }, function () { fl.remove(); }); else fl.remove();
+            ['#4caf50', '#3f9743', '#8a8a8a', '#8b5a2b', '#ffb000', '#ffffff'].forEach(function (col) { particles(at, col, 6); });
+            pop('💥 BOOM!', at, '#ffffff');
+            if (!REDUCED) { shake(box); shake(document.body); }
+            toast('A creeper blew up your mine! Fresh blocks are on the way.');
+            await wait(REDUCED ? 300 : 900);
+            exploding = false;
+            if (active) fill();
+        }
+
+        function floating() {
+            if (!active || document.hidden) return;
+            var banner = document.querySelector('.top-banner');
+            if (!banner || floatEls.length >= 2) return;
+            var r = Math.random(), kind = r < 0.35 ? 'coal' : r < 0.65 ? 'iron' : r < 0.88 ? 'gold' : 'diamond';
+            var b = el('button', 'mblock ore-float');
+            b.type = 'button';
+            paint(b, kind);
+            b.classList.add('ore-float');
+            b.setAttribute('aria-label', 'Mine floating ' + BLOCKS[kind].name + ' for bonus ore');
+            var onLeft = Math.random() < 0.5;
+            b.style.left = (onLeft ? rand(3, 16) : rand(82, 93)) + '%';
+            b.style.top = rand(70, 190) + 'px';
+            b.style.cursor = pickaxeCursor();
+            var gone = function () { var i = floatEls.indexOf(b); if (i >= 0) floatEls.splice(i, 1); b.remove(); };
+            b.addEventListener('click', function () {
+                hit(b, kind, 1.5, function () { gone(); });
+            });
+            banner.appendChild(b);
+            floatEls.push(b);
+            if (b.animate && !REDUCED) b.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 300 });
+            pop('⛏️ Ore!', center(b), '#ffff55');
+            setTimeout(function () {
+                if (floatEls.indexOf(b) < 0) return;
+                if (b.animate) b.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400 }).finished.then(gone, gone); else gone();
+            }, 16000);
+        }
+
+        function schedule() { clearTimeout(timer); timer = setTimeout(function () { floating(); schedule(); }, rand(22000, 40000)); }
+
+        return {
+            enter: function () {
+                grid = $('mine-grid');
+                active = true; exploding = false;
+                fill(); ui();
+                clearTimeout(timer);
+                timer = setTimeout(function () { floating(); schedule(); }, 7000);
+            },
+            leave: function () {
+                active = false; clearTimeout(timer);
+                floatEls.slice().forEach(function (b) { b.remove(); });
+                floatEls = [];
+            },
+            refresh: ui
+        };
+    })();
+
     var Yard = (function () {
         var yard, mobs = [], raf = 0, last = 0, running = false, rotateTimer = 0, inited = false;
         var byId = {};
@@ -3449,7 +3714,16 @@
         var uidn = 0, gen = 0, MAXMOBS = 24;
         /* The banner stays calm: only creatures you find in a village roam by default. Spawn the rest yourself. */
         var VILLAGE = ['villager', 'golem', 'cat', 'chicken', 'pig', 'cow', 'sheep', 'horse'];
-        var ctrl = null, keys = { l: 0, r: 0 };
+        var ctrl = null, keys = { l: 0, r: 0 }, pickMode = false, firstPick = null;
+        /* Health (hit points, 2 = one heart) and attack damage for every mob, loosely based on vanilla Minecraft and balanced for quick fights. */
+        var STATS = {
+            villager: [10, 0], steve: [20, 5], zombie: [20, 4], skeleton: [16, 4], creeper: [20, 14], spider: [16, 3], slime: [14, 3],
+            blaze: [20, 5], ghast: [14, 7], dragon: [60, 9], enderman: [40, 7], golem: [60, 9], snowgolem: [8, 2], wolf: [14, 4],
+            fox: [12, 3], cat: [12, 3], frog: [10, 2], polar: [30, 6], bee: [8, 2], goat: [14, 3], llama: [14, 2], panda: [20, 5],
+            pig: [10, 0], cow: [10, 0], sheep: [8, 0], chicken: [6, 0], horse: [20, 0], rabbit: [6, 0], turtle: [20, 0],
+            parrot: [6, 0], axolotl: [14, 0], camel: [30, 0], bat: [6, 0]
+        };
+        function statOf(id) { return STATS[id] || [10, 0]; }
 
         function place(m) {
             m.el.style.transform = 'translate3d(' + m.x + 'px,0,0)';
@@ -3468,9 +3742,10 @@
             hpEl.appendChild(el('i'));
             hpEl.hidden = true;
             wrap.appendChild(hpEl);
-            var m = { id: ++uidn, def: def, el: wrap, inner: inner, x: x, dir: Math.random() < 0.5 ? -1 : 1, speed: rand(14, 38), idleUntil: 0, busy: false, moving: false, crashes: 0, hp: 20, hpEl: hpEl, spawned: false };
+            var m = { id: ++uidn, def: def, el: wrap, inner: inner, x: x, dir: Math.random() < 0.5 ? -1 : 1, speed: rand(14, 38), idleUntil: 0, busy: false, moving: false, crashes: 0, hp: statOf(def.id)[0], max: statOf(def.id)[0], atk: statOf(def.id)[1], hpEl: hpEl, spawned: false };
             wrap.addEventListener('click', function () {
                 if (m.busy) return;
+                if (pickMode) { choose(m); return; }
                 control(m === ctrl ? null : m);
                 pop(def.snd, center(wrap), '#ffffff');
                 Snd.mob(def.id);
@@ -3514,16 +3789,49 @@
             var n = $('ctrl-name');
             if (!n) return;
             n.textContent = ctrl ? 'Controlling ' + ctrl.def.name : 'Click a mob to control it';
-            ['ctrl-l', 'ctrl-j', 'ctrl-r', 'ctrl-off'].forEach(function (id) { $(id).disabled = !ctrl; });
+            document.dispatchEvent(new Event('mobctrl'));
+            ['ctrl-l', 'ctrl-j', 'ctrl-r', 'ctrl-atk', 'ctrl-off'].forEach(function (id) { $(id).disabled = !ctrl; });
             mobs.forEach(function (m) { m.el.classList.toggle('controlled', m === ctrl); });
         }
-        function control(m) { ctrl = m; keys.l = keys.r = 0; updatePad(); }
+        function setPick(on) {
+            pickMode = on;
+            if (firstPick) { firstPick.el.classList.remove('picked'); firstPick = null; }
+            var b = $('fight-pick');
+            if (b) { b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '✖ Cancel picking' : '⚔️ Pick two mobs to fight'; }
+            mobs.forEach(function (m) { m.el.classList.toggle('pickable', on); });
+        }
+        function startFight(a, b) {
+            if (fightsOn) { toast('A fight is already going on. Wait for it to finish.'); return false; }
+            if (!canAttack(a.def.id) && !canAttack(b.def.id)) { toast(a.def.name + ' and ' + b.def.name + ' are passive mobs and refuse to fight.'); return false; }
+            if (a.busy || b.busy) { toast('One of them is busy right now. Try again in a moment.'); return false; }
+            if (a === ctrl || b === ctrl) control(null);
+            fightsOn++;
+            fight(a, b);
+            return true;
+        }
+        function choose(m) {
+            if (!firstPick) {
+                firstPick = m; m.el.classList.add('picked');
+                toast('Now click a second mob to fight ' + m.def.name + '.');
+                return;
+            }
+            if (m === firstPick) { setPick(false); return; }
+            var a = firstPick;
+            setPick(false);
+            startFight(a, m);
+        }
+        function control(m) {
+            ctrl = m; keys.l = keys.r = 0; updatePad();
+            // So the arrow keys and F work right away instead of changing a dropdown.
+            var ae = document.activeElement;
+            if (m && ae && /^(SELECT|INPUT|BUTTON)$/.test(ae.tagName)) ae.blur();
+        }
         function jump() { if (ctrl && !ctrl.busy && !ctrl.jumpAt) { ctrl.jumpAt = performance.now(); Snd.mob(ctrl.def.id); } }
 
         function bar(m) {
             var f = m.hpEl.firstChild;
-            f.style.width = Math.max(0, m.hp / 20 * 100) + '%';
-            f.style.background = m.hp <= 6 ? '#ff5555' : '#55ff55';
+            f.style.width = Math.max(0, m.hp / m.max * 100) + '%';
+            f.style.background = m.hp / m.max <= 0.3 ? '#ff5555' : '#55ff55';
         }
 
         /* Two roaming mobs that bump into each other. Crash into others more than twice and it turns into a fight. */
@@ -3540,66 +3848,286 @@
             golem: HOSTILE,
             snowgolem: HOSTILE
         };
+        /* Who can attack: fighters start fights, neutral mobs only hit back, passive mobs never attack (they just run). */
+        var FIGHTER = { zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1, wolf: 1, fox: 1, cat: 1, frog: 1, golem: 1, snowgolem: 1 };
+        var NEUTRAL = { polar: 1, bee: 1, goat: 1, llama: 1, panda: 1, enderman: 1, steve: 1 };
+        function canAttack(id) { return !!(FIGHTER[id] || NEUTRAL[id]); }
+        /* Ranged attackers shoot from a distance; everyone else uses melee. */
+        var RANGED = { skeleton: { icon: '🏹', dmg: [2, 5] }, snowgolem: { icon: '❄️', dmg: [1, 3] }, blaze: { icon: '🔥', dmg: [3, 5] }, ghast: { icon: '🔥', dmg: [4, 7] } };
+        /* Protectors rush to defend: they spot hostile mobs from further away, run faster, and jump into fights to help. */
+        var PROTECTOR = { golem: 1, snowgolem: 1, wolf: 1 };
+        function reach(m) { return RANGED[m.def.id] ? 200 : 46; }
         function aggro(x, y) { return !!((HOSTILE[x] && PREY[y]) || (HUNTS[x] && HUNTS[x][y])); }
         function canFight(a, b) { return aggro(a, b) || aggro(b, a); }
         var cool = {}, fightsOn = 0, nextFightAt = 0;
+        /* Like vanilla: rivals notice each other nearby, walk up and fight. One fight at a time, with a short breather. */
+        var AGGRO_RANGE = 280;
+        function chaseTarget(m, ts) {
+            if ((fightsOn || ts < nextFightAt) && !PROTECTOR[m.def.id]) return null;
+            if (!PROTECTOR[m.def.id] && (fightsOn || ts < nextFightAt)) return null;
+            var best = null, bd = 9999, prot = PROTECTOR[m.def.id];
+            for (var i = 0; i < mobs.length; i++) {
+                var o = mobs[i];
+                if (o === m || !aggro(m.def.id, o.def.id)) continue;
+                var guard = prot && HOSTILE[o.def.id];
+                if (o.busy && !(guard && o.fighting)) continue;
+                var d = Math.abs(o.x - m.x);
+                if (d < (guard ? 420 : AGGRO_RANGE) && d < bd) { bd = d; best = o; }
+            }
+            return best;
+        }
         function collide(ts) {
-            // Grudges fade: a mob that has stayed out of trouble for 15 seconds starts again at zero.
-            mobs.forEach(function (m) { if (m.crashes && ts - (m.lastCrash || 0) > 15000) m.crashes = 0; });
+            if (fightsOn || ts < nextFightAt) return;
             for (var i = 0; i < mobs.length; i++) {
                 for (var j = i + 1; j < mobs.length; j++) {
                     var a = mobs[i], b = mobs[j];
-                    if (a.busy || b.busy || !(a.moving || b.moving) || Math.abs(a.x - b.x) > 30) continue;
-                    var k = a.id + '-' + b.id;
-                    if (ts < (cool[k] || 0)) continue;
-                    cool[k] = ts + 3000;
-                    var rivals = canFight(a.def.id, b.def.id);
-                    if (rivals) { a.crashes = Math.min(3, a.crashes + 1); b.crashes = Math.min(3, b.crashes + 1); a.lastCrash = b.lastCrash = ts; }
-                    // At most one fight at a time, and a breather of about 20 seconds between fights.
-                    if (rivals && (a.crashes > 2 || b.crashes > 2) && !fightsOn && ts >= nextFightAt) { fightsOn++; fight(a, b); return; }
+                    if (a.busy || b.busy || Math.abs(a.x - b.x) > Math.max(reach(a), reach(b)) || !canFight(a.def.id, b.def.id)) continue;
+                    fightsOn++; fight(a, b); return;
                 }
             }
         }
 
         async function fight(a, b) {
             try { await fightInner(a, b); }
-            finally { fightsOn = Math.max(0, fightsOn - 1); nextFightAt = performance.now() + 20000; }
+            finally { a.fighting = b.fighting = false; fightsOn = Math.max(0, fightsOn - 1); nextFightAt = performance.now() + 8000; }
         }
+        /* ---- Direct combat: attack with the mob you control (press F), and mobs you hit react ---- */
+        function kill(m) {
+            if (mobs.indexOf(m) < 0) return;
+            pop('💨 K.O.', center(m.el), '#ffffff');
+            var g = gen;
+            var done = function () {
+                m.el.remove();
+                var i = mobs.indexOf(m);
+                if (i >= 0) mobs.splice(i, 1);
+                mobs.forEach(function (o) { if (o.enemy === m) o.enemy = null; });
+                if (m === ctrl) control(null);
+                if (!m.spawned) setTimeout(function () { if (g === gen && running && mobs.length < MAXMOBS) mobs.push(build(m.def, rand(10, Math.max(20, width() - 60)))); }, 6000);
+            };
+            m.busy = true;
+            if (m.inner.animate && !REDUCED) m.inner.animate([{ opacity: 1, transform: 'rotate(0) scaleX(' + m.dir + ')' }, { opacity: 0, transform: 'rotate(' + (-m.dir * 90) + 'deg) scaleX(' + m.dir + ')' }], { duration: 450, fill: 'forwards' }).finished.then(done, done);
+            else done();
+        }
+        function explode(c) {
+            var at = center(c.el);
+            Snd.mob('creeper');
+            pop('Ssssss...', at, '#8aff8a');
+            c.busy = true;
+            c.inner.style.filter = 'brightness(3) saturate(0)';
+            setTimeout(function () {
+                if (mobs.indexOf(c) < 0) return;
+                Snd.play('boom');
+                pop('💥 BOOM!', at, '#ffffff');
+                if (!REDUCED) { for (var k = 0; k < 6; k++) wisp({ x: at.x + rand(-26, 26), y: at.y + rand(-26, 26) }); shake(document.body); }
+                var dmg = Math.max(1, Math.round(c.atk * rand(0.8, 1.2)));
+                mobs.slice().forEach(function (o) {
+                    if (o === c || Math.abs(o.x - c.x) > 110) return;
+                    o.hp -= dmg; o.hpShow = performance.now() + 4000; o.hpEl.hidden = false; bar(o);
+                    pop('-' + dmg, center(o.el), '#ff8a8a');
+                    if (o.hp <= 0) kill(o);
+                });
+                c.inner.style.filter = '';
+                kill(c);
+            }, 700);
+        }
+        /* One attack from att on tgt, in att's own style: melee swing, ranged shot, golem launch or creeper blast. */
+        function deal(att, tgt) {
+            var id = att.def.id, rg = RANGED[id];
+            att.dir = tgt.x >= att.x ? 1 : -1;
+            if (id === 'creeper') { explode(att); return; }
+            var d = att.dir;
+            var dmg = Math.max(1, Math.round(att.atk * rand(0.75, 1.25)));
+            Snd.play(rg ? 'swing' : 'hit');
+            Snd.mob(id);
+            var land = function () {
+                if (mobs.indexOf(tgt) < 0) return;
+                tgt.hp -= dmg;
+                tgt.hpShow = performance.now() + 4000; tgt.hpEl.hidden = false; bar(tgt);
+                pop('-' + dmg, center(tgt.el), '#ff8a8a');
+                Snd.play('hit');
+                shake(tgt.el);
+                if (id === 'golem' && !REDUCED) tgt.inner.animate([{ transform: 'translateY(0) rotate(0deg) scaleX(' + tgt.dir + ')' }, { transform: 'translateY(-110px) rotate(' + (d * 360) + 'deg) scaleX(' + tgt.dir + ')', offset: 0.5, easing: 'ease-in' }, { transform: 'translateY(0) rotate(' + (d * 720) + 'deg) scaleX(' + tgt.dir + ')' }], { duration: 750, easing: 'ease-out' });
+                if (tgt.hp <= 0) kill(tgt);
+                else if (tgt !== ctrl) { tgt.enemy = att; tgt.enemyUntil = performance.now() + 8000; }
+            };
+            if (rg && !REDUCED) fly(makeFloat('fly', rg.icon), { x: center(att.el).x, y: center(att.el).y - 10 }, { x: center(tgt.el).x, y: center(tgt.el).y - 10 }, { dur: 320, arc: 12, s0: 0.8, s1: 0.8, spin: 0, ease: 'linear' }).then(land);
+            else {
+                if (att.inner.animate) att.inner.animate([{ transform: 'translateX(0) scaleX(' + d + ')' }, { transform: 'translateX(' + (d * 20) + 'px) scaleX(' + d + ')' }, { transform: 'translateX(0) scaleX(' + d + ')' }], { duration: 240 });
+                setTimeout(land, 140);
+            }
+        }
+        function attackKey() {
+            if (!ctrl || ctrl.busy) return;
+            var now = performance.now();
+            if (now < (ctrl.nextHit || 0)) return;
+            if (!canAttack(ctrl.def.id)) { toast(ctrl.def.name + ' is passive and cannot attack.'); ctrl.nextHit = now + 1500; return; }
+            var range = RANGED[ctrl.def.id] ? 260 : (ctrl.def.id === 'creeper' ? 90 : 72);
+            var best = null, bd = range;
+            mobs.forEach(function (o) { var dd = Math.abs(o.x - ctrl.x); if (o !== ctrl && !o.busy && dd < bd) { bd = dd; best = o; } });
+            if (!best) {
+                ctrl.nextHit = now + 400;
+                Snd.play('swing');
+                if (ctrl.inner.animate) ctrl.inner.animate([{ transform: 'translateX(0) scaleX(' + ctrl.dir + ')' }, { transform: 'translateX(' + (ctrl.dir * 16) + 'px) scaleX(' + ctrl.dir + ')' }, { transform: 'translateX(0) scaleX(' + ctrl.dir + ')' }], { duration: 220 });
+                return;
+            }
+            ctrl.nextHit = now + 520;
+            deal(ctrl, best);
+        }
+        /* Mobs you have hit: attackers hit back, passive ones run away. Health returns after a calm moment. */
+        function fightAI(m, ts, dt, w) {
+            var e = m.enemy, dx = e.x - m.x, dist = Math.abs(dx);
+            if (canAttack(m.def.id)) {
+                m.dir = dx >= 0 ? 1 : -1;
+                if (dist > reach(m) - 24) m.x = clamp(m.x + m.dir * 110 * dt, 4, w - 48);
+                else if (ts >= (m.nextHit || 0)) { m.nextHit = ts + 900; deal(m, e); }
+            } else {
+                m.dir = dx >= 0 ? -1 : 1;
+                m.x = clamp(m.x + m.dir * 100 * dt, 4, w - 48);
+            }
+        }
+
+        /* Melee fighters walk up to their target before they hit; only shooters attack from a distance. */
+        async function approach(m, t, g) {
+            var last = performance.now();
+            while (Math.abs(m.x - t.x) > 40 && g === gen && running) {
+                var now = performance.now(), dt = Math.min(0.05, (now - last) / 1000);
+                last = now;
+                m.dir = t.x >= m.x ? 1 : -1;
+                m.x = clamp(m.x + m.dir * 240 * dt, 4, width() - 48);
+                m.moving = true;
+                await new Promise(function (res) { requestAnimationFrame(res); });
+            }
+            m.moving = false;
+        }
+
+        /* A creeper swells, flashes and explodes: it dies and hurts its target badly. */
+        async function blast(c, v, g) {
+            await approach(c, v, g);
+            if (g !== gen) return;
+            c.dir = c.x <= v.x ? 1 : -1;
+            pop('Ssssss...', center(c.el), '#8aff8a');
+            Snd.mob('creeper');
+            for (var i = 0; i < 3; i++) { c.inner.style.filter = 'brightness(3) saturate(0)'; await wait(180); c.inner.style.filter = ''; await wait(180); }
+            if (g !== gen) return;
+            var at = center(c.el);
+            Snd.play('boom');
+            pop('💥 BOOM!', at, '#ffffff');
+            if (!REDUCED) { for (var k = 0; k < 6; k++) wisp({ x: at.x + rand(-26, 26), y: at.y + rand(-26, 26) }); shake(document.body); }
+            c.hpEl.hidden = true;
+            var dmg = Math.max(1, Math.round(c.atk * rand(0.8, 1.2)));
+            v.hp -= dmg;
+            pop('-' + dmg, center(v.el), '#ff8a8a');
+            bar(v); shake(v.el);
+            c.el.remove();
+            var ci = mobs.indexOf(c);
+            if (ci >= 0) mobs.splice(ci, 1);
+            if (c === ctrl) control(null);
+            if (!c.spawned) setTimeout(function () { if (g === gen && running && mobs.length < MAXMOBS) mobs.push(build(c.def, rand(10, Math.max(20, width() - 60)))); }, 6000);
+            await wait(500);
+            v.hpEl.hidden = true;
+            if (g !== gen) return;
+            if (v.hp <= 0) {
+                pop('💨 K.O.', center(v.el), '#ffffff');
+                v.el.remove();
+                var vi = mobs.indexOf(v);
+                if (vi >= 0) mobs.splice(vi, 1);
+                if (v === ctrl) control(null);
+                if (!v.spawned) setTimeout(function () { if (g === gen && running && mobs.length < MAXMOBS) mobs.push(build(v.def, rand(10, Math.max(20, width() - 60)))); }, 6000);
+            } else {
+                v.busy = false; v.idleUntil = 0;
+                pop('😮‍💨 ' + v.def.name + ' survived', { x: clamp(v.x + 22, 80, window.innerWidth - 80), y: center(v.el).y - 40 }, '#ffff55', 'chat');
+            }
+        }
+
         async function fightInner(a, b) {
             var g = gen;
             a.busy = b.busy = true;
+            a.fighting = b.fighting = true;
             a.crashes = b.crashes = 0;
-            a.hp = b.hp = 20;
+            a.hp = a.max; b.hp = b.max;
             a.hpEl.hidden = b.hpEl.hidden = false;
             bar(a); bar(b);
             a.dir = a.x <= b.x ? 1 : -1; b.dir = -a.dir;
             pop('⚔️ Fight! ' + a.def.name + ' vs ' + b.def.name, { x: clamp((a.x + b.x) / 2 + 22, 90, window.innerWidth - 90), y: center(a.el).y - 40 }, '#ffff55', 'chat');
             Snd.mob(a.def.id); Snd.mob(b.def.id);
             await wait(500);
+            var cr = a.def.id === 'creeper' ? a : b.def.id === 'creeper' ? b : null;
+            if (cr) { await blast(cr, cr === a ? b : a, g); return; }
             var turn = 0;
-            while (a.hp > 0 && b.hp > 0 && g === gen && running) {
+            while (a.hp > 0 && b.hp > 0 && g === gen && running && turn < 24) {
                 var at = turn % 2 ? b : a, df = turn % 2 ? a : b;
                 turn++;
                 var d = at.x <= df.x ? 1 : -1;
-                await at.inner.animate([
+                if (!canAttack(at.def.id)) {
+                    // Passive mobs never fight back: they panic and hop away.
+                    pop('😨', center(at.el), '#ffffff');
+                    Snd.mob(at.def.id);
+                    await at.inner.animate([{ transform: 'translateY(0) scaleX(' + at.dir + ')' }, { transform: 'translateY(-14px) scaleX(' + at.dir + ')' }, { transform: 'translateY(0) scaleX(' + at.dir + ')' }], { duration: 300 }).finished.catch(function () {});
+                    if (g !== gen) return;
+                    await wait(200);
+                    continue;
+                }
+                var rg = RANGED[at.def.id];
+                if (rg) {
+                    Snd.play('swing');
+                    at.inner.animate([{ transform: 'translateX(0) scaleX(' + d + ')' }, { transform: 'translateX(' + (-d * 8) + 'px) scaleX(' + d + ')' }, { transform: 'translateX(0) scaleX(' + d + ')' }], { duration: 220 });
+                    if (!REDUCED) await fly(makeFloat('fly', rg.icon), { x: center(at.el).x, y: center(at.el).y - 10 }, { x: center(df.el).x, y: center(df.el).y - 10 }, { dur: 380, arc: 14, s0: 0.8, s1: 0.8, spin: 0, ease: 'linear' });
+                    else await wait(250);
+                    if (g !== gen) return;
+                } else {
+                    await approach(at, df, g);
+                    if (g !== gen) return;
+                    d = at.x <= df.x ? 1 : -1;
+                    await at.inner.animate([
                     { transform: 'translateX(0) scaleX(' + d + ')' },
                     { transform: 'translateX(' + (d * 20) + 'px) scaleX(' + d + ')' },
                     { transform: 'translateX(0) scaleX(' + d + ')' }
                 ], { duration: 260, easing: 'ease-out' }).finished.catch(function () {});
+                }
                 if (g !== gen) return;
-                var dmg = Math.round(rand(2, 6));
+                var launch = at.def.id === 'golem';
+                var dmg = Math.max(1, Math.round(at.atk * rand(0.75, 1.25)));
                 df.hp -= dmg;
+                if (launch && !REDUCED) {
+                    // The iron golem flings its enemy high into the air, just like in vanilla.
+                    pop('🚀', center(df.el), '#ffffff');
+                    Snd.mob('golem');
+                    await df.inner.animate([
+                        { transform: 'translateY(0) rotate(0deg) scaleX(' + df.dir + ')' },
+                        { transform: 'translateY(-120px) rotate(' + (d * 360) + 'deg) scaleX(' + df.dir + ')', offset: 0.5, easing: 'ease-in' },
+                        { transform: 'translateY(0) rotate(' + (d * 720) + 'deg) scaleX(' + df.dir + ')' }
+                    ], { duration: 800, easing: 'ease-out' }).finished.catch(function () {});
+                    if (g !== gen) return;
+                }
                 Snd.play('hit');
                 if (turn % 2 === 0) Snd.mob(at.def.id);
                 pop('-' + dmg, center(df.el), '#ff8a8a');
                 bar(df);
                 shake(df.el);
                 await wait(300);
+                // Protectors nearby pile in on the hostile mob.
+                var hostile = HOSTILE[a.def.id] ? a : HOSTILE[b.def.id] ? b : null;
+                if (hostile && hostile.hp > 0 && g === gen) {
+                    for (var hi = 0; hi < mobs.length; hi++) {
+                        var hp = mobs[hi];
+                        if (hp === a || hp === b || hp.busy || !PROTECTOR[hp.def.id] || Math.abs(hp.x - hostile.x) > 70) continue;
+                        var ad = Math.max(1, Math.round(hp.atk * rand(0.75, 1.25)));
+                        hostile.hp -= ad;
+                        hp.dir = hp.x <= hostile.x ? 1 : -1;
+                        hp.inner.animate([{ transform: 'translateX(0) scaleX(' + hp.dir + ')' }, { transform: 'translateX(' + (hp.dir * 18) + 'px) scaleX(' + hp.dir + ')' }, { transform: 'translateX(0) scaleX(' + hp.dir + ')' }], { duration: 240 });
+                        Snd.play('hit'); Snd.mob(hp.def.id);
+                        pop('🛡️ -' + ad, center(hostile.el), '#9ec5ff');
+                        bar(hostile); shake(hostile.el);
+                        await wait(260);
+                        break;
+                    }
+                }
             }
             a.hpEl.hidden = b.hpEl.hidden = true;
             if (g !== gen) return;
             if (!running) { a.busy = b.busy = false; return; }
-            var loser = a.hp <= 0 ? a : b, winner = loser === a ? b : a;
+            var loser = a.hp <= 0 ? a : b.hp <= 0 ? b : (a.hp / a.max < b.hp / b.max ? a : b), winner = loser === a ? b : a;
+            if (loser.hp > 0) loser.hp = 0;
             pop('💨 K.O.', center(loser.el), '#ffffff');
             await loser.inner.animate([{ transform: 'rotate(0) scaleX(' + loser.dir + ')', opacity: 1 }, { transform: 'rotate(' + (-loser.dir * 90) + 'deg) scaleX(' + loser.dir + ')', opacity: 0 }], { duration: 520, fill: 'forwards' }).finished.catch(function () {});
             if (g !== gen) return;
@@ -3625,10 +4153,19 @@
             last = ts;
             mobs.forEach(function (m) {
                 var mine = m === ctrl && !m.busy;
-                var moving = !m.busy && (mine ? (keys.r !== keys.l) : ts >= m.idleUntil);
+                var ai = !mine && !m.busy && m.enemy && ts < (m.enemyUntil || 0) && mobs.indexOf(m.enemy) >= 0;
+                if (!ai && m.enemy) m.enemy = null;
+                if (m.hpShow && ts > m.hpShow && !m.busy) { m.hpShow = 0; m.hpEl.hidden = true; m.hp = m.max; }
+                var tgt = (!mine && !m.busy && !ai) ? chaseTarget(m, ts) : null;
+                var moving = !m.busy && (mine ? (keys.r !== keys.l) : (ai || tgt || ts >= m.idleUntil));
                 m.moving = moving;
                 if (mine) {
                     if (moving) { m.dir = keys.r - keys.l; m.x = clamp(m.x + m.dir * 120 * dt, 4, w - 48); }
+                } else if (ai) {
+                    fightAI(m, ts, dt, w);
+                } else if (tgt) {
+                    m.dir = tgt.x >= m.x ? 1 : -1;
+                    if (Math.abs(tgt.x - m.x) > reach(m) - 24) m.x = clamp(m.x + m.dir * (PROTECTOR[m.def.id] ? 150 : Math.max(m.speed, 60)) * dt, 4, w - 48);
                 } else if (moving) {
                     m.x += m.dir * m.speed * dt;
                     if (m.x < 4) { m.x = 4; m.dir = 1; } else if (m.x > w - 48) { m.x = w - 48; m.dir = -1; }
@@ -3681,10 +4218,34 @@
                 return n;
             },
             count: function () { return mobs.length; },
+            describe: function (id) {
+                var def = byId[id], st = statOf(id);
+                if (!def) return '';
+                var style = id === 'creeper' ? 'Explodes on its target'
+                    : RANGED[id] ? 'Ranged: shoots ' + RANGED[id].icon
+                    : id === 'golem' ? 'Melee: launches enemies into the air'
+                    : FIGHTER[id] ? 'Melee'
+                    : NEUTRAL[id] ? 'Melee, but only fights back'
+                    : 'Passive: never attacks, runs away';
+                var hearts = Math.ceil(st[0] / 2);
+                return def.name + ' · ❤️ ' + st[0] + ' HP (' + (hearts > 12 ? hearts + ' hearts' : new Array(hearts + 1).join('♥')) + ') · ⚔️ ' + (st[1] || 'no') + ' damage · ' + style;
+            },
             control: control,
+            pickFight: function () { setPick(!pickMode); if (pickMode) toast('Click two mobs and they will fight.'); },
+            randomFight: function () {
+                var free = mobs.filter(function (m) { return !m.busy; });
+                if (free.length < 2) { toast('Not enough free mobs. Spawn a few more.'); return false; }
+                var atk = free.filter(function (m) { return canAttack(m.def.id); });
+                if (!atk.length) { toast('Only passive mobs are around. Spawn a zombie, skeleton or golem first.'); return false; }
+                var first = atk[Math.floor(Math.random() * atk.length)];
+                var others = free.filter(function (m) { return m !== first; });
+                setPick(false);
+                return startFight(first, others[Math.floor(Math.random() * others.length)]);
+            },
             release: function () { control(null); },
             press: function (dir, down) { if (dir === 'l') keys.l = down ? 1 : 0; else keys.r = down ? 1 : 0; },
             jump: jump,
+            attack: attackKey,
             /* Called when a controlled mob goes on an errand etc. */
             controlled: function () { return ctrl; },
             /* A free mob to run an errand. Villagers are four times as likely as any other mob. */
@@ -4197,6 +4758,10 @@
             sel.appendChild(o);
         });
         sel.value = 'zombie';
+        function stats() { $('mob-stats').textContent = Yard.describe(Yard.controlled() ? Yard.controlled().def.id : sel.value); }
+        sel.addEventListener('change', stats);
+        document.addEventListener('mobctrl', stats);
+        stats();
         $('spawn-btn').addEventListener('click', function () {
             if (!Yard.spawn(sel.value)) toast(Yard.count() >= 24 ? 'The yard is full. Clear some mobs first.' : 'Switch to the Minecraft theme to spawn mobs.');
         });
@@ -4214,12 +4779,16 @@
         }
         hold('ctrl-l', 'l'); hold('ctrl-r', 'r');
         $('ctrl-j').addEventListener('click', function () { Yard.jump(); });
+        $('ctrl-atk').addEventListener('click', function () { Yard.attack(); });
         $('ctrl-off').addEventListener('click', function () { Yard.release(); });
+        $('fight-pick').addEventListener('click', function () { Yard.pickFight(); });
+        $('fight-random').addEventListener('click', function () { Yard.randomFight(); });
         function typing(e) { return /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '') || document.querySelector('.modal:not([hidden])'); }
         var map = { ArrowLeft: 'l', a: 'l', A: 'l', ArrowRight: 'r', d: 'r', D: 'r' };
         document.addEventListener('keydown', function (e) {
             if (state.theme !== 'minecraft' || !Yard.controlled() || typing(e) || e.ctrlKey || e.metaKey) return;
             if (map[e.key]) { e.preventDefault(); Yard.press(map[e.key], true); }
+            else if (e.key === 'f' || e.key === 'F' || e.key === 'j' || e.key === 'J') { e.preventDefault(); Yard.attack(); }
             else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { e.preventDefault(); Yard.jump(); }
         });
         document.addEventListener('keyup', function (e) { if (map[e.key]) Yard.press(map[e.key], false); });
