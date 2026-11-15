@@ -661,6 +661,19 @@
         .top-banner.night .fx.cloud { opacity: .2; }
         .top-banner.night .mob-in { filter: brightness(.82); }
         [data-theme="racing"] .top-banner { padding-bottom: 96px; }
+        [data-theme="harry-potter"] .top-banner { padding-bottom: 190px; }
+        .hp-stage { display: none; position: absolute; left: 0; right: 0; bottom: 58px; z-index: 3; justify-content: space-between; align-items: flex-end; padding: 0 clamp(10px, 6%, 80px); pointer-events: none; }
+        [data-theme="harry-potter"] .hp-stage { display: flex; }
+        .hs-fig { width: 110px; text-align: center; transition: transform .2s; }
+        .hs-av { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 2px; font-size: 2.2rem; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #7a3b7a, #2a142a 75%); border: 2px solid #d4af37; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+        .hs-fig .hp { margin: 3px 6px 0; }
+        .hs-fig small { display: block; font-size: .7rem; text-shadow: 0 1px 3px #000; line-height: 1.1; }
+        .hs-fig.hurt .hs-av { animation: hurt .35s; }
+        .hs-fig.shielded .hs-av { box-shadow: 0 0 0 4px rgba(120,200,255,.8), 0 0 24px 8px rgba(120,200,255,.6); }
+        .hs-fig.ko .hs-av { filter: grayscale(1); transform: rotate(80deg) scale(.9); }
+        .hs-mid { display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: auto; }
+        .hs-mid .btn-trigger { font-size: .78rem; padding: 5px 10px; min-height: 0; }
+        @media (max-width: 560px) { .hs-fig { width: 80px; } .hs-av { width: 48px; height: 48px; font-size: 1.6rem; } .hs-mid .btn-trigger { font-size: .68rem; padding: 4px 7px; } }
         [data-theme="racing"] .banner-deco {
             background:
                 repeating-linear-gradient(90deg, #fff 0 36px, transparent 36px 72px) 0 calc(100% - 22px) / 100% 5px no-repeat,
@@ -725,6 +738,14 @@
         .mob.pickable .mob-in { outline: 2px dashed #ffff55; outline-offset: 2px; }
         .mob.picked .mob-in { outline: 3px solid #ff5555; outline-offset: 2px; }
         .mob.controlled::after { content: '▼'; position: absolute; left: 50%; top: -22px; transform: translateX(-50%); color: #ffff55; font-size: 14px; text-shadow: 0 0 6px #000; animation: float 1s ease-in-out infinite; }
+        .sun { position: absolute; width: 38px; height: 38px; background: #ffe45c; box-shadow: 0 0 28px 8px rgba(255,228,92,.55), inset -6px -6px 0 #f5b800; pointer-events: none; z-index: 1; }
+        .pond { position: absolute; right: 1.5%; bottom: 44px; width: clamp(110px, 18%, 210px); height: 20px; background: repeating-linear-gradient(90deg, #3b78d8 0 14px, #4a89ea 14px 28px); border: 3px solid #6b4a2b; border-radius: 6px; box-shadow: inset 0 3px 0 rgba(255,255,255,.28), 0 2px 0 rgba(0,0,0,.35); overflow: hidden; pointer-events: auto; cursor: pointer; transition: filter 2.5s; animation: pondshimmer 3s linear infinite; }
+        @keyframes pondshimmer { to { background-position: 28px 0; } }
+        .pond .lily { position: absolute; top: 4px; left: 20%; width: 12px; height: 8px; background: #3f9b3f; border-radius: 50%; }
+        .pond .lily.l2 { left: 62%; top: 6px; width: 9px; height: 6px; }
+        .top-banner.night .pond { filter: brightness(.55); }
+        .mob-drowned .spr, .mob-drowned .emo { filter: hue-rotate(120deg) saturate(1.3) brightness(.9); }
+        .fish-jump { position: absolute; z-index: 2; font-size: 18px; pointer-events: none; }
         .spawner { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 0 0 8px; }
         .spawner .field { grid-column: 1 / -1; }
         .spawner .btn-primary { min-height: 44px; padding: 8px 18px; }
@@ -911,7 +932,17 @@
         <div class="moon" id="moon" aria-hidden="true"></div>
         <div class="village" id="village" aria-hidden="true" hidden></div>
         <div class="village lit" id="village-lit" aria-hidden="true" hidden></div>
+        <div class="sun" id="sun" aria-hidden="true" hidden></div>
+        <div class="pond" id="pond" title="The pond" hidden><i class="lily"></i><i class="lily l2"></i></div>
         <div class="mob-yard" id="mob-yard" aria-hidden="true" hidden></div>
+        <div class="hp-stage" id="hp-stage">
+            <div class="hs-fig" id="hs-a"><div class="hs-av" id="hs-av-a">⚡</div><div class="hp"><i></i></div><small>Harry Potter</small></div>
+            <div class="hs-mid">
+                <button type="button" class="btn-trigger" id="hs-hv">⚡ Harry vs Voldemort</button>
+                <button type="button" class="btn-trigger" id="hs-rand">🎲 Random duel</button>
+            </div>
+            <div class="hs-fig" id="hs-b"><div class="hs-av" id="hs-av-b">🐍</div><div class="hp"><i></i></div><small>Lord Voldemort</small></div>
+        </div>
         <div class="config-menu">
             <label for="theme-select" class="sr-only">Theme</label>
             <select id="theme-select" class="selector-box">
@@ -1011,6 +1042,18 @@
                         <button type="button" class="move-btn" data-move="protego" disabled>🛡️ Protego<small>reflects 8</small></button>
                     </div>
                     <div class="duel-record" id="duel-record"></div>
+                    <h3 class="panel-sub" style="margin:14px 0 6px">🍿 Watch a duel (you don't control it)</h3>
+                    <div class="duel-setup">
+                        <label for="watch-a" class="sr-only">First duellist</label>
+                        <select id="watch-a" class="field"></select>
+                        <label for="watch-b" class="sr-only">Second duellist</label>
+                        <select id="watch-b" class="field"></select>
+                    </div>
+                    <div class="ctrl-btns" style="margin-top:8px">
+                        <button type="button" class="btn-trigger" id="watch-go">▶ Watch this duel</button>
+                        <button type="button" class="btn-trigger" id="watch-hv">⚡ Harry vs Voldemort</button>
+                        <button type="button" class="btn-trigger" id="watch-rand">🎲 Random duel</button>
+                    </div>
                 </section>
 
                 <!-- Minecraft: update log -->
@@ -1039,6 +1082,11 @@
                             <button type="button" class="btn-trigger" id="ctrl-r" aria-label="Walk right" disabled>▶</button>
                             <button type="button" class="btn-trigger" id="ctrl-atk" aria-label="Attack" disabled>⚔️ Attack (F)</button>
                             <button type="button" class="btn-trigger" id="ctrl-off" disabled>Release</button>
+                        </div>
+                        <div class="ctrl-btns" role="group" aria-label="Time of day">
+                            <button type="button" class="btn-trigger" id="tod-day">☀️ Day</button>
+                            <button type="button" class="btn-trigger" id="tod-night">🌙 Night</button>
+                            <button type="button" class="btn-trigger" id="tod-auto" aria-pressed="true">🔄 Auto cycle</button>
                         </div>
                         <div class="ctrl-btns fight-btns">
                             <button type="button" class="btn-trigger" id="fight-pick" aria-pressed="false">⚔️ Pick two mobs to fight</button>
@@ -1291,6 +1339,9 @@
         { id: 'dumbledore', name: 'Albus Dumbledore', icon: '🧙‍♂️', tier: 'Hard', hp: 110, skill: 0.5, dmgMul: 1, weights: [0.3, 0.3, 0.4],
           blurb: 'Headmaster. Rarely wrong about what you will do next.',
           taunt: 'Ah, a challenger. Do try to surprise me.', win: 'A fine effort. Perhaps after some lemon drops?', lose: 'Well duelled indeed. I am impressed.' },
+        { id: 'voldemort', name: 'Lord Voldemort', icon: '🐍', tier: 'Hard', hp: 120, skill: 0.55, dmgMul: 1.1, weights: [0.45, 0.2, 0.35],
+          blurb: 'The Dark Lord. Relentless with Stupefy-style curses.',
+          taunt: 'You dare face the Dark Lord?', win: 'Pathetic. Know your place.', lose: 'Impossible... how?' },
         { id: 'harry', name: 'Harry Potter', icon: '⚡', tier: 'Hard', hp: 110, skill: 0.5, dmgMul: 1, weights: [0.25, 0.5, 0.25],
           blurb: 'Loves Expelliarmus. Has beaten far worse than you.',
           taunt: "Let's do this. Expelliarmus!", win: "Good duel. Don't feel bad.", lose: "Brilliant! You'd make a great Auror." },
@@ -1767,6 +1818,7 @@
             hit: function () { noise(0.12, 0.25, 0, 900); tone(140, 0.14, 'sawtooth', 0.08, 0, 60); },
             crack: function () { noise(0.1, 0.4, 0, 2400); tone(200, 0.14, 'triangle', 0.22, 0, 80); },
             swing: function () { noise(0.14, 0.12, 0, 1400); },
+            splash: function () { noise(0.18, 0.12, 0, 1400); tone(700, 0.12, 'sine', 0.05, 0, 300); },
             boom: function () { noise(0.9, 0.5, 0, 500); tone(70, 0.8, 'sawtooth', 0.25, 0, 28); },
             engine: function () { tone(80, 0.7, 'sawtooth', 0.07, 0, 420); noise(0.5, 0.06, 0, 700); },
             honk: function () { tone(420, 0.18, 'square', 0.05); tone(530, 0.18, 'square', 0.05); },
@@ -1782,6 +1834,7 @@
             villager: function () { seq([[210, 0.2, 'sawtooth', 0.05, 0, 175], [195, 0.28, 'sawtooth', 0.05, 0.22, 150]]); },
             steve: function () { seq([[230, 0.14, 'triangle', 0.08, 0, 200], [210, 0.2, 'triangle', 0.08, 0.16, 170]]); },
             zombie: function () { tone(120, 0.8, 'sawtooth', 0.08, 0, 65); noise(0.7, 0.07, 0, 500); },
+            drowned: function () { tone(110, 0.9, 'sawtooth', 0.08, 0, 60); noise(0.8, 0.08, 0, 900); },
             skeleton: function () { ticks(7, 0.06, 0.25, 3200); },
             creeper: function () { noise(0.9, 0.16, 0, 5200); },
             enderman: function () { tone(1000, 0.35, 'sine', 0.07, 0, 220); tone(300, 0.3, 'sine', 0.06, 0.3, 1100); },
@@ -3055,7 +3108,82 @@
             $('foe-name').textContent = foe.name;
             $('opp-blurb').textContent = foe.tier + ' · ' + foe.blurb;
         }
+        /* ---- Spectator mode: two duellists fight on their own ---- */
+        var watchId = 0;
+        var stageOn = false;
+        function stg(k) { return $(k === 'you' ? 'hs-a' : 'hs-b'); }
+        function stageSet(k, d) { var f = stg(k); f.querySelector('.hs-av').textContent = d.icon; f.querySelector('small').textContent = d.name; f.classList.remove('ko', 'hurt', 'shielded'); f.querySelector('.hp i').style.width = '100%'; }
+        function stageBars() { ['you', 'foe'].forEach(function (k) { stg(k).querySelector('.hp i').style.width = (clamp(hp[k], 0, max[k]) / max[k] * 100) + '%'; }); }
+        function stageFx(k, cls, on) { var f = stg(k); if (on === false) f.classList.remove(cls); else { f.classList.remove(cls); void f.offsetWidth; f.classList.add(cls); } }
+        function setSide(k, name, icon) {
+            $('f-' + k).querySelector('.f-name').textContent = name;
+            $('av-' + k).textContent = icon;
+        }
+        function restoreSides() {
+            setSide('you', 'You', '🧙');
+            $('foe-name').textContent = foe.name; $('av-foe').textContent = foe.icon;
+            if (stageOn) { stageOn = false; stageSet('you', duelist('harry')); stageSet('foe', duelist('voldemort')); }
+        }
+        function aiMove(d, enemyHist) {
+            if (d.skill && Math.random() < d.skill) {
+                var fav = null, best = 0;
+                Object.keys(enemyHist).forEach(function (m) { if (enemyHist[m] > best) { best = enemyHist[m]; fav = m; } });
+                if (fav) { for (var m in BEATS) if (BEATS[m] === fav) return m; }
+            }
+            var r = Math.random(), w = d.weights;
+            return r < w[0] ? 'stupefy' : (r < w[0] + w[1] ? 'expelliarmus' : 'protego');
+        }
+        async function watch(a, b) {
+            var id = ++watchId;
+            active = false; busy = true; moves(false);
+            ['f-you', 'f-foe'].forEach(function (i) { $(i).classList.remove('ko', 'hurt', 'shielded'); });
+            max.you = a.hp; max.foe = b.hp; hp.you = a.hp; hp.foe = b.hp; bars();
+            setSide('you', a.name, a.icon); setSide('foe', b.name, b.icon);
+            stageSet('you', a); stageSet('foe', b); stageOn = true;
+            $('opp-blurb').textContent = 'Spectating: ' + a.name + ' vs ' + b.name;
+            log(a.name + ' and ' + b.name + ' face off!');
+            var ha = { stupefy: 0, expelliarmus: 0, protego: 0 }, hb = { stupefy: 0, expelliarmus: 0, protego: 0 };
+            await wait(900);
+            for (var round = 1; round <= 40 && watchId === id; round++) {
+                var ma = aiMove(a, hb), mb = aiMove(b, ha);
+                ha[ma]++; hb[mb]++;
+                var toA = 0, toB = 0, text;
+                var an = a.name.replace(/^Lord /, '').split(' ')[0], bn = b.name.replace(/^Lord /, '').split(' ')[0];
+                if (ma === mb) {
+                    if (ma !== 'protego') { toA = Math.round(6 * (b.dmgMul || 1)); toB = Math.round(6 * (a.dmgMul || 1)); text = 'Both ' + NAMES[ma] + ' spells collide!'; }
+                    else text = 'Both raise shields. Nothing happens.';
+                } else if (BEATS[ma] === mb) { toB = Math.round(DMG[ma] * (a.dmgMul || 1)); text = an + "'s " + NAMES[ma] + ' beats ' + bn + "'s " + NAMES[mb] + '!'; }
+                else { toA = Math.round(DMG[mb] * (b.dmgMul || 1)); text = bn + "'s " + NAMES[mb] + ' beats ' + an + "'s " + NAMES[ma] + '!'; }
+                var ya = $('hs-av-a'), yb = $('hs-av-b'), shots = [];
+                if (ma !== 'protego') shots.push(fly(makeFloat('fly bolt ' + ma), center(ya), center(yb), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+                if (mb !== 'protego') shots.push(fly(makeFloat('fly bolt ' + mb), center(yb), center(ya), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+                if (ma === 'protego') { $('f-you').classList.add('shielded'); stageFx('you', 'shielded'); }
+                if (mb === 'protego') { $('f-foe').classList.add('shielded'); stageFx('foe', 'shielded'); }
+                if (!REDUCED) await Promise.all(shots.concat([wait(450)]));
+                if (watchId !== id) return;
+                $('f-you').classList.remove('shielded'); $('f-foe').classList.remove('shielded'); stageFx('you', 'shielded', false); stageFx('foe', 'shielded', false);
+                hp.you -= toA; hp.foe -= toB;
+                if (toA) { hurt('f-you', toA); stageFx('you', 'hurt'); }
+                if (toB) { hurt('f-foe', toB); stageFx('foe', 'hurt'); }
+                bars(); stageBars();
+                Snd.say(NAMES[Math.random() < 0.5 ? ma : mb]);
+                log(an + ' cast ' + NAMES[ma] + ', ' + bn + ' cast ' + NAMES[mb] + '. ' + text);
+                if (hp.you <= 0 || hp.foe <= 0) {
+                    if (hp.you <= 0 && hp.foe <= 0) log(text + ' They both fall. A draw!');
+                    else if (hp.foe <= 0) { $('f-foe').classList.add('ko'); stageFx('foe', 'ko'); log(text + ' ' + a.name + ' wins! "' + (a.lose ? '' : '') + (a.taunt || '') + '"'); }
+                    else { $('f-you').classList.add('ko'); stageFx('you', 'ko'); log(text + ' ' + b.name + ' wins! "' + (b.taunt || '') + '"'); }
+                    busy = false;
+                    return;
+                }
+                await wait(REDUCED ? 300 : 1100);
+            }
+            if (watchId === id) { log('The duel ends in a stalemate.'); busy = false; }
+        }
+        function cancelWatch() { if (watchId) { watchId++; restoreSides(); } }
+        function duelist(id) { return DUELISTS.filter(function (d) { return d.id === id; })[0]; }
+
         function reset() {
+            cancelWatch();
             active = false; busy = false;
             max.you = 100; max.foe = foe.hp;
             hp.you = 100; hp.foe = foe.hp;
@@ -3176,8 +3304,26 @@
                 o.value = d.id;
                 sel.appendChild(o);
             });
+            ['watch-a', 'watch-b'].forEach(function (sid, i) {
+                var ws = $(sid);
+                DUELISTS.forEach(function (d) { var o = el('option', null, d.icon + ' ' + d.name); o.value = d.id; ws.appendChild(o); });
+                ws.value = i ? 'voldemort' : 'harry';
+            });
+            $('watch-go').addEventListener('click', function () {
+                var a = duelist($('watch-a').value), b = duelist($('watch-b').value);
+                if (a === b) { toast('Pick two different duellists.'); return; }
+                watch(a, b);
+            });
+            $('hs-hv').addEventListener('click', function () { $('watch-hv').click(); });
+            $('hs-rand').addEventListener('click', function () { $('watch-rand').click(); });
+            $('watch-hv').addEventListener('click', function () { $('watch-a').value = 'harry'; $('watch-b').value = 'voldemort'; watch(duelist('harry'), duelist('voldemort')); });
+            $('watch-rand').addEventListener('click', function () {
+                var pool = DUELISTS.slice().sort(function () { return Math.random() - 0.5; });
+                $('watch-a').value = pool[0].id; $('watch-b').value = pool[1].id;
+                watch(pool[0], pool[1]);
+            });
             sel.addEventListener('change', function () { pickFoe(); reset(); $('duel-start').textContent = 'Challenge'; log('Press Challenge when you are ready.'); });
-            $('duel-start').addEventListener('click', start);
+            $('duel-start').addEventListener('click', function () { cancelWatch(); start(); });
             Array.prototype.forEach.call(document.querySelectorAll('.move-btn'), function (b) {
                 b.addEventListener('click', function () { play(b.getAttribute('data-move')); });
             });
@@ -3401,7 +3547,7 @@
        the sky darkens, stars and a moon come out and the windows and torches glow.
        ===================================================================== */
     var Village = (function () {
-        var W = 520, H = 110, nightTimer = 0, isNight = false, built = false;
+        var W = 520, H = 110, isNight = false, built = false;
         function R(x, y, w, h, c) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + c + '"/>'; }
         var WINDOWS = [[32, 68, 14, 14], [88, 68, 14, 14], [194, 46, 14, 18], [194, 74, 14, 14], [300, 74, 14, 14], [352, 74, 14, 14]];
         var TORCHES = [[52, 80], [186, 84], [214, 84], [346, 86], [418, 70]];
@@ -3456,35 +3602,109 @@
                 sky.appendChild(st);
             }
         }
+        var DAY_MS = 150000, NIGHT_MS = 60000, on = false, pinned = false;
+        var cycleTimer = 0, spawnTimer = 0, fishTimer = 0, sunAnim = null;
         function banner() { return document.querySelector('.top-banner'); }
-        function day2() {
-            clearTimeout(nightTimer);
-            if (!isNight) return;
-            isNight = false;
-            banner().classList.remove('night');
+        function setNight(n) { isNight = n; banner().classList.toggle('night', n); }
+        function runSun() {
+            var sn = $('sun');
+            if (sunAnim) { sunAnim.cancel(); sunAnim = null; }
+            sn.hidden = false;
+            if (sn.animate && !REDUCED) {
+                sunAnim = sn.animate([{ left: '4%', top: '120px', opacity: 0.4 }, { left: '50%', top: '26px', opacity: 1, offset: 0.5 }, { left: '96%', top: '120px', opacity: 0.4 }], { duration: DAY_MS, easing: 'linear', fill: 'forwards' });
+            } else { sn.style.left = '50%'; sn.style.top = '26px'; }
+        }
+        function startDay(announce) {
+            clearTimeout(cycleTimer); clearTimeout(spawnTimer);
+            setNight(false);
+            if (announce) {
+                pop('☀️ The sun rises. Night creatures burn away.', { x: window.innerWidth / 2, y: 110 }, '#ffff55', 'chat');
+                Snd.play('dawn');
+            }
+            runSun();
+            if (!pinned) cycleTimer = setTimeout(function () { startNight(true); }, DAY_MS);
+        }
+        /* Night: hostile mobs wander in from the dark every few seconds, until the sun comes up. */
+        function scheduleSpawn() {
+            clearTimeout(spawnTimer);
+            spawnTimer = setTimeout(function () {
+                if (!on || !isNight) return;
+                Yard.spawnNight();
+                scheduleSpawn();
+            }, rand(6000, 12000));
+        }
+        function startNight(announce) {
+            clearTimeout(cycleTimer);
+            setNight(true);
+            if (sunAnim) { sunAnim.cancel(); sunAnim = null; }
+            $('sun').hidden = true;
+            if (announce) {
+                pop('🌙 Night falls. Monsters are coming!', { x: window.innerWidth / 2, y: 110 }, '#9ec5ff', 'chat');
+                Snd.play('night');
+            }
+            Yard.guard();
+            spawnTimer = setTimeout(function () { if (on && isNight) { Yard.spawnNight(); scheduleSpawn(); } }, 2500);
+            if (!pinned) cycleTimer = setTimeout(function () { startDay(true); }, NIGHT_MS);
+        }
+        /* A fish jumps out of the pond now and then. */
+        function fish() {
+            clearTimeout(fishTimer);
+            fishTimer = setTimeout(function () {
+                if (!on) return;
+                var pond = $('pond'), bn = banner();
+                if (pond && bn && !pond.hidden && pond.animate && !REDUCED) {
+                    var f = el('span', 'fish-jump', '🐟');
+                    var x = pond.offsetLeft + rand(10, Math.max(12, pond.offsetWidth - 34)), y = pond.offsetTop - 6;
+                    f.style.left = x + 'px'; f.style.top = y + 'px';
+                    bn.appendChild(f);
+                    var dir = Math.random() < 0.5 ? -1 : 1;
+                    var a = f.animate([
+                        { transform: 'translate(0,0) rotate(' + (-60 * dir) + 'deg)', opacity: 0 },
+                        { transform: 'translate(' + (dir * 14) + 'px,-36px) rotate(0deg)', opacity: 1, offset: 0.5 },
+                        { transform: 'translate(' + (dir * 28) + 'px,0) rotate(' + (60 * dir) + 'deg)', opacity: 0 }
+                    ], { duration: 900, easing: 'ease-out' });
+                    a.finished.then(function () { f.remove(); }, function () { f.remove(); });
+                    Snd.play('splash');
+                }
+                fish();
+            }, rand(5000, 11000));
         }
         return {
-            show: function (on) {
-                if (on) build();
-                $('village').hidden = !on;
-                $('village-lit').hidden = !on;
-                if (!on) day2();
+            show: function (v) {
+                on = v;
+                if (v) build();
+                $('village').hidden = !v;
+                $('village-lit').hidden = !v;
+                $('pond').hidden = !v;
+                if (v) { startDay(false); fish(); }
+                else {
+                    clearTimeout(cycleTimer); clearTimeout(spawnTimer); clearTimeout(fishTimer);
+                    if (sunAnim) { sunAnim.cancel(); sunAnim = null; }
+                    $('sun').hidden = true;
+                    setNight(false);
+                }
             },
             isNight: function () { return isNight; },
-            /* Called whenever a mob is sent on an errand: a one in ten chance that night falls. */
-            maybeNight: function () {
-                if (isNight || Math.random() >= 0.1) return;
-                isNight = true;
-                banner().classList.add('night');
-                pop('🌙 Night falls on the village…', { x: window.innerWidth / 2, y: 110 }, '#9ec5ff', 'chat');
-                Snd.play('night');
-                nightTimer = setTimeout(function () {
-                    day2();
-                    pop('☀️ The sun rises', { x: window.innerWidth / 2, y: 110 }, '#ffff55', 'chat');
-                    Snd.play('dawn');
-                }, 30000);
+            /* Player control: 'day' or 'night' holds that time of day, 'auto' lets the cycle run again. */
+            setMode: function (mode) {
+                if (!on) return;
+                if (mode === 'auto') {
+                    pinned = false;
+                    clearTimeout(cycleTimer);
+                    cycleTimer = setTimeout(function () { isNight ? startDay(true) : startNight(true); }, isNight ? NIGHT_MS : DAY_MS);
+                    return;
+                }
+                pinned = true;
+                if (mode === 'night' && !isNight) startNight(true);
+                else if (mode === 'day' && isNight) startDay(true);
+                else clearTimeout(cycleTimer);
             },
-            forceNight: function () { if (!isNight) { var r = Math.random; Math.random = function () { return 0; }; this.maybeNight(); Math.random = r; } }
+            isPinned: function () { return pinned; },
+            /* A lucky errand can bring night on early. */
+            maybeNight: function () {
+                if (!on || isNight || Math.random() >= 0.1) return;
+                startNight(true);
+            }
         };
     })();
 
@@ -3493,6 +3713,11 @@
        Ore blocks also float up in the empty parts of the banner now and then.
        Clear the whole mine and a creeper shows up and blows it all up.
        ===================================================================== */
+    $('pond').addEventListener('click', function () {
+        var r = Yard.spawnDrowned();
+        if (r === false) toast('Nothing stirs in the pond. Come back at night.');
+        else if (r === null) toast('Two Drowned are already out of the water.');
+    });
     var Mine = (function () {
         var COLS = 8, ROWS = 4;
         var TIERS = [
@@ -3711,13 +3936,21 @@
         var byId = {};
         MOBS.forEach(function (m) { byId[m.id] = m; });
         byId.steve = STEVE;
+        byId.drowned = Object.assign({}, byId.zombie, { id: 'drowned', name: 'Drowned' });
+        var SWIM = { axolotl: 1, turtle: 1, frog: 1, drowned: 1, parrot: 1, bat: 1 };
+        function pondZone() {
+            var pd = $('pond'); if (!pd || pd.hidden || !yard) return null;
+            var a = pd.getBoundingClientRect(), b = yard.getBoundingClientRect();
+            if (!a.width) return null;
+            return { l: a.left - b.left, r: a.right - b.left };
+        }
         var uidn = 0, gen = 0, MAXMOBS = 24;
         /* The banner stays calm: only creatures you find in a village roam by default. Spawn the rest yourself. */
         var VILLAGE = ['villager', 'golem', 'cat', 'chicken', 'pig', 'cow', 'sheep', 'horse'];
         var ctrl = null, keys = { l: 0, r: 0 }, pickMode = false, firstPick = null;
         /* Health (hit points, 2 = one heart) and attack damage for every mob, loosely based on vanilla Minecraft and balanced for quick fights. */
         var STATS = {
-            villager: [10, 0], steve: [20, 5], zombie: [20, 4], skeleton: [16, 4], creeper: [20, 14], spider: [16, 3], slime: [14, 3],
+            villager: [10, 0], steve: [20, 5], zombie: [20, 4], drowned: [18, 4], skeleton: [16, 4], creeper: [20, 14], spider: [16, 3], slime: [14, 3],
             blaze: [20, 5], ghast: [14, 7], dragon: [60, 9], enderman: [40, 7], golem: [60, 9], snowgolem: [8, 2], wolf: [14, 4],
             fox: [12, 3], cat: [12, 3], frog: [10, 2], polar: [30, 6], bee: [8, 2], goat: [14, 3], llama: [14, 2], panda: [20, 5],
             pig: [10, 0], cow: [10, 0], sheep: [8, 0], chicken: [6, 0], horse: [20, 0], rabbit: [6, 0], turtle: [20, 0],
@@ -3838,7 +4071,7 @@
         /* Only mobs that really fight each other in vanilla Minecraft: hostile mobs go after players, villagers and
            golems; golems defend; wolves hunt skeletons, sheep, rabbits, foxes and llamas; foxes hunt chickens and
            rabbits; cats hunt rabbits; frogs eat slimes. Everyone else just bumps and walks on. */
-        var HOSTILE = { zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1 };
+        var HOSTILE = { drowned: 1, zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1 };
         var PREY = { villager: 1, steve: 1, golem: 1, snowgolem: 1, wolf: 1 };
         var HUNTS = {
             wolf: { skeleton: 1, sheep: 1, rabbit: 1, fox: 1, llama: 1 },
@@ -3849,7 +4082,7 @@
             snowgolem: HOSTILE
         };
         /* Who can attack: fighters start fights, neutral mobs only hit back, passive mobs never attack (they just run). */
-        var FIGHTER = { zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1, wolf: 1, fox: 1, cat: 1, frog: 1, golem: 1, snowgolem: 1 };
+        var FIGHTER = { drowned: 1, zombie: 1, skeleton: 1, creeper: 1, spider: 1, slime: 1, blaze: 1, ghast: 1, dragon: 1, wolf: 1, fox: 1, cat: 1, frog: 1, golem: 1, snowgolem: 1 };
         var NEUTRAL = { polar: 1, bee: 1, goat: 1, llama: 1, panda: 1, enderman: 1, steve: 1 };
         function canAttack(id) { return !!(FIGHTER[id] || NEUTRAL[id]); }
         /* Ranged attackers shoot from a distance; everyone else uses melee. */
@@ -3892,9 +4125,9 @@
             finally { a.fighting = b.fighting = false; fightsOn = Math.max(0, fightsOn - 1); nextFightAt = performance.now() + 8000; }
         }
         /* ---- Direct combat: attack with the mob you control (press F), and mobs you hit react ---- */
-        function kill(m) {
+        function kill(m, label) {
             if (mobs.indexOf(m) < 0) return;
-            pop('💨 K.O.', center(m.el), '#ffffff');
+            pop(label || '💨 K.O.', center(m.el), '#ffffff');
             var g = gen;
             var done = function () {
                 m.el.remove();
@@ -4151,6 +4384,10 @@
             var w = width();
             var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
             last = ts;
+            mobs.slice().forEach(function (m) {
+                // Night creatures burn up when the sun rises, like in vanilla.
+                if (m.night && !Village.isNight() && !m.busy && !m.burning) { m.burning = true; kill(m, '🔥'); return; }
+            });
             mobs.forEach(function (m) {
                 var mine = m === ctrl && !m.busy;
                 var ai = !mine && !m.busy && m.enemy && ts < (m.enemyUntil || 0) && mobs.indexOf(m.enemy) >= 0;
@@ -4176,6 +4413,33 @@
                 if (m.jumpAt && ts - m.jumpAt < 520) bob += Math.sin(Math.PI * (ts - m.jumpAt) / 520) * 32; else m.jumpAt = 0;
                 m.el.style.transform = 'translate3d(' + m.x + 'px,' + (-bob) + 'px,0)';
                 m.inner.style.transform = 'scaleX(' + m.dir + ')';
+            });
+            var pz = pondZone();
+            if (pz) mobs.forEach(function (m) {
+                if (m.busy || SWIM[m.def.id]) { m.wet = 0; return; }
+                var c = m.x + 22, inside = c > pz.l && c < pz.r;
+                if (m === ctrl) {
+                    if (!inside) { m.wet = 0; return; }
+                    if (!m.wet) m.wet = ts;
+                    if (ts - m.wet > 600 && ts - (m.lastDrown || 0) > 500) {
+                        m.lastDrown = ts; m.hp -= 3; Snd.play('splash');
+                        pop('🫧 Glug!', center(m.el), '#8ecbff');
+                        m.hpEl.hidden = false; m.hpEl.firstChild.style.width = Math.max(0, m.hp / m.max * 100) + '%'; m.hpShow = ts + 4000;
+                        if (m.hp <= 0) kill(m, '🫧 Drowned');
+                    }
+                    return;
+                }
+                // AI mobs sense the water and turn away from it.
+                if (c > pz.l - 34 && c < pz.r + 34) {
+                    var mid = (pz.l + pz.r) / 2, away = c < mid ? -1 : 1;
+                    var edge = away < 0 ? pz.l - 42 : pz.r + 42;
+                    if (edge < 4 || edge > w - 48) away = -away, edge = away < 0 ? pz.l - 42 : pz.r + 42;
+                    m.dir = away;
+                    var step = Math.max(m.speed, 70) * dt;
+                    m.x = clamp(m.x + away * step, 4, w - 48);
+                    if (inside && Math.abs(edge - m.x) < step) m.x = edge;
+                    if (m.enemy) m.enemy = null;
+                }
             });
             collide(ts);
             raf = requestAnimationFrame(frame);
@@ -4218,6 +4482,47 @@
                 return n;
             },
             count: function () { return mobs.length; },
+            /* Click the pond at night: a Drowned zombie climbs out of the water. */
+            spawnDrowned: function () {
+                if (!yard || yard.hidden) return false;
+                if (!Village.isNight()) return false;
+                if (mobs.filter(function (m) { return m.def.id === 'drowned'; }).length >= 2 || mobs.length >= MAXMOBS) return null;
+                var pz = pondZone(); if (!pz) return false;
+                var cx = (pz.l + pz.r) / 2 - 22;
+                var m = build(byId.drowned, clamp(pz.l - 40, 4, width() - 52));
+                m.el.classList.add('mob-drowned');
+                m.dir = -1; m.spawned = true; m.night = true; m.speed = rand(30, 44);
+                mobs.push(m);
+                if (m.inner.animate && !REDUCED) m.inner.animate([{ transform: 'translateY(30px) scaleX(-1)', opacity: 0 }, { transform: 'translateY(0) scaleX(-1)', opacity: 1 }], { duration: 700, easing: 'ease-out' });
+                pop('🫧 Drowned rises!', center(m.el), '#7fe0d0');
+                Snd.play('splash'); Snd.mob('drowned');
+                return true;
+            },
+            /* A hostile mob walks in from the edge of the village at night. */
+            /* Iron golems guard the village: make sure at least one is on patrol when night falls. */
+            guard: function () {
+                if (!yard || yard.hidden || mobs.length >= MAXMOBS) return;
+                if (mobs.some(function (m) { return m.def.id === 'golem'; })) return;
+                var m = build(byId.golem, rand(40, Math.max(60, width() / 2)));
+                m.spawned = true; m.speed = rand(18, 28);
+                mobs.push(m);
+                pop('🛡️ Iron Golem guards the village', center(m.el), '#ffd27a');
+                Snd.mob('golem');
+            },
+            spawnNight: function () {
+                if (!yard || yard.hidden || mobs.length >= MAXMOBS) return;
+                if (mobs.filter(function (m) { return m.night; }).length >= 4) return;
+                var ids = ['zombie', 'zombie', 'skeleton', 'creeper', 'spider'];
+                var def = byId[ids[Math.floor(Math.random() * ids.length)]];
+                var left = Math.random() < 0.5;
+                var m = build(def, left ? 4 : Math.max(20, width() - 52));
+                m.dir = left ? 1 : -1;
+                m.spawned = true; m.night = true;
+                m.speed = rand(28, 46);
+                mobs.push(m);
+                pop('🌑 ' + def.name + ' appears', center(m.el), '#ff9a9a');
+                Snd.mob(def.id);
+            },
             describe: function (id) {
                 var def = byId[id], st = statOf(id);
                 if (!def) return '';
@@ -4762,6 +5067,16 @@
         sel.addEventListener('change', stats);
         document.addEventListener('mobctrl', stats);
         stats();
+        function todSync() {
+            var a = !Village.isPinned();
+            $('tod-auto').setAttribute('aria-pressed', a ? 'true' : 'false');
+            $('tod-day').setAttribute('aria-pressed', !a && !Village.isNight() ? 'true' : 'false');
+            $('tod-night').setAttribute('aria-pressed', !a && Village.isNight() ? 'true' : 'false');
+        }
+        ['day', 'night', 'auto'].forEach(function (k) {
+            $('tod-' + k).addEventListener('click', function () { Village.setMode(k); todSync(); });
+        });
+        setInterval(todSync, 2000);
         $('spawn-btn').addEventListener('click', function () {
             if (!Yard.spawn(sel.value)) toast(Yard.count() >= 24 ? 'The yard is full. Clear some mobs first.' : 'Switch to the Minecraft theme to spawn mobs.');
         });
