@@ -644,6 +644,8 @@
         .fly.carried { filter: drop-shadow(0 0 8px #9be7ff); }
         .fly.bolt { width: 18px; height: 18px; font-size: 0; border-radius: 50%; }
         .fly.bolt.stupefy { background: radial-gradient(circle, #fff 0, #ff5a5a 55%, transparent 72%); box-shadow: 0 0 14px 7px rgba(255, 70, 70, .75); }
+        .fly.bolt.avada { width: 24px; height: 24px; background: radial-gradient(circle, #fff 0, #5dff5d 50%, transparent 72%); box-shadow: 0 0 20px 10px rgba(60, 255, 60, .85); }
+        .fly.bolt.crucio { width: 22px; height: 22px; background: radial-gradient(circle, #fff 0, #ff2a2a 50%, transparent 72%); box-shadow: 0 0 20px 10px rgba(255, 30, 30, .9); }
         .fly.bolt.expelliarmus { background: radial-gradient(circle, #fff 0, #ffb347 55%, transparent 72%); box-shadow: 0 0 14px 7px rgba(255, 170, 60, .75); }
         .wisp { position: fixed; left: 0; top: 0; z-index: 999; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, #fff, rgba(155, 231, 255, .6) 55%, transparent 72%); }
         .pop { position: fixed; left: 0; top: 0; z-index: 1001; pointer-events: none; will-change: transform, opacity; font-weight: 700; font-size: 1.3rem; white-space: nowrap; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
@@ -665,15 +667,17 @@
         .hp-stage { display: none; position: absolute; left: 0; right: 0; bottom: 58px; z-index: 3; justify-content: space-between; align-items: flex-end; padding: 0 clamp(10px, 6%, 80px); pointer-events: none; }
         [data-theme="harry-potter"] .hp-stage { display: flex; }
         .hs-fig { width: 110px; text-align: center; transition: transform .2s; }
-        .hs-av { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 2px; font-size: 2.2rem; border-radius: 50%; background: radial-gradient(circle at 30% 25%, #7a3b7a, #2a142a 75%); border: 2px solid #d4af37; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+        .hs-av { width: 84px; height: 118px; margin: 0 auto 2px; filter: drop-shadow(0 6px 8px rgba(0,0,0,.55)); }
+        .hs-av svg { width: 100%; height: 100%; display: block; }
+        .hs-fig.b .hs-av svg { transform: scaleX(-1); }
         .hs-fig .hp { margin: 3px 6px 0; }
         .hs-fig small { display: block; font-size: .7rem; text-shadow: 0 1px 3px #000; line-height: 1.1; }
         .hs-fig.hurt .hs-av { animation: hurt .35s; }
-        .hs-fig.shielded .hs-av { box-shadow: 0 0 0 4px rgba(120,200,255,.8), 0 0 24px 8px rgba(120,200,255,.6); }
+        .hs-fig.shielded .hs-av { filter: drop-shadow(0 0 10px rgba(120,200,255,.95)) drop-shadow(0 0 22px rgba(120,200,255,.8)); }
         .hs-fig.ko .hs-av { filter: grayscale(1); transform: rotate(80deg) scale(.9); }
         .hs-mid { display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: auto; }
         .hs-mid .btn-trigger { font-size: .78rem; padding: 5px 10px; min-height: 0; }
-        @media (max-width: 560px) { .hs-fig { width: 80px; } .hs-av { width: 48px; height: 48px; font-size: 1.6rem; } .hs-mid .btn-trigger { font-size: .68rem; padding: 4px 7px; } }
+        @media (max-width: 560px) { .hs-fig { width: 80px; } .hs-av { width: 58px; height: 82px; } .hs-mid .btn-trigger { font-size: .68rem; padding: 4px 7px; } }
         [data-theme="racing"] .banner-deco {
             background:
                 repeating-linear-gradient(90deg, #fff 0 36px, transparent 36px 72px) 0 calc(100% - 22px) / 100% 5px no-repeat,
@@ -936,12 +940,12 @@
         <div class="pond" id="pond" title="The pond" hidden><i class="lily"></i><i class="lily l2"></i></div>
         <div class="mob-yard" id="mob-yard" aria-hidden="true" hidden></div>
         <div class="hp-stage" id="hp-stage">
-            <div class="hs-fig" id="hs-a"><div class="hs-av" id="hs-av-a">⚡</div><div class="hp"><i></i></div><small>Harry Potter</small></div>
+            <div class="hs-fig" id="hs-a"><div class="hs-av" id="hs-av-a"></div><div class="hp"><i></i></div><small>Bright wizard</small></div>
             <div class="hs-mid">
                 <button type="button" class="btn-trigger" id="hs-hv">⚡ Harry vs Voldemort</button>
                 <button type="button" class="btn-trigger" id="hs-rand">🎲 Random duel</button>
             </div>
-            <div class="hs-fig" id="hs-b"><div class="hs-av" id="hs-av-b">🐍</div><div class="hp"><i></i></div><small>Lord Voldemort</small></div>
+            <div class="hs-fig b" id="hs-b"><div class="hs-av" id="hs-av-b"></div><div class="hp"><i></i></div><small>Dark wizard</small></div>
         </div>
         <div class="config-menu">
             <label for="theme-select" class="sr-only">Theme</label>
@@ -3110,9 +3114,43 @@
         }
         /* ---- Spectator mode: two duellists fight on their own ---- */
         var watchId = 0;
+        /* Two original wizard figures (not any film character): a bright-robed one and a dark-robed one. */
+        function wizardSVG(c) {
+            return '<svg viewBox="0 0 84 118" aria-hidden="true">' +
+              '<path d="M22 112 L30 52 Q42 44 54 52 L62 112 Z" fill="' + c.robe + '"/>' +
+              '<path d="M42 50 L42 112" stroke="' + c.trim + '" stroke-width="3"/>' +
+              '<path d="M30 52 Q42 60 54 52 L52 60 Q42 66 32 60Z" fill="' + c.trim + '"/>' +
+              '<circle cx="42" cy="36" r="13" fill="' + c.skin + '"/>' +
+              '<path d="M28 33 L42 2 L56 33 Q42 27 28 33Z" fill="' + c.hat + '"/>' +
+              '<rect x="26" y="31" width="32" height="5" rx="2.5" fill="' + c.trim + '"/>' +
+              (c.beard ? '<path d="M32 40 Q42 62 52 40 Q42 46 32 40Z" fill="' + c.beard + '"/>' : '') +
+              '<circle cx="37" cy="37" r="1.6" fill="#1b1b1b"/><circle cx="47" cy="37" r="1.6" fill="#1b1b1b"/>' +
+              '<path d="M54 56 Q70 52 76 40" stroke="' + c.robe + '" stroke-width="8" fill="none" stroke-linecap="round"/>' +
+              '<circle cx="76" cy="39" r="4" fill="' + c.skin + '"/>' +
+              '<path d="M77 38 L83 22" stroke="#6b4a2b" stroke-width="2.5" stroke-linecap="round"/>' +
+              '<circle cx="83" cy="21" r="2.5" fill="' + c.spark + '"/>' +
+              '</svg>';
+        }
+        var WIZ = {
+            a: { robe: '#2f5fb8', trim: '#e6c14d', hat: '#24468a', skin: '#f1c9a0', beard: null, spark: '#fff2a8' },
+            b: { robe: '#1d1d24', trim: '#6e6e7e', hat: '#121218', skin: '#d9dccf', beard: null, spark: '#9dff9d' }
+        };
+        var ROBES = [
+            { robe: '#2f5fb8', trim: '#e6c14d', hat: '#24468a', skin: '#f1c9a0' }, { robe: '#8a2332', trim: '#e6c14d', hat: '#5e1621', skin: '#e8b88c' },
+            { robe: '#2e7d4f', trim: '#c9d6c0', hat: '#1f5a37', skin: '#f1c9a0' }, { robe: '#7a4fb0', trim: '#f0d98a', hat: '#573783', skin: '#d9a77c' },
+            { robe: '#c98a1f', trim: '#3a2a10', hat: '#8f6112', skin: '#f6d6b4' }, { robe: '#1d1d24', trim: '#6e6e7e', hat: '#121218', skin: '#d9dccf' },
+            { robe: '#3b7f8c', trim: '#e9f5f7', hat: '#285a64', skin: '#c68f66' }, { robe: '#a8478f', trim: '#f4d8ee', hat: '#7a3268', skin: '#f1c9a0' }
+        ];
+        function paletteFor(d) {
+            if (d.id === 'voldemort') return Object.assign({ spark: '#9dff9d' }, ROBES[5]);
+            if (d.id === 'harry') return Object.assign({ spark: '#fff2a8' }, ROBES[1]);
+            var i = 0; for (var n = 0; n < d.id.length; n++) i += d.id.charCodeAt(n);
+            return Object.assign({ spark: '#fff2a8' }, ROBES[i % 5]);
+        }
+        function stageDraw() { stageSet('you', duelist('harry')); stageSet('foe', duelist('voldemort')); }
         var stageOn = false;
         function stg(k) { return $(k === 'you' ? 'hs-a' : 'hs-b'); }
-        function stageSet(k, d) { var f = stg(k); f.querySelector('.hs-av').textContent = d.icon; f.querySelector('small').textContent = d.name; f.classList.remove('ko', 'hurt', 'shielded'); f.querySelector('.hp i').style.width = '100%'; }
+        function stageSet(k, d) { var f = stg(k); f.querySelector('.hs-av').innerHTML = wizardSVG(paletteFor(d)); f.querySelector('small').textContent = d.name; f.classList.remove('ko', 'hurt', 'shielded'); f.querySelector('.hp i').style.width = '100%'; }
         function stageBars() { ['you', 'foe'].forEach(function (k) { stg(k).querySelector('.hp i').style.width = (clamp(hp[k], 0, max[k]) / max[k] * 100) + '%'; }); }
         function stageFx(k, cls, on) { var f = stg(k); if (on === false) f.classList.remove(cls); else { f.classList.remove(cls); void f.offsetWidth; f.classList.add(cls); } }
         function setSide(k, name, icon) {
@@ -3154,20 +3192,47 @@
                     else text = 'Both raise shields. Nothing happens.';
                 } else if (BEATS[ma] === mb) { toB = Math.round(DMG[ma] * (a.dmgMul || 1)); text = an + "'s " + NAMES[ma] + ' beats ' + bn + "'s " + NAMES[mb] + '!'; }
                 else { toA = Math.round(DMG[mb] * (b.dmgMul || 1)); text = bn + "'s " + NAMES[mb] + ' beats ' + an + "'s " + NAMES[ma] + '!'; }
+                /* Voldemort's Unforgivable Curses: most duellists dodge, Harry never does but survives and wins. */
+                var curse = null, vSide = a.id === 'voldemort' ? 'a' : (b.id === 'voldemort' ? 'b' : null);
+                var harryFight = vSide && (a.id === 'harry' || b.id === 'harry');
+                if (vSide && (Math.random() < 0.4 || (harryFight && round >= 30))) {
+                    var cur = harryFight && round >= 30 ? 'avada' : (Math.random() < 0.5 ? 'avada' : 'crucio');
+                    var vObj = vSide === 'a' ? a : b, tObj = vSide === 'a' ? b : a, tn = tObj.name.replace(/^Lord /, '').split(' ')[0];
+                    var cname = cur === 'avada' ? 'Avada Kedavra' : 'Crucio';
+                    var dVold = 0, dTgt = 0;
+                    if (tObj.id === 'harry') {
+                        if (cur === 'avada') { dVold = 30; text = 'Voldemort casts Avada Kedavra! Harry does not dodge, and survives it. The curse rebounds on Voldemort!'; }
+                        else { dTgt = 5; dVold = 12; text = 'Voldemort casts Crucio! Harry grits his teeth, fights through the pain and strikes back.'; }
+                    } else if (Math.random() < (cur === 'avada' ? 0.6 : 0.5)) {
+                        text = 'Voldemort casts ' + cname + '! ' + tn + ' dodges it!';
+                        pop('💨 Dodged!', center($(vSide === 'a' ? 'hs-av-b' : 'hs-av-a')), '#ffffff');
+                    } else if (cur === 'avada') { dTgt = 999; text = 'Voldemort casts Avada Kedavra! ' + tn + ' cannot dodge. The green light hits!'; }
+                    else { dTgt = Math.round(25 * (vObj.dmgMul || 1)); text = 'Voldemort casts Crucio! ' + tn + ' is hit and cries out.'; }
+                    toA = vSide === 'a' ? dVold : dTgt; toB = vSide === 'a' ? dTgt : dVold;
+                    curse = { kind: cur, name: cname, from: vSide };
+                    if (dTgt === 999) { if (vSide === 'a') toB = hp.foe; else toA = hp.you; }
+                    ma = vSide === 'a' ? cur : null; mb = vSide === 'b' ? cur : null;
+                }
                 var ya = $('hs-av-a'), yb = $('hs-av-b'), shots = [];
-                if (ma !== 'protego') shots.push(fly(makeFloat('fly bolt ' + ma), center(ya), center(yb), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
-                if (mb !== 'protego') shots.push(fly(makeFloat('fly bolt ' + mb), center(yb), center(ya), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+                if (ma && ma !== 'protego') shots.push(fly(makeFloat('fly bolt ' + ma), center(ya), center(yb), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
+                if (mb && mb !== 'protego') shots.push(fly(makeFloat('fly bolt ' + mb), center(yb), center(ya), { dur: 420, arc: 0, s0: 1, s1: 1, ease: 'ease-in' }));
                 if (ma === 'protego') { $('f-you').classList.add('shielded'); stageFx('you', 'shielded'); }
                 if (mb === 'protego') { $('f-foe').classList.add('shielded'); stageFx('foe', 'shielded'); }
                 if (!REDUCED) await Promise.all(shots.concat([wait(450)]));
                 if (watchId !== id) return;
                 $('f-you').classList.remove('shielded'); $('f-foe').classList.remove('shielded'); stageFx('you', 'shielded', false); stageFx('foe', 'shielded', false);
                 hp.you -= toA; hp.foe -= toB;
-                if (toA) { hurt('f-you', toA); stageFx('you', 'hurt'); }
+                if (harryFight) {
+                    // Harry cannot fall until Voldemort does.
+                    var hk = a.id === 'harry' ? 'you' : 'foe', vk = hk === 'you' ? 'foe' : 'you';
+                    if (hp[hk] <= 0 && hp[vk] > 0) hp[hk] = 8;
+                    if (hp[hk] <= 0 && hp[vk] <= 0) hp[hk] = 1;
+                }
+                if (toA) { hurt('f-you', Math.min(toA, 999)); stageFx('you', 'hurt'); }
                 if (toB) { hurt('f-foe', toB); stageFx('foe', 'hurt'); }
                 bars(); stageBars();
-                Snd.say(NAMES[Math.random() < 0.5 ? ma : mb]);
-                log(an + ' cast ' + NAMES[ma] + ', ' + bn + ' cast ' + NAMES[mb] + '. ' + text);
+                if (curse) { Snd.say(curse.name); log(text); }
+                else { Snd.say(NAMES[Math.random() < 0.5 ? ma : mb]); log(an + ' cast ' + NAMES[ma] + ', ' + bn + ' cast ' + NAMES[mb] + '. ' + text); }
                 if (hp.you <= 0 || hp.foe <= 0) {
                     if (hp.you <= 0 && hp.foe <= 0) log(text + ' They both fall. A draw!');
                     else if (hp.foe <= 0) { $('f-foe').classList.add('ko'); stageFx('foe', 'ko'); log(text + ' ' + a.name + ' wins! "' + (a.lose ? '' : '') + (a.taunt || '') + '"'); }
@@ -3314,6 +3379,9 @@
                 if (a === b) { toast('Pick two different duellists.'); return; }
                 watch(a, b);
             });
+            ['a', 'b'].forEach(function (k, i) {
+                $('watch-' + k).addEventListener('change', function () { if (watchId === 0 || !busy) stageSet(i ? 'foe' : 'you', duelist(this.value)); });
+            });
             $('hs-hv').addEventListener('click', function () { $('watch-hv').click(); });
             $('hs-rand').addEventListener('click', function () { $('watch-rand').click(); });
             $('watch-hv').addEventListener('click', function () { $('watch-a').value = 'harry'; $('watch-b').value = 'voldemort'; watch(duelist('harry'), duelist('voldemort')); });
@@ -3327,6 +3395,7 @@
             Array.prototype.forEach.call(document.querySelectorAll('.move-btn'), function (b) {
                 b.addEventListener('click', function () { play(b.getAttribute('data-move')); });
             });
+            stageDraw();
             pickFoe(); reset(); record();
         }
 
