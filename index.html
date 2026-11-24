@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="A themed home shopping list: browse items, add your own, and tick them off. Harry Potter, Minecraft and Cricket themes with mini games.">
     <title>Home Shopping</title>
-    <meta property="og:title" content="Home Shopping"><meta property="og:description" content="A themed shopping list with budgets, sharing and mini games."><meta name="twitter:card" content="summary">
+    <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛒%3C/text%3E%3C/svg%3E">
+    <meta name="apple-mobile-web-app-title" content="Home Shopping">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <meta property="og:title" content="Home Shopping"><meta property="og:description" content="A themed shopping list with budgets, sharing and mini games."><meta name="twitter:card" content="summary">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&family=Poppins:wght@500;600;700&family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1129,6 +1133,7 @@
         <nav class="quick-nav" aria-label="Shopping and games">
             <button type="button" class="shop-home" data-nav-shop>🛍️ Shop home</button>
             <button type="button" data-nav-target="list-panel">🧾 My list</button>
+            <button type="button" id="install-app">📲 Install app</button>
             <details class="games-menu">
                 <summary>🎮 Games &amp; themes ▾</summary>
                 <div class="game-links">
@@ -5802,6 +5807,28 @@
         requestAnimationFrame(function () { deck.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); });
     });
 
+    var installPrompt = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        installPrompt = e;
+    });
+    window.addEventListener('appinstalled', function () {
+        installPrompt = null;
+        toast('Home Shopping is installed! 📲');
+    });
+    $('install-app').addEventListener('click', function () {
+        if (installPrompt) {
+            installPrompt.prompt();
+            installPrompt.userChoice.then(function (choice) {
+                if (choice.outcome === 'accepted') toast('Installing Home Shopping… 📲');
+                installPrompt = null;
+            });
+            return;
+        }
+        var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        toast(ios ? 'In Safari, tap Share, then Add to Home Screen. 📲' : 'Open your browser menu and choose Install Home Shopping or Add to Home screen. 📲');
+    });
+
     $('cart-bar').addEventListener('click', function () {
         $('list-panel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
     });
@@ -5823,6 +5850,13 @@
     render();
     celebrateReady = true;
 })();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+}
 </script>
 </body>
 </html>
