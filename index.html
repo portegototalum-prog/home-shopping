@@ -231,6 +231,15 @@
         .idol .idol-carry { position: absolute; left: 50%; top: -26px; transform: translateX(-50%); font-size: 1.6rem; }
         .fan-bar { height: 12px; border-radius: 999px; background: rgba(0,0,0,.35); overflow: hidden; border: 1px solid rgba(255,255,255,.2); margin: 8px 0; }
         .fan-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ff4fa3, #8b5cf6, #38bdf8); transition: width .25s; }
+        .kp-game { margin: 14px 0; padding: 14px; border: 1px solid rgba(255,183,206,.4); border-radius: 16px; background: rgba(13,19,36,.48); }
+        .kp-game h3 { margin: 0 0 6px; font-size: 1rem; }
+        .kp-cue { margin: 0 0 10px; color: var(--text-sub); }
+        .kp-choices { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; }
+        .kp-choices .btn-trigger { min-height: 48px; }
+        .kp-game-status { min-height: 1.4em; margin: 10px 0 0; font-weight: 700; }
+        .kp-game-status.good { color: #86efac; }
+        .kp-game-status.try-again { color: #fda4af; }
+        @media (max-width: 639px) { .kp-choices { grid-template-columns: 1fr; } }
         [data-theme="racing"] {
             --page-bg: repeating-linear-gradient(0deg, #1b1f24 0 90px, #20252b 90px 180px);
             --hero-bg: linear-gradient(180deg, #0b1020 0%, #1f2937 62%, #374151 100%);
@@ -305,7 +314,7 @@
             background: var(--hero-bg);
             color: var(--header-text);
             text-align: center;
-            padding: clamp(48px, 8vw, 76px) 20px clamp(84px, 12vw, 112px);
+            padding: clamp(38px, 5vw, 58px) 20px clamp(70px, 9vw, 94px);
             border-bottom: var(--border-element);
         }
 
@@ -487,6 +496,37 @@
         .element-ico { font-size: 1.5rem; display: block; margin-bottom: 2px; }
         .element-lbl { font-size: calc(0.8rem * var(--scale)); font-weight: 600; }
 
+        /* A compact route into the site's two sides: shopping and play. */
+        .quick-nav {
+            display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap;
+            gap: 8px; margin: 0 auto 18px; padding: 8px 0;
+        }
+        .quick-nav > button, .quick-nav .games-menu > summary {
+            min-height: 44px; padding: 8px 16px; border: 1px solid color-mix(in srgb, var(--text-sub) 24%, transparent);
+            border-radius: 999px; background: var(--chip-bg); color: var(--text-main); font-weight: 700; cursor: pointer;
+            list-style: none; transition: transform .15s, background .15s, box-shadow .15s;
+        }
+        .quick-nav .shop-home { margin-right: auto; background: var(--btn-add-bg); color: var(--btn-add-text); border-color: transparent; }
+        .quick-nav > button:hover, .quick-nav .games-menu > summary:hover { transform: translateY(-2px); box-shadow: var(--shadow-style); background: var(--btn-action-bg); }
+        .quick-nav .shop-home:hover { background: var(--btn-add-bg); filter: brightness(1.08); }
+        .games-menu { position: relative; }
+        .games-menu > summary::-webkit-details-marker { display: none; }
+        .games-menu[open] { flex-basis: 100%; }
+        .game-links { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; margin-top: 8px; border: var(--card-edge); border-radius: 16px; background: var(--card-bg); box-shadow: var(--shadow-style); }
+        .game-links button { min-height: 42px; padding: 7px 12px; border: var(--card-edge); border-radius: 999px; background: var(--chip-bg); color: var(--text-main); font-weight: 700; cursor: pointer; }
+        .game-links button[aria-pressed="true"] { background: var(--chip-active-bg); color: var(--chip-active-text); }
+        .whole-cart-shop { margin-top: 12px; padding: 13px; border: var(--card-edge); border-radius: 15px; background: color-mix(in srgb, var(--card-bg) 82%, transparent); }
+        .whole-cart-shop[hidden] { display: none; }
+        .whole-cart-title { margin: 0 0 4px; font-weight: 800; }
+        .whole-cart-note { margin: 0 0 10px; color: var(--text-sub); font-size: .8rem; line-height: 1.4; }
+        .whole-cart-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .whole-cart-links a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 8px 10px; border-radius: 12px; background: var(--btn-action-bg); color: var(--btn-action-text); font-weight: 800; text-decoration: none; text-align: center; }
+        .whole-cart-links a:hover { filter: brightness(1.12); }
+        .whatsapp-quick { display: block; width: 100%; margin-top: 10px; padding: 11px 14px; border-radius: 12px; background: #168c55; color: #fff; text-align: center; text-decoration: none; font-weight: 800; }
+        .whatsapp-quick:hover { background: #117447; }
+
+        .horizontal-scroller { flex-wrap: wrap; overflow: visible; }
+        .category-element { flex: 1 1 84px; }
         .items-showcase { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 16px; }
 
         .item-box {
@@ -542,7 +582,7 @@
            SIDEBAR PANELS
            ===================================================================== */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
-        .game-deck { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 560px)); justify-content: center; gap: 20px; margin-bottom: 26px; align-items: start; }
+        .game-deck { display: grid; grid-template-columns: minmax(0, 1fr); justify-content: stretch; gap: 20px; margin-bottom: 26px; align-items: start; }
         .game-deck:not(:has(> .panel:not([hidden]))) { display: none; }
         .game-deck.collapsed { display: none; }
         .deck-toggle { display: block; position: relative; z-index: 1; clear: both; margin: 16px auto 16px; padding: 6px 16px; border-radius: 999px; border: var(--border-element); background: var(--chip-bg); color: var(--text-main); font: inherit; font-size: .85rem; cursor: pointer; }
@@ -948,7 +988,7 @@
         @media (max-width: 999px) { .toast { bottom: 80px; } }
 
         .shop-exit { position: fixed; top: 10px; right: 10px; z-index: 2500; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: #dc2626; color: #fff; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
-        body.shop-mode .top-banner, body.shop-mode .action-row, body.shop-mode .usuals, body.shop-mode .content-grid > section,
+        body.shop-mode .top-banner, body.shop-mode .action-row, body.shop-mode .usuals, body.shop-mode .quick-nav, body.shop-mode .content-grid > section,
         body.shop-mode .sidebar > .panel:not(.list-panel), body.shop-mode .game-deck, body.shop-mode .cart-bar, body.shop-mode #wand-wrap, body.shop-mode .list-tools .mini-btn,
         body.shop-mode #list-footer .shop-hide { display: none !important; }
         body.shop-mode .content-grid { grid-template-columns: minmax(0, 1fr); }
@@ -1008,6 +1048,13 @@
             .wand svg { width: 34px; height: auto; }
             .wand-bubble { right: 40px; width: 180px; }
             .panel { padding: 14px; }
+            .quick-nav { justify-content: space-between; gap: 7px; padding: 8px 0; margin-bottom: 14px; }
+            .quick-nav > button, .quick-nav .games-menu > summary { padding-inline: 12px; font-size: .88rem; }
+            .quick-nav .shop-home { margin-right: 0; }
+            .games-menu[open] { flex-basis: 100%; }
+            .game-links button { flex: 1 1 calc(50% - 8px); padding-inline: 8px; font-size: .86rem; }
+            .whole-cart-shop { padding: 11px; }
+            .category-element { flex-basis: calc(25% - 10px); min-width: 66px; padding-inline: 6px; }
         }
 
         @media (pointer: coarse) {
@@ -1073,6 +1120,22 @@
             <button type="submit" class="action-btn" id="add-btn">Add to list</button>
         </form>
         <div class="usuals" id="usuals" hidden><span class="usuals-label">Your usuals:</span><span id="usuals-row" style="display:contents"></span></div>
+
+        <nav class="quick-nav" aria-label="Shopping and games">
+            <button type="button" class="shop-home" data-nav-shop>🛍️ Shop home</button>
+            <button type="button" data-nav-target="list-panel">🧾 My list</button>
+            <details class="games-menu">
+                <summary>🎮 Games &amp; themes ▾</summary>
+                <div class="game-links">
+                    <button type="button" data-nav-theme="harry-potter">⚔️ Dueling Corner</button>
+                    <button type="button" data-nav-theme="minecraft">⛏️ Minecraft Mine</button>
+                    <button type="button" data-nav-theme="racing">🏁 Drag Strip</button>
+                    <button type="button" data-nav-theme="cricket">🏏 Cricket match</button>
+                    <button type="button" data-nav-theme="kdrama">🎬 Drama Night</button>
+                    <button type="button" data-nav-theme="girls">💄 Makeup Studio</button>
+                </div>
+            </details>
+        </nav>
 
         <button type="button" class="deck-toggle" id="deck-toggle" aria-expanded="true" aria-controls="game-deck" hidden>▾ Hide games &amp; controls</button>
         <div class="game-deck" id="game-deck">
@@ -1214,11 +1277,22 @@
 
         <section class="panel" id="panel-kp" data-theme-panel="kdrama" hidden aria-labelledby="kp-title">
             <h2 class="panel-title" id="kp-title">🎬 Drama Night</h2>
-            <p class="panel-sub">Click an item and a drama lead rushes over to fetch it. Between errands, stir up plot twists to finish episodes. Tap fast for cliffhanger combos.</p>
+            <p class="panel-sub">Direct a five-scene mini episode: read the audience cue and pick the matching story beat. Earn fan points, build a streak, and finish the episode. Shopping still sends your drama lead rushing to fetch each item.</p>
+            <div class="kp-game" aria-labelledby="kp-game-title">
+                <h3 id="kp-game-title">🎥 Director's challenge</h3>
+                <p class="kp-cue" id="kp-cue" aria-live="polite">The audience wants a heart-fluttering moment.</p>
+                <div class="kp-choices" role="group" aria-label="Choose the next story beat">
+                    <button type="button" class="btn-trigger" data-kp-choice="romance">💌 Love confession</button>
+                    <button type="button" class="btn-trigger" data-kp-choice="mystery">🕵️ Secret revealed</button>
+                    <button type="button" class="btn-trigger" data-kp-choice="comedy">😂 Funny mishap</button>
+                </div>
+                <p class="kp-game-status" id="kp-game-status" role="status" aria-live="polite">Scene 1 of 5 · Choose the beat the audience asked for.</p>
+                <button type="button" class="btn-trigger" id="kp-restart" hidden>🔁 Play another episode</button>
+            </div>
             <div class="fan-bar"><i id="kp-fill"></i></div>
             <div class="duel-record" id="kp-count" style="text-align:left"></div>
             <div class="ctrl-btns" style="margin-top:8px">
-                <button type="button" class="btn-trigger" id="kp-cheer">💔 Plot twist!</button>
+                <button type="button" class="btn-trigger" id="kp-cheer">💔 Plot twist! Build fan combo</button>
                 <button type="button" class="btn-trigger" id="kp-lights" aria-pressed="false">☔ Rain scene</button>
             </div>
         </section>
@@ -1255,7 +1329,6 @@
             <section aria-labelledby="browse-title">
                 <h2 class="layout-title" id="browse-title">Categories</h2>
                 <div class="horizontal-scroller" id="categories" role="group" aria-label="Filter by category"></div>
-
                 <h2 class="layout-title" id="items-title">Items</h2>
                 <div class="items-showcase" id="catalog"></div>
             </section>
@@ -1275,6 +1348,17 @@
                         <div class="prog-bar" aria-hidden="true"><i id="prog-fill"></i></div>
                         <div class="prog-bar budget" id="budget-bar" aria-hidden="true" hidden><i id="budget-fill"></i></div>
                         <button type="button" class="budget-line" id="budget-btn"><span id="budget-text">Tap to set a budget</span></button>
+                        <a class="whatsapp-quick" id="share-wa-quick" target="_blank" rel="noopener noreferrer" hidden>📲 Send list to WhatsApp</a>
+                        <section class="whole-cart-shop" id="whole-cart-shop" aria-label="Shop your whole list" hidden>
+                            <h3 class="whole-cart-title">🛒 Shop your whole cart</h3>
+                            <p class="whole-cart-note">Opens one search with all unticked items. Add them and check out in the store app.</p>
+                            <div class="whole-cart-links">
+                                <a id="cart-shop-blinkit" target="_blank" rel="noopener noreferrer">⚡ Blinkit</a>
+                                <a id="cart-shop-amazon" target="_blank" rel="noopener noreferrer">🟠 Amazon Now</a>
+                                <a id="cart-shop-flipkart" target="_blank" rel="noopener noreferrer">🟦 Flipkart Minutes</a>
+                                <a id="cart-shop-zepto" target="_blank" rel="noopener noreferrer">🟪 Zepto</a>
+                            </div>
+                        </section>
                     </div>
                     <ul id="list" aria-live="polite"></ul>
                     <div class="list-footer" id="list-footer" hidden>
@@ -2292,6 +2376,9 @@
         $('list-count').textContent = String(items.length);
         $('bar-count').textContent = String(items.length);
         $('list-footer').hidden = items.length === 0;
+        $('share-wa-quick').hidden = items.length === 0;
+        if (items.length) $('share-wa-quick').href = 'https://wa.me/?text=' + encodeURIComponent(listText());
+        updateWholeCartLinks();
         $('list-title-text').textContent = THEME_COPY[state.theme] ? THEME_COPY[state.theme].list : 'Your list';
         renderSwitcher();
         renderSummary();
@@ -2669,6 +2756,19 @@
         }
     }
 
+    function updateWholeCartLinks() {
+        var pending = state.list.filter(function (item) { return !item.done; });
+        var panel = $('whole-cart-shop');
+        panel.hidden = pending.length === 0;
+        if (!pending.length) return;
+        var term = pending.map(function (item) { return (item.qty > 1 ? item.qty + ' ' : '') + item.name; }).join(', ');
+        var q = encodeURIComponent(term);
+        $('cart-shop-blinkit').href = 'https://blinkit.com/s/?q=' + q;
+        $('cart-shop-amazon').href = 'https://www.amazon.in/s?k=' + q;
+        $('cart-shop-flipkart').href = 'https://www.flipkart.com/search?q=' + q;
+        $('cart-shop-zepto').href = 'https://www.zepto.com/search?query=' + q;
+    }
+
     function renderCategories() {
         var box = $('categories');
         box.textContent = '';
@@ -2829,6 +2929,10 @@
         $('brand-sub').textContent = copy.sub;
         $('list-title-text').textContent = copy.list;
         $('bar-label').textContent = copy.bar;
+        Array.prototype.forEach.call(document.querySelectorAll('[data-nav-theme]'), function (button) {
+            var active = button.getAttribute('data-nav-theme') === t;
+            button.setAttribute('aria-pressed', String(active));
+        });
 
         Array.prototype.forEach.call(document.querySelectorAll('[data-theme-panel]'), function (p) {
             p.hidden = p.getAttribute('data-theme-panel') !== t;
@@ -2975,16 +3079,14 @@
     }
 
     (function () {
-        var dt = $('deck-toggle'), deck = $('game-deck'), KEY = 'home-shopping.deck';
+        var dt = $('deck-toggle'), deck = $('game-deck');
         function set(open) {
             deck.classList.toggle('collapsed', !open);
             dt.setAttribute('aria-expanded', open ? 'true' : 'false');
             dt.innerHTML = open ? '▾ Hide games &amp; controls' : '▸ Show games &amp; controls';
-            try { localStorage.setItem(KEY, open ? '1' : '0'); } catch (e) {}
         }
         dt.addEventListener('click', function () { set(deck.classList.contains('collapsed')); });
-        var saved = '1'; try { saved = localStorage.getItem(KEY) || '1'; } catch (e) {}
-        set(saved !== '0');
+        set(false);
     })();
 
     /* Makeup studio: choose colours, then show the client; match her request for stars. */
@@ -3058,25 +3160,77 @@
 
     /* Drama Night panel: stir plot twists to finish episodes; rain scene dims the banner. */
     var Fans = (function () {
-        var fans = 0, combo = 0, lastAt = 0;
-        function ui() { $('kp-fill').style.width = Math.min(100, fans % 100) + '%'; $('kp-count').textContent = '🎬 Episode ' + (Math.floor(fans / 100) + 1) + ' of 16 · ' + (fans % 100) + '% · twist combo ×' + combo; }
+        var fans = 0, combo = 0, lastAt = 0, scene = 0, hits = 0, streak = 0, bestStreak = 0, answer = null, cues = [];
+        var beats = [
+            { kind: 'romance', cue: 'Give the audience a heart-fluttering moment.' },
+            { kind: 'mystery', cue: 'The audience wants a shocking secret to come out.' },
+            { kind: 'comedy', cue: 'The audience needs a funny break from the tension.' },
+            { kind: 'romance', cue: 'Make this goodbye feel like the start of a love story.' },
+            { kind: 'mystery', cue: 'End the scene with a clue nobody expected.' },
+            { kind: 'comedy', cue: 'Turn the awkward silence into a laugh.' }
+        ];
+        function ui() {
+            $('kp-fill').style.width = Math.min(100, fans % 100) + '%';
+            $('kp-count').textContent = '🎬 Episode ' + (Math.floor(fans / 100) + 1) + ' of 16 · ' + (fans % 100) + '% to next episode · ' + fans + ' fan points · twist combo ×' + combo;
+        }
+        function startEpisode() {
+            scene = 0; hits = 0; streak = 0; bestStreak = 0; answer = null;
+            cues = beats.slice().sort(function () { return Math.random() - 0.5; }).slice(0, 5);
+            $('kp-restart').hidden = true;
+            Array.prototype.forEach.call(document.querySelectorAll('[data-kp-choice]'), function (b) { b.disabled = false; });
+            nextScene();
+        }
+        function nextScene() {
+            if (scene >= cues.length) {
+                $('kp-cue').textContent = 'Your episode is in the can. Want to direct another?';
+                $('kp-game-status').className = 'kp-game-status good';
+                $('kp-game-status').textContent = 'Episode complete · ' + hits + '/5 scenes matched · best streak ' + bestStreak + ' 🎉';
+                $('kp-restart').hidden = false;
+                Array.prototype.forEach.call(document.querySelectorAll('[data-kp-choice]'), function (b) { b.disabled = true; });
+                return;
+            }
+            answer = cues[scene];
+            $('kp-cue').textContent = 'Scene ' + (scene + 1) + ' of 5 · ' + answer.cue;
+            $('kp-game-status').className = 'kp-game-status';
+            $('kp-game-status').textContent = 'Choose the story beat that fits the cue.';
+        }
+        function choose(kind) {
+            if (!answer || scene >= cues.length) return;
+            if (kind === answer.kind) {
+                hits++; streak++; bestStreak = Math.max(bestStreak, streak); scene++; fans += 10 + Math.min(10, (streak - 1) * 2); ui();
+                $('kp-game-status').className = 'kp-game-status good';
+                $('kp-game-status').textContent = 'Perfect scene! +' + (10 + Math.min(10, (streak - 1) * 2)) + ' fan points · streak ' + streak + ' 🔥';
+                Snd.play('fanfare');
+                pop('💖 Scene nailed!', center($('kp-game-status')), '#ffb3c7');
+                nextScene();
+            } else {
+                streak = 0;
+                $('kp-game-status').className = 'kp-game-status try-again';
+                $('kp-game-status').textContent = 'Not quite—the audience is still waiting. Try another story beat.';
+                Snd.play('hit');
+            }
+        }
         var did = false;
         return { init: function () {
             if (did) return; did = true;
+            Array.prototype.forEach.call(document.querySelectorAll('[data-kp-choice]'), function (button) {
+                button.addEventListener('click', function () { choose(button.getAttribute('data-kp-choice')); });
+            });
+            $('kp-restart').addEventListener('click', startEpisode);
             $('kp-cheer').addEventListener('click', function () {
                 var now = performance.now();
                 combo = now - lastAt < 900 ? combo + 1 : 1; lastAt = now;
                 fans += combo; ui();
                 Snd.play('add');
                 pop(combo > 3 ? '😱 ×' + combo : '💔', center($('kp-cheer')), '#ffb3c7');
-                if (fans % 100 < combo) pop('🎬 Episode ' + Math.floor(fans / 100) + ' complete!', { x: window.innerWidth / 2, y: 120 }, '#ffd27a', 'chat');
+                if (Math.floor(fans / 100) > Math.floor((fans - combo) / 100)) pop('🎬 Episode ' + Math.floor(fans / 100) + ' complete!', { x: window.innerWidth / 2, y: 120 }, '#ffd27a', 'chat');
             });
             $('kp-lights').addEventListener('click', function () {
                 var on = $('kp-lights').getAttribute('aria-pressed') !== 'true';
                 $('kp-lights').setAttribute('aria-pressed', on ? 'true' : 'false');
                 document.querySelector('.top-banner').style.filter = on ? 'brightness(.7) saturate(.8) hue-rotate(-10deg)' : '';
             });
-            ui();
+            ui(); startEpisode();
         } };
     })();
 
@@ -5533,6 +5687,38 @@
         render();
     });
 
+    document.querySelector('.quick-nav').addEventListener('click', function (e) {
+        var button = e.target.closest('button');
+        if (!button) return;
+        if (button.hasAttribute('data-nav-shop')) {
+            document.querySelector('.games-menu').open = false;
+            setTheme('light');
+            save();
+            render();
+            $('game-deck').classList.add('collapsed');
+            $('deck-toggle').setAttribute('aria-expanded', 'false');
+            $('deck-toggle').innerHTML = '▸ Show games &amp; controls';
+            $('add-form').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+            return;
+        }
+        if (button.hasAttribute('data-nav-target')) {
+            var target = $(button.getAttribute('data-nav-target'));
+            if (target) target.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+            return;
+        }
+        var theme = button.getAttribute('data-nav-theme');
+        if (!theme) return;
+        var select = $('theme-select');
+        select.value = theme;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        var deck = $('game-deck'), toggle = $('deck-toggle');
+        deck.classList.remove('collapsed');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.innerHTML = '▾ Hide games &amp; controls';
+        document.querySelector('.games-menu').open = false;
+        requestAnimationFrame(function () { deck.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' }); });
+    });
+
     $('cart-bar').addEventListener('click', function () {
         $('list-panel').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
     });
@@ -5540,17 +5726,14 @@
     /* =====================================================================
        INIT
        ===================================================================== */
+    document.querySelector('.content-grid').after($('game-deck'));
     load();
     applySettings();
     initPro();
     Voice.init();
     Sync.start();
     initPatronusModal();
-    if (!state.theme) {
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        state.theme = prefersDark ? 'dark' : 'light';
-    }
-    var startTheme = state.theme;
+    var startTheme = 'light';
     state.theme = null;
     setTheme(startTheme);
     lastAllDone = allDone();
