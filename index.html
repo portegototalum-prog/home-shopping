@@ -522,6 +522,11 @@
         .whole-cart-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
         .whole-cart-links a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 8px 10px; border-radius: 12px; background: var(--btn-action-bg); color: var(--btn-action-text); font-weight: 800; text-decoration: none; text-align: center; }
         .whole-cart-links a:hover { filter: brightness(1.12); }
+        .print-help { margin: -6px 0 12px; color: var(--text-sub); font-size: .88rem; line-height: 1.45; }
+        #print-files { display: block; width: 100%; min-height: 46px; padding: 9px; border: var(--card-edge); border-radius: 12px; background: var(--chip-bg); color: var(--text-main); font: inherit; }
+        #print-file-names { margin: 8px 0; color: var(--text-sub); font-size: .86rem; overflow-wrap: anywhere; }
+        #print-status { min-height: 1.3em; margin: 8px 0 0; color: var(--text-sub); font-size: .84rem; }
+        #print-start { width: 100%; margin-top: 8px; }
         .whatsapp-quick { display: block; width: 100%; margin-top: 10px; padding: 11px 14px; border-radius: 12px; background: #168c55; color: #fff; text-align: center; text-decoration: none; font-weight: 800; }
         .whatsapp-quick:hover { background: #117447; }
 
@@ -1367,6 +1372,16 @@
                         <button type="button" class="btn-trigger" id="clear-done">Remove ticked</button>
                         <button type="button" class="btn-trigger" id="clear-all">Clear all</button>
                     </div>
+                </section>
+
+                <section class="panel print-panel" id="print-panel" aria-labelledby="print-title">
+                    <h2 class="layout-title" id="print-title">🖨️ Print files</h2>
+                    <p class="print-help">Choose PDF, image, or text files, then print using a nearby printer selected in your computer's print window.</p>
+                    <label for="print-files">Select files</label>
+                    <input id="print-files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,application/pdf,image/*,text/plain">
+                    <p id="print-file-names">No files selected.</p>
+                    <button type="button" class="btn-trigger" id="print-start" disabled>🖨️ Open print window</button>
+                    <p id="print-status" role="status" aria-live="polite">Files stay on this device; choose your printer in the print dialog.</p>
                 </section>
 
                 <!-- Harry Potter: Dueling corner -->
@@ -2638,6 +2653,74 @@
     /* ----- wire up all the pro controls ----- */
     function initPro() {
         ['share-modal', 'settings-modal', 'buy-modal'].forEach(wireModal);
+        var printInput = $('print-files'), printButton = $('print-start');
+        printInput.addEventListener('change', function () {
+            var files = Array.prototype.slice.call(printInput.files || []);
+            printButton.disabled = !files.length;
+            $('print-file-names').textContent = files.length ? files.map(function (file) { return file.name; }).join(' · ') : 'No files selected.';
+            $('print-status').textContent = files.length ? files.length + ' file' + (files.length === 1 ? '' : 's') + ' selected. The printer is chosen in the print window.' : 'Files stay on this device; choose your printer in the print dialog.';
+        });
+        printButton.addEventListener('click', function () {
+            var files = Array.prototype.slice.call(printInput.files || []);
+            if (!files.length) return;
+            function typeOf(file) {
+                var name = file.name.toLowerCase();
+                if (file.type === 'application/pdf' || /\.pdf$/.test(name)) return 'pdf';
+                if (file.type.indexOf('image/') === 0 || /\.(png|jpe?g|gif|webp)$/.test(name)) return 'image';
+                if (file.type === 'text/plain' || /\.txt$/.test(name)) return 'text';
+                return '';
+            }
+            var kinds = files.map(typeOf);
+            if (kinds.some(function (kind) { return !kind; })) {
+                $('print-status').textContent = 'Please choose PDF, image, or plain-text files.';
+                return;
+            }
+            if (files.length > 1 && kinds.indexOf('pdf') !== -1) {
+                $('print-status').textContent = 'Print a PDF by itself, or select multiple images and text files together.';
+                return;
+            }
+            var tab = window.open('about:blank', '_blank');
+            if (!tab) {
+                $('print-status').textContent = 'Allow pop-ups for this site, then try printing again.';
+                return;
+            }
+            $('print-status').textContent = 'Print window opened. Select your nearest printer there.';
+            function revokeLater(urls) {
+                urls.forEach(function (url) { setTimeout(function () { URL.revokeObjectURL(url); }, 120000); });
+            }
+            if (kinds[0] === 'pdf') {
+                var pdfUrl = URL.createObjectURL(files[0]);
+                tab.onload = function () { setTimeout(function () { try { tab.focus(); tab.print(); } catch (e) {} }, 800); };
+                tab.location.href = pdfUrl;
+                revokeLater([pdfUrl]);
+                return;
+            }
+            function escapeHtml(value) {
+                return String(value).replace(/[&<>\"]/g, function (ch) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' })[ch]; });
+            }
+            var objectUrls = [];
+            Promise.all(files.map(function (file, index) {
+                if (kinds[index] === 'text') return file.text().then(function (text) {
+                    return '<section class="sheet"><h2>' + escapeHtml(file.name) + '</h2><pre>' + escapeHtml(text) + '</pre></section>';
+                });
+                var url = URL.createObjectURL(file);
+                objectUrls.push(url);
+                return Promise.resolve('<section class="sheet"><h2>' + escapeHtml(file.name) + '</h2><img src="' + url + '" alt="' + escapeHtml(file.name) + '"></section>');
+            })).then(function (pages) {
+                tab.document.open();
+                tab.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Print files</title><style>@page{margin:14mm}body{font:16px Arial,sans-serif;color:#111;margin:0}.sheet{page-break-after:always;break-after:page;padding:4mm}.sheet:last-child{page-break-after:auto;break-after:auto}h2{font-size:14px;overflow-wrap:anywhere}img{display:block;max-width:100%;max-height:88vh;object-fit:contain;margin:auto}pre{font:12pt/1.45 monospace;white-space:pre-wrap;overflow-wrap:anywhere}</style></head><body>' + pages.join('') + '</body></html>');
+                tab.document.close();
+                var images = Array.prototype.slice.call(tab.document.images);
+                Promise.all(images.map(function (image) {
+                    if (image.complete) return Promise.resolve();
+                    return new Promise(function (resolve) { image.onload = resolve; image.onerror = resolve; });
+                })).then(function () { setTimeout(function () { try { tab.focus(); tab.print(); } catch (e) {} }, 250); });
+                revokeLater(objectUrls);
+            }).catch(function () {
+                $('print-status').textContent = 'Could not open one of those files. Try a PDF, image, or text file.';
+                try { tab.close(); } catch (e) {}
+            });
+        });
         $('buy-close').addEventListener('click', function () { closeModal('buy-modal'); });
         $('buy-cart').addEventListener('click', function () {
             var cb = buyCtx && buyCtx.onCart;
@@ -5743,3 +5826,4 @@
 </script>
 </body>
 </html>
+
