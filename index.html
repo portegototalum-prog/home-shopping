@@ -526,6 +526,15 @@
         .whole-cart-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
         .whole-cart-links a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 8px 10px; border-radius: 12px; background: var(--btn-action-bg); color: var(--btn-action-text); font-weight: 800; text-decoration: none; text-align: center; }
         .whole-cart-links a:hover { filter: brightness(1.12); }
+        .catalog-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+        .catalog-tools .layout-title { margin-bottom: 14px; }
+        .catalog-remove { position: absolute; top: 9px; right: 9px; z-index: 2; min-width: 38px; min-height: 38px; border: var(--card-edge); border-radius: 999px; background: var(--card-bg); color: var(--danger); font-size: 1rem; cursor: pointer; box-shadow: var(--shadow-style); }
+        .catalog-remove:hover { transform: scale(1.06); }
+        .hidden-products-panel { margin: 0 0 16px; padding: 12px; border: var(--card-edge); border-radius: 14px; background: var(--card-bg); }
+        #hidden-products-panel[hidden] { display: none; }
+        .hidden-products-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .hidden-product-chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 999px; background: var(--chip-bg); color: var(--text-main); }
+        .hidden-product-chip button { min-height: 32px; border: 0; border-radius: 999px; padding: 4px 9px; background: var(--btn-action-bg); color: var(--btn-action-text); font: inherit; font-weight: 700; cursor: pointer; }
         .print-help { margin: -6px 0 12px; color: var(--text-sub); font-size: .88rem; line-height: 1.45; }
         #print-files { display: block; width: 100%; min-height: 46px; padding: 9px; border: var(--card-edge); border-radius: 12px; background: var(--chip-bg); color: var(--text-main); font: inherit; }
         #print-file-names { margin: 8px 0; color: var(--text-sub); font-size: .86rem; overflow-wrap: anywhere; }
@@ -1339,7 +1348,14 @@
             <section aria-labelledby="browse-title">
                 <h2 class="layout-title" id="browse-title">Categories</h2>
                 <div class="horizontal-scroller" id="categories" role="group" aria-label="Filter by category"></div>
-                <h2 class="layout-title" id="items-title">Items</h2>
+                <div class="catalog-tools">
+                    <h2 class="layout-title" id="items-title">Items</h2>
+                    <button type="button" class="btn-trigger" id="manage-hidden-products" aria-controls="hidden-products-panel" aria-expanded="false">🗃️ Removed products (0)</button>
+                </div>
+                <section class="hidden-products-panel" id="hidden-products-panel" aria-label="Removed products" hidden>
+                    <p class="print-help">Removed products are hidden from browsing. Items already on your shopping lists stay there.</p>
+                    <div class="hidden-products-list" id="hidden-products-list"></div>
+                </section>
                 <div class="items-showcase" id="catalog"></div>
             </section>
 
@@ -1652,7 +1668,7 @@
         activeId: 'l1',
         theme: null, cat: 'all', query: '',
         stats: { w: 0, l: 0, d: 0, ckBests: {}, rW: 0, rL: 0, rBest: 0, ore: 0, oreSpent: 0, gear: 0, rPts: 0, rUp: 0, tW: 0 },
-        usage: {}, custom: [], shared: [],
+        usage: {}, custom: [], shared: [], hiddenProducts: [],
         settings: { currency: defaultCurrency(), sound: true, motion: 'auto', group: true, sortDone: true, syncUrl: '' }
     };
     function activeList() {
@@ -1726,6 +1742,7 @@
             });
         }
         if (Array.isArray(data.shared)) state.shared = data.shared.slice(0, 500).map(cleanShared).filter(Boolean);
+        state.hiddenProducts = Array.isArray(data.hiddenProducts) ? data.hiddenProducts.filter(function (id) { return typeof id === 'string' && id; }).slice(0, 1000) : [];
         var s = data.settings;
         if (s && typeof s === 'object') {
             if (['₹', '$', '€', '£'].indexOf(s.currency) !== -1) state.settings.currency = s.currency;
@@ -1750,7 +1767,7 @@
         try {
             localStorage.setItem(STORE_KEY, JSON.stringify({
                 v: 2, lists: state.lists, activeId: state.activeId, theme: state.theme,
-                stats: state.stats, usage: state.usage, custom: state.custom, shared: state.shared, settings: state.settings
+                stats: state.stats, usage: state.usage, custom: state.custom, shared: state.shared, hiddenProducts: state.hiddenProducts, settings: state.settings
             }));
         } catch (e) { /* ignore */ }
     }
@@ -1935,6 +1952,50 @@
             CATALOG.push({ id: 's-' + stem(c.name).replace(/[^a-z0-9]+/g, '-'), name: c.name, icon: c.icon, cat: c.cat, custom: true, shared: true, price: null });
         });
         catalogVersion++;
+    }
+    var catalogManageOpen = false;
+    function isProductHidden(item) { return !!(item && state.hiddenProducts.indexOf(item.id) !== -1); }
+    function hideCatalogProduct(item) {
+        if (isProductHidden(item)) return;
+        state.hiddenProducts.push(item.id);
+        catalogVersion++;
+        save();
+        render();
+        toast('Removed ' + item.name + ' from products.', function () {
+            state.hiddenProducts = state.hiddenProducts.filter(function (id) { return id !== item.id; });
+            catalogVersion++;
+            save();
+            render();
+        });
+    }
+    function restoreCatalogProduct(id) {
+        var item = CATALOG.filter(function (c) { return c.id === id; })[0];
+        state.hiddenProducts = state.hiddenProducts.filter(function (hiddenId) { return hiddenId !== id; });
+        catalogVersion++;
+        save();
+        render();
+        if (item) toast('Restored ' + item.name + ' to products.');
+    }
+    function renderHiddenProducts() {
+        var removed = CATALOG.filter(isProductHidden);
+        var button = $('manage-hidden-products'), panel = $('hidden-products-panel'), box = $('hidden-products-list');
+        button.textContent = '🗃️ Removed products (' + removed.length + ')';
+        button.setAttribute('aria-expanded', String(catalogManageOpen));
+        panel.hidden = !catalogManageOpen;
+        box.textContent = '';
+        if (!removed.length) {
+            box.appendChild(el('span', 'print-help', 'No products removed.'));
+            return;
+        }
+        removed.forEach(function (item) {
+            var chip = el('div', 'hidden-product-chip', item.icon + ' ' + item.name);
+            var restore = el('button', '', '↩️ Restore');
+            restore.type = 'button';
+            restore.setAttribute('aria-label', 'Restore ' + item.name);
+            restore.addEventListener('click', function () { restoreCatalogProduct(item.id); });
+            chip.appendChild(restore);
+            box.appendChild(chip);
+        });
     }
     function ensureCustom(name) {
         var c = resolveCatalog(name);
@@ -2430,7 +2491,7 @@
 
     function renderUsuals() {
         var names = Object.keys(state.usage)
-            .filter(function (n) { return state.usage[n] >= 2 && !findOnList(n); })
+            .filter(function (n) { return state.usage[n] >= 2 && !findOnList(n) && !isProductHidden(findCatalog(n)); })
             .sort(function (a, b) { return state.usage[b] - state.usage[a]; })
             .slice(0, 8);
         var row = $('usuals-row');
@@ -2482,7 +2543,7 @@
     function safeName(s) { return s.replace(/[^\w\-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'list'; }
     function today() { return new Date().toISOString().slice(0, 10); }
     function payload() {
-        return { app: 'home-shopping', v: 2, exportedAt: new Date().toISOString(), lists: state.lists, activeId: state.activeId, theme: state.theme, stats: state.stats, usage: state.usage, custom: state.custom, settings: state.settings };
+        return { app: 'home-shopping', v: 2, exportedAt: new Date().toISOString(), lists: state.lists, activeId: state.activeId, theme: state.theme, stats: state.stats, usage: state.usage, custom: state.custom, shared: state.shared, hiddenProducts: state.hiddenProducts, settings: state.settings };
     }
     function openShare() {
         var text = listText();
@@ -2658,6 +2719,10 @@
     /* ----- wire up all the pro controls ----- */
     function initPro() {
         ['share-modal', 'settings-modal', 'buy-modal'].forEach(wireModal);
+        $('manage-hidden-products').addEventListener('click', function () {
+            catalogManageOpen = !catalogManageOpen;
+            renderHiddenProducts();
+        });
         var printInput = $('print-files'), printButton = $('print-start');
         printInput.addEventListener('change', function () {
             var files = Array.prototype.slice.call(printInput.files || []);
@@ -2861,7 +2926,7 @@
         var box = $('categories');
         box.textContent = '';
         CATEGORIES.forEach(function (c) {
-            if (c.id === 'mine' && !CATALOG.some(function (x) { return x.custom; })) return;
+            if (c.id === 'mine' && !CATALOG.some(function (x) { return x.custom && !isProductHidden(x); })) return;
             var b = el('button', 'category-element' + (state.cat === c.id ? ' active' : ''));
             b.type = 'button';
             b.setAttribute('aria-pressed', String(state.cat === c.id));
@@ -2877,7 +2942,7 @@
     function renderCatalog() {
         var q = norm(state.query);
         var items = CATALOG.filter(function (i) {
-            return (state.cat === 'all' || (state.cat === 'mine' ? i.custom : i.cat === state.cat)) && (!q || i.name.toLowerCase().indexOf(q) !== -1);
+            return !isProductHidden(i) && (state.cat === 'all' || (state.cat === 'mine' ? i.custom : i.cat === state.cat)) && (!q || i.name.toLowerCase().indexOf(q) !== -1);
         });
         var sig = state.theme + '|' + state.cat + '|' + q + '|' + catalogVersion + '|' + state.settings.currency;
         var grid = $('catalog');
@@ -2904,6 +2969,12 @@
         items.forEach(function (i, idx) {
             var card = el('div', 'item-box');
             card.style.setProperty('--i', String(idx % 14));
+            var remove = el('button', 'catalog-remove', '🗑️');
+            remove.type = 'button';
+            remove.setAttribute('aria-label', 'Remove ' + i.name + ' from products');
+            remove.title = 'Remove from product list';
+            remove.addEventListener('click', function () { hideCatalogProduct(i); });
+            card.appendChild(remove);
             var art = el('div', 'item-art');
             var ico = el('span', 'item-ico', i.icon);
             ico.setAttribute('aria-hidden', 'true');
@@ -2931,6 +3002,7 @@
     function render() {
         renderCategories();
         renderCatalog();
+        renderHiddenProducts();
         renderList();
         renderUsuals();
         $('clear-search').hidden = !state.query;
